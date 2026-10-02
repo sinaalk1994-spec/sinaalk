@@ -1,0 +1,1077 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+  <meta charset="utf-8">
+<script src="storage-sync.js"></script>
+
+  <title>گزارش‌گیری فروش - STLP</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+
+    /* =================================
+       جستجوی گزارش
+    ================================= */
+
+    #reportSearch, .invtabs-search {
+      padding: 10px;
+
+      width: 280px;
+      max-width: 100%;
+
+      margin-bottom: 15px;
+
+      border: 1px solid #aaa;
+      border-radius: 6px;
+
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+
+
+    /* =================================
+       جدول گزارش
+    ================================= */
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+
+      border-collapse: collapse;
+
+      background: #e9e3e3;
+      color: #000;
+
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 8px;
+
+      border: 1px solid #999;
+
+      text-align: center;
+    }
+
+    th {
+      background: #d3cccc;
+      font-weight: bold;
+    }
+
+
+    /* =================================
+       دکمه مشاهده / چاپ
+    ================================= */
+
+    .view-btn {
+      background: #0d6efd;
+
+      color: white;
+
+      border: none;
+
+      padding: 6px 14px;
+
+      border-radius: 5px;
+
+      cursor: pointer;
+
+      font-family: inherit;
+    }
+
+    .view-btn:hover {
+      background: #0b5ed7;
+    }
+
+
+    /* =================================
+       کارت گزارش
+    ================================= */
+
+    .report-card {
+      background: rgba(0, 0, 0, 0.45);
+
+      padding: 20px;
+
+      border-radius: 12px;
+
+      margin-bottom: 20px;
+
+      backdrop-filter: blur(6px);
+
+      border: 1px solid #0fa37f88;
+
+      box-shadow: 0 0 20px #00000080;
+    }
+
+
+    /* =================================
+       داشبورد: KPI و چارت‌ها
+    ================================= */
+
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .kpi-card {
+        background: rgba(255,255,255,.06);
+        border: 1px solid #0fa37f55;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+    }
+
+    .kpi-card .kpi-icon {
+        font-size: 22px;
+    }
+
+    .kpi-card .kpi-label {
+        color: #ccc;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    .kpi-card .kpi-value {
+        color: #00ffca;
+        font-size: 19px;
+        font-weight: 900;
+        margin-top: 8px;
+    }
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .chart-box {
+        background: rgba(255,255,255,.05);
+        border: 1px solid #0fa37f44;
+        border-radius: 12px;
+        padding: 15px;
+    }
+
+    .chart-box h3 {
+        margin-top: 0;
+        font-size: 15px;
+    }
+
+    .chart-box canvas {
+        max-height: 280px;
+    }
+
+    .debt-table {
+        width: 100%;
+        background: #fff;
+        color: #000;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    .debt-table th {
+        background: #0fa37f;
+        color: #fff;
+        padding: 7px;
+    }
+
+    .debt-table td {
+        padding: 6px;
+        text-align: center;
+        background: #fafafa;
+    }
+
+
+    /* =================================
+       تب‌های لیست فاکتورها
+    ================================= */
+
+    .invtabs-tabs {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0 16px;
+        flex-wrap: wrap;
+    }
+
+    .invtabs-tab-btn {
+        background: rgba(255,255,255,.08);
+        border: 1px solid #0fa37f66;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 14px;
+        transition: .2s;
+    }
+
+    .invtabs-tab-btn:hover { background: rgba(255,255,255,.15); }
+
+    .invtabs-tab-btn.active { background: #0fa37f; border-color: #0fa37f; }
+
+    .invtabs-tab-panel { display: none; }
+    .invtabs-tab-panel.active { display: block; }
+
+
+    /* =================================
+       موبایل
+    ================================= */
+
+    @media (max-width: 600px) {
+
+      #reportSearch, .invtabs-search {
+        width: 100%;
+      }
+
+      .report-card {
+        padding: 12px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="overlay">
+
+
+  <!-- ===============================
+       منوی بالا
+  ================================ -->
+
+  <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html" class="active">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+
+  <!-- ===============================
+       عنوان
+  ================================ -->
+
+  <h2>
+    گزارش و داشبورد مدیریتی
+  </h2>
+
+
+  <!-- ===============================
+       بخش داشبورد: KPI و چارت‌ها
+  ================================ -->
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="charts-grid">
+
+      <div class="chart-box">
+          <h3>📈 فروش ماهانه</h3>
+          <canvas id="chartMonthlySales"></canvas>
+      </div>
+
+      <div class="chart-box">
+          <h3>🏆 پرفروش‌ترین کالاها (بر اساس تعداد)</h3>
+          <canvas id="chartTopProducts"></canvas>
+      </div>
+
+      <div class="chart-box">
+          <h3>🏦 توزیع نقدینگی بین حساب‌های خزانه</h3>
+          <canvas id="chartAccountBalances"></canvas>
+      </div>
+
+      <div class="chart-box">
+          <h3>💰 هزینه حقوق ماهانه</h3>
+          <canvas id="chartPayrollCost"></canvas>
+      </div>
+
+  </div>
+
+  <div class="report-card">
+      <h3>🔴 بدهی‌های باز</h3>
+
+      <button
+        type="button"
+        class="view-btn"
+        onclick="downloadOpenDebtsExcel()"
+        style="margin-bottom:15px;"
+      >
+        📊 خروجی اکسل بدهی‌های باز
+      </button>
+
+      <h4>حواله‌های نسیه در انتظار تسویه (از مشتریان)</h4>
+      <table class="debt-table" id="salesDebtTable" style="margin-bottom:20px;">
+          <thead>
+              <tr><th>مشتری</th><th>شماره حواله</th><th>مبلغ</th></tr>
+          </thead>
+          <tbody></tbody>
+      </table>
+
+      <h4>بدهی به تأمین‌کنندگان (خرید نسیه)</h4>
+      <table class="debt-table" id="purchaseDebtTable">
+          <thead>
+              <tr><th>تأمین‌کننده</th><th>شماره حواله</th><th>مبلغ</th></tr>
+          </thead>
+          <tbody></tbody>
+      </table>
+  </div>
+
+
+  <!-- ===============================
+       بخش گزارش: لیست فاکتورها
+  ================================ -->
+
+  <div class="report-card">
+
+    <h3>
+      لیست فاکتورهای فروش
+    </h3>
+
+    <button
+      type="button"
+      class="view-btn"
+      onclick="exportInvoicesReportToExcel()"
+      style="margin-bottom:15px;"
+    >
+      📊 خروجی اکسل گزارش‌ها
+    </button>
+
+    <div class="invtabs-tabs">
+      <button type="button" class="invtabs-tab-btn active" data-invtab="pending">📋 پیش‌فاکتورها</button>
+      <button type="button" class="invtabs-tab-btn" data-invtab="approved">✅ فاکتورهای تأییدشده</button>
+      <button type="button" class="invtabs-tab-btn" data-invtab="rejected">❌ فاکتورهای ردشده</button>
+    </div>
+
+    <div class="invtabs-tab-panel active" id="invtab-pending">
+
+      <input
+        class="invtabs-search"
+        id="reportSearchPending"
+        type="text"
+        oninput="stlpFilterInvoiceRows('invoiceTablePending', 'reportSearchPending')"
+        placeholder="جستجوی شماره فاکتور یا نام مشتری..."
+      >
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" onchange="stlpToggleTableInvoiceChecks(this)" title="انتخاب همه"></th>
+              <th>شماره فاکتور</th>
+              <th>تاریخ</th>
+              <th>مشتری</th>
+              <th>نوع خرید</th>
+              <th>جمع کل</th>
+              <th>نمایش / چاپ</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceTablePending"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="invtabs-tab-panel" id="invtab-approved">
+
+      <input
+        class="invtabs-search"
+        id="reportSearchApproved"
+        type="text"
+        oninput="stlpFilterInvoiceRows('invoiceTableApproved', 'reportSearchApproved')"
+        placeholder="جستجوی شماره فاکتور یا نام مشتری..."
+      >
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" onchange="stlpToggleTableInvoiceChecks(this)" title="انتخاب همه"></th>
+              <th>شماره فاکتور</th>
+              <th>تاریخ</th>
+              <th>مشتری</th>
+              <th>نوع خرید</th>
+              <th>جمع کل</th>
+              <th>نمایش / چاپ</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceTableApproved"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="invtabs-tab-panel" id="invtab-rejected">
+
+      <input
+        class="invtabs-search"
+        id="reportSearchRejected"
+        type="text"
+        oninput="stlpFilterInvoiceRows('invoiceTableRejected', 'reportSearchRejected')"
+        placeholder="جستجوی شماره فاکتور یا نام مشتری..."
+      >
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" onchange="stlpToggleTableInvoiceChecks(this)" title="انتخاب همه"></th>
+              <th>شماره فاکتور</th>
+              <th>تاریخ</th>
+              <th>مشتری</th>
+              <th>نوع خرید</th>
+              <th>جمع کل</th>
+              <th>نمایش / چاپ</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceTableRejected"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+<script>
+document.querySelectorAll('.invtabs-tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+        document.querySelectorAll('.invtabs-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+        document.querySelectorAll('.invtabs-tab-panel').forEach(function(p){ p.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById('invtab-' + btn.dataset.invtab).classList.add('active');
+    });
+});
+</script>
+
+
+<!-- ===============================
+     اسکریپت‌های خارجی
+================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="chart.umd.min.js"></script>
+
+<script src="app.js"></script>
+
+<script>
+stlpRequirePermission("reports");
+</script>
+
+
+<!-- ===============================
+     بارگذاری گزارش لیست فاکتورها
+================================ -->
+
+<script>
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+
+    if (typeof loadInvoices === "function") {
+
+      loadInvoices();
+
+    }
+
+  }
+);
+
+</script>
+
+
+<!-- ===============================
+     داشبورد: KPI و چارت‌ها
+================================ -->
+
+<script>
+
+// =====================================================
+// نرمال‌سازی تاریخ به دوره‌ی «سال/ماه» برای گروه‌بندی
+// اعداد فارسی/عربی به انگلیسی تبدیل می‌شوند
+// =====================================================
+
+function stlpToEnglishDigits(str) {
+
+    return String(str || "").replace(/[۰-۹٠-٩]/g, function(d) {
+
+        const persian = "۰۱۲۳۴۵۶۷۸۹".indexOf(d);
+        if (persian >= 0) return persian;
+
+        const arabic = "٠١٢٣٤٥٦٧٨٩".indexOf(d);
+        if (arabic >= 0) return arabic;
+
+        return d;
+
+    });
+
+}
+
+function stlpDateToPeriod(dateStr) {
+
+    const normalized = stlpToEnglishDigits(dateStr);
+
+    const parts = normalized.split(/[\/\-]/);
+
+    if (parts.length < 2) return null;
+
+    const year = parts[0].trim();
+    const month = parts[1].trim().padStart(2, "0");
+
+    if (!year || !month || isNaN(Number(year))) return null;
+
+    return year + "/" + month;
+
+}
+
+
+// =====================================================
+// بارگذاری داده‌های خام
+// =====================================================
+
+function stlpLoadDashboardData() {
+
+    const invoices =
+        JSON.parse(localStorage.getItem("invoices") || "[]");
+
+    const rawDeliveries =
+        JSON.parse(localStorage.getItem("salesDeliveries") || "[]");
+
+    const salesDeliveries =
+        rawDeliveries.filter(function(d) { return d.direction !== "purchase"; });
+
+    const purchases =
+        rawDeliveries.filter(function(d) { return d.direction === "purchase"; });
+
+    const payrollRecords =
+        JSON.parse(localStorage.getItem("stlp_payroll") || "[]");
+
+    // فاکتورهای «فروشِ واقعاً تکمیل‌شده» — یعنی حواله‌ی مرتبط‌شان
+    // تأیید شده باشد. قبلاً کارت‌های KPI و نمودارهای فروش/پرفروش‌ترین
+    // کالاها، همه‌ی data.invoices را بدون فیلتر می‌شمردند؛ یعنی
+    // فاکتوری که حواله‌اش رد شده (هرگز تحویل/پرداخت نشده) یا هنوز
+    // در انتظار تأیید است، هم‌چنان به‌عنوان فروشِ قطعی در گزارش‌ها
+    // حساب می‌شد — برخلافِ همان قاعده‌ای که جدولِ بدهکاران/بستانکارانِ
+    // همین صفحه از قبل رعایت می‌کند (فقط d.status==="approved").
+    const approvedInvoiceNumbers =
+        new Set(
+            salesDeliveries
+                .filter(function(d) { return d.status === "approved"; })
+                .map(function(d) { return String(d.invoiceNo || "").trim(); })
+        );
+
+    const approvedInvoices =
+        invoices.filter(function(inv) {
+            return approvedInvoiceNumbers.has(String(inv.invoiceNo || "").trim());
+        });
+
+    return { invoices, approvedInvoices, salesDeliveries, purchases, payrollRecords };
+
+}
+
+
+// =====================================================
+// کارت‌های KPI
+// =====================================================
+
+function renderKPIs(data) {
+
+    const currentPeriod =
+        stlpCurrentDashboardPeriod();
+
+    let totalSalesAllTime = 0;
+    let totalSalesThisMonth = 0;
+
+    data.approvedInvoices.forEach(function(inv) {
+
+        const amount = stlpParseMoney(inv.total);
+        totalSalesAllTime += amount;
+
+        if (stlpDateToPeriod(inv.date) === currentPeriod) {
+            totalSalesThisMonth += amount;
+        }
+
+    });
+
+    let totalCash = 0;
+
+    if (typeof getTreasuryAccountBalances === "function") {
+
+        const balances = getTreasuryAccountBalances();
+
+        Object.keys(balances).forEach(function(key) {
+            totalCash += Number(balances[key] || 0);
+        });
+
+    }
+
+    const pendingSettlementCount =
+        data.salesDeliveries.filter(function(d) {
+            return d.status === "approved" && d.purchaseType === "credit" && !d.treasuryRegistered;
+        }).length;
+
+    const supplierDebt =
+        data.purchases
+            .filter(function(p) {
+                return p.status === "approved" && p.purchaseType === "credit" && !p.treasuryRegistered;
+            })
+            .reduce(function(sum, p) { return sum + stlpParseMoney(p.total); }, 0);
+
+    const payrollThisMonth =
+        data.payrollRecords
+            .filter(function(r) { return r.period === currentPeriod && r.paid; })
+            .reduce(function(sum, r) { return sum + Number(r.netAmount || 0); }, 0);
+
+    const kpis = [
+
+        { icon: "🧾", label: "فروش این ماه", value: stlpTreasuryMoney(totalSalesThisMonth) },
+        { icon: "📊", label: "فروش کل (تمام دوره‌ها)", value: stlpTreasuryMoney(totalSalesAllTime) },
+        { icon: "🏦", label: "نقدینگی کل خزانه", value: stlpTreasuryMoney(totalCash) },
+        { icon: "🕒", label: "حواله‌های در انتظار تسویه", value: pendingSettlementCount + " مورد" },
+        { icon: "🔴", label: "بدهی به تأمین‌کنندگان", value: stlpTreasuryMoney(supplierDebt) },
+        { icon: "💰", label: "هزینه حقوق این ماه", value: stlpTreasuryMoney(payrollThisMonth) }
+
+    ];
+
+    document.getElementById("kpiGrid").innerHTML =
+        kpis.map(function(k) {
+
+            return (
+                '<div class="kpi-card">' +
+                '<div class="kpi-icon">' + k.icon + '</div>' +
+                '<div class="kpi-label">' + k.label + '</div>' +
+                '<div class="kpi-value">' + k.value + '</div>' +
+                '</div>'
+            );
+
+        }).join("");
+
+}
+
+function stlpCurrentDashboardPeriod() {
+
+    try {
+
+        const formatter =
+            new Intl.DateTimeFormat("fa-IR-u-ca-persian", { year: "numeric", month: "2-digit" });
+
+        const parts = formatter.formatToParts(new Date());
+
+        let year = "", month = "";
+
+        parts.forEach(function(p) {
+            if (p.type === "year") year = p.value;
+            if (p.type === "month") month = p.value;
+        });
+
+        year = stlpToEnglishDigits(year);
+        month = stlpToEnglishDigits(month).padStart(2, "0");
+
+        return year + "/" + month;
+
+    } catch (error) {
+
+        return "";
+
+    }
+
+}
+
+
+// =====================================================
+// چارت ۱: فروش ماهانه
+// =====================================================
+
+function renderMonthlySalesChart(data) {
+
+    const totals = {};
+
+    data.approvedInvoices.forEach(function(inv) {
+
+        const period = stlpDateToPeriod(inv.date);
+        if (!period) return;
+
+        totals[period] = (totals[period] || 0) + stlpParseMoney(inv.total);
+
+    });
+
+    const periods = Object.keys(totals).sort().slice(-8);
+
+    new Chart(document.getElementById("chartMonthlySales"), {
+
+        type: "bar",
+
+        data: {
+            labels: periods,
+            datasets: [{
+                label: "فروش (ریال)",
+                data: periods.map(function(p) { return totals[p]; }),
+                backgroundColor: "#0fa37f"
+            }]
+        },
+
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+
+    });
+
+}
+
+
+// =====================================================
+// چارت ۲: پرفروش‌ترین کالاها
+// =====================================================
+
+function renderTopProductsChart(data) {
+
+    const qtyByProduct = {};
+
+    data.approvedInvoices.forEach(function(inv) {
+
+        (inv.items || []).forEach(function(row) {
+
+            // ساختار قدیمی آرایه‌ای: [ردیف, کد, شرح, واحد, تعداد, ...]
+
+            const desc = row[2] || row.desc || row.name || "-";
+            const qty = Number(row[4] || row.qty || 0);
+
+            if (!desc || !qty) return;
+
+            qtyByProduct[desc] = (qtyByProduct[desc] || 0) + qty;
+
+        });
+
+    });
+
+    const sorted =
+        Object.entries(qtyByProduct)
+            .sort(function(a, b) { return b[1] - a[1]; })
+            .slice(0, 6);
+
+    new Chart(document.getElementById("chartTopProducts"), {
+
+        type: "bar",
+
+        data: {
+            labels: sorted.map(function(x) { return x[0]; }),
+            datasets: [{
+                label: "تعداد فروخته‌شده",
+                data: sorted.map(function(x) { return x[1]; }),
+                backgroundColor: "#0d6efd"
+            }]
+        },
+
+        options: {
+            indexAxis: "y",
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+
+    });
+
+}
+
+
+// =====================================================
+// چارت ۳: توزیع نقدینگی حساب‌های خزانه
+// =====================================================
+
+function renderAccountBalancesChart() {
+
+    if (
+        typeof getTreasuryAccountBalances !== "function" ||
+        typeof stlpTreasuryAccounts === "undefined"
+    ) return;
+
+    const balances = getTreasuryAccountBalances();
+
+    const labels = stlpTreasuryAccounts.map(function(a) { return a.name; });
+    const values = stlpTreasuryAccounts.map(function(a) { return Number(balances[a.id] || 0); });
+
+    new Chart(document.getElementById("chartAccountBalances"), {
+
+        type: "doughnut",
+
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: ["#0fa37f", "#0d6efd", "#f59e0b", "#dc3545", "#8b5cf6", "#14b8a6", "#e11d48"]
+            }]
+        },
+
+        options: {
+            responsive: true
+        }
+
+    });
+
+}
+
+
+// =====================================================
+// چارت ۴: هزینه حقوق ماهانه
+// =====================================================
+
+function renderPayrollChart(data) {
+
+    const totals = {};
+
+    data.payrollRecords.forEach(function(r) {
+
+        if (!r.paid) return;
+
+        // r.period یک فیلدِ متنیِ آزاد است (کارمند می‌تواند بدونِ صفرِ
+        // ابتدایی مثلاً «1404/6» تایپ کند) — بدونِ نرمال‌سازی، مرتب‌سازیِ
+        // رشته‌ایِ پایین‌تر ماه ۱۲ را قبل از ماه ۶ نشان می‌داد (چون
+        // کاراکتر به کاراکتر مقایسه می‌شود، نه عددی)، دقیقاً همان باگِ
+        // مرتب‌سازیِ تاریخِ شمسی که برای فاکتورها با stlpDateToPeriod حل
+        // شده، اینجا برای دوره‌ی حقوق دوباره تکرار شده بود
+        const normalizedPeriod =
+            stlpDateToPeriod(r.period) || r.period;
+
+        totals[normalizedPeriod] = (totals[normalizedPeriod] || 0) + Number(r.netAmount || 0);
+
+    });
+
+    const periods = Object.keys(totals).sort().slice(-8);
+
+    new Chart(document.getElementById("chartPayrollCost"), {
+
+        type: "line",
+
+        data: {
+            labels: periods,
+            datasets: [{
+                label: "هزینه حقوق (ریال)",
+                data: periods.map(function(p) { return totals[p]; }),
+                borderColor: "#f59e0b",
+                backgroundColor: "#f59e0b55",
+                fill: true,
+                tension: 0.3
+            }]
+        },
+
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+
+    });
+
+}
+
+
+// =====================================================
+// جداول بدهی‌های باز
+// =====================================================
+
+function renderDebtTables(data) {
+
+    const salesDebtBody =
+        document.querySelector("#salesDebtTable tbody");
+
+    const openSalesDebt =
+        data.salesDeliveries.filter(function(d) {
+            return d.status === "approved" && d.purchaseType === "credit" && !d.treasuryRegistered;
+        });
+
+    salesDebtBody.innerHTML =
+        openSalesDebt.length === 0
+            ? '<tr><td colspan="3">بدهی بازی وجود ندارد.</td></tr>'
+            : openSalesDebt.map(function(d) {
+
+                return (
+                    "<tr><td>" + escapeHtml(d.customer || "-") + "</td>" +
+                    "<td>" + escapeHtml(d.deliveryNo || "-") + "</td>" +
+                    "<td>" + escapeHtml(String(d.total || "-")) + "</td></tr>"
+                );
+
+            }).join("");
+
+    const purchaseDebtBody =
+        document.querySelector("#purchaseDebtTable tbody");
+
+    const openPurchaseDebt =
+        data.purchases.filter(function(p) {
+            return p.status === "approved" && p.purchaseType === "credit" && !p.treasuryRegistered;
+        });
+
+    purchaseDebtBody.innerHTML =
+        openPurchaseDebt.length === 0
+            ? '<tr><td colspan="3">بدهی بازی وجود ندارد.</td></tr>'
+            : openPurchaseDebt.map(function(p) {
+
+                return (
+                    "<tr><td>" + escapeHtml(p.supplierName || "-") + "</td>" +
+                    "<td>" + escapeHtml(p.deliveryNo || "-") + "</td>" +
+                    "<td>" + escapeHtml(String(p.total || "-")) + "</td></tr>"
+                );
+
+            }).join("");
+
+}
+
+
+// =====================================================
+// انتخاب همه‌ی فاکتورهای همین جدول (چک‌باکس بالای هر جدول،
+// مخصوص همان تب — روی جدول‌های تب‌های دیگر اثر نمی‌گذارد)
+// =====================================================
+
+function stlpToggleTableInvoiceChecks(sourceCheckbox) {
+
+    const table = sourceCheckbox.closest("table");
+    if (!table) return;
+
+    table.querySelectorAll(".invoice-check").forEach(function(chk) {
+        chk.checked = sourceCheckbox.checked;
+    });
+
+}
+
+
+// =====================================================
+// خروجی اکسل بدهی‌های باز (فروش + خرید، یک فایل)
+// =====================================================
+
+let stlpLastDashboardData = null;
+
+function downloadOpenDebtsExcel() {
+
+    const data =
+        stlpLastDashboardData || stlpLoadDashboardData();
+
+    const openSalesDebt =
+        data.salesDeliveries.filter(function(d) {
+            return d.status === "approved" && d.purchaseType === "credit" && !d.treasuryRegistered;
+        });
+
+    const openPurchaseDebt =
+        data.purchases.filter(function(p) {
+            return p.status === "approved" && p.purchaseType === "credit" && !p.treasuryRegistered;
+        });
+
+    if (openSalesDebt.length === 0 && openPurchaseDebt.length === 0) {
+
+        alert("در حال حاضر بدهی باز (فروش یا خرید) وجود ندارد.");
+        return;
+
+    }
+
+    const rows = [];
+
+    rows.push(["بدهی‌های نسیه از مشتریان (فروش)"]);
+    rows.push(["مشتری", "شماره حواله", "شماره فاکتور", "تاریخ", "مبلغ"]);
+
+    openSalesDebt.forEach(function(d) {
+
+        rows.push([
+            d.customer || "-",
+            d.deliveryNo || "-",
+            d.invoiceNo || "-",
+            d.date || "-",
+            stlpParseMoney(d.total)
+        ]);
+
+    });
+
+    rows.push([]);
+    rows.push(["بدهی به تأمین‌کنندگان (خرید نسیه)"]);
+    rows.push(["تأمین‌کننده", "شماره حواله", "شماره فاکتور", "تاریخ", "مبلغ"]);
+
+    openPurchaseDebt.forEach(function(p) {
+
+        rows.push([
+            p.supplierName || "-",
+            p.deliveryNo || "-",
+            p.invoiceNo || "-",
+            p.date || "-",
+            stlpParseMoney(p.total)
+        ]);
+
+    });
+
+    const blob =
+        stlpBuildSimpleXlsx("بدهی‌های باز", rows);
+
+    stlpDownloadBlob(
+        blob,
+        "بدهی-های-باز-" + new Date().toISOString().slice(0, 10) + ".xlsx"
+    );
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const data = stlpLoadDashboardData();
+    stlpLastDashboardData = data;
+
+    function safeRun(fn, label) {
+
+        try {
+            fn();
+        } catch (error) {
+            console.error("خطا در " + label + ":", error);
+        }
+
+    }
+
+    safeRun(function() { renderKPIs(data); }, "کارت‌های KPI");
+    safeRun(function() { renderMonthlySalesChart(data); }, "چارت فروش ماهانه");
+    safeRun(function() { renderTopProductsChart(data); }, "چارت پرفروش‌ترین کالاها");
+    safeRun(function() { renderAccountBalancesChart(); }, "چارت حساب‌های خزانه");
+    safeRun(function() { renderPayrollChart(data); }, "چارت حقوق");
+    safeRun(function() { renderDebtTables(data); }, "جدول بدهی‌های باز");
+
+});
+
+</script>
+
+
+</body>
+
+</html>

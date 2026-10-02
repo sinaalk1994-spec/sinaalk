@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فروشگاه محصولات Vaccuject — STLP</title>
+
+
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+
+<style>
+  .page-head{ padding:40px 0 0; }
+  .page-head h1{ font-size:24px; margin-bottom:6px; }
+  .page-head p{ font-size:13px; color:var(--muted); }
+
+  .shop-layout{ display:flex; gap:28px; align-items:flex-start; padding:24px 0 72px; }
+  .filters{ flex:0 0 240px; background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px; position:sticky; top:88px; }
+  .filters h4{ font-size:14px; margin-bottom:16px; }
+  .filters .group-label{ font-size:12px; font-weight:700; color:var(--ink-soft); margin:16px 0 10px; }
+  .filters .group-label:first-of-type{ margin-top:0; }
+  #searchInput{ width:100%; padding:10px 12px; border-radius:999px; border:1px solid var(--line); font-size:13px; font-family:inherit; outline:none; }
+  #searchInput:focus{ border-color:var(--accent); }
+  .check-row{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); padding:4px 0; cursor:pointer; }
+  .price-row{ display:flex; gap:8px; }
+  .price-row input{ width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--line); font-size:12px; font-family:inherit; }
+  select.sel{ width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--line); font-size:12.5px; font-family:inherit; background:#fff; }
+
+  .results{ flex:1 1 0; min-width:0; }
+  #resultInfo{ font-size:13px; color:var(--muted); margin-bottom:14px; }
+  #products-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
+  @media (max-width:1000px){ #products-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } .filters{ position:static; } .shop-layout{ flex-direction:column; } .filters{ width:100%; } }
+  @media (max-width:520px){ #products-grid{ grid-template-columns:1fr; } }
+
+  .p-card{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px; text-align:center; }
+  .p-card img.pimg{ height:88px; margin:0 auto 10px; }
+  .p-code{ font-weight:700; font-size:14px; }
+  .p-meta{ font-size:11.5px; color:var(--muted-2); margin-top:8px; }
+  .p-price{ font-size:14px; font-weight:800; color:var(--accent-dark); margin-top:10px; }
+  .p-price small{ font-size:10.5px; font-weight:600; color:var(--muted-2); }
+  .qty-input{ margin-top:10px; width:80px; padding:6px; border-radius:8px; border:1px solid var(--line); text-align:center; font-family:inherit; }
+</style>
+<link rel="stylesheet" href="css/refresh.css">
+<link rel="stylesheet" href="css/site-complete.css">
+<link rel="stylesheet" href="css/site-unified.css"></head>
+<body class="refresh shop-page">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="STLP">
+      <div><div class="brand-name">STLP</div><div class="brand-sub">صبا تجهیز لاله پارسه</div></div>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" >خانه</a>
+      <a href="shop.html" class="active">فروشگاه</a>
+      <a href="brands.html">برندها</a>
+      <a href="about.html">درباره ما</a>
+      <a href="verify.html">تأیید اصالت</a>
+      <a href="track.html">پیگیری سفارش</a>
+    </nav>
+    <div class="header-right">
+      <a href="cart.html" class="cart-link" aria-label="سبد خرید">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e7efec" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;"></span>
+      </a>
+      
+      <button class="menu-btn" onclick="openMenu()" aria-label="منو">☰</button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-menu">
+  <div class="sheet">
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+    <a href="index.html">خانه</a>
+    <a href="shop.html">فروشگاه</a>
+    <a href="brands.html">برندها</a>
+    <a href="about.html">درباره ما</a>
+    <a href="verify.html">تأیید اصالت</a>
+    <a href="track.html">پیگیری سفارش</a>
+  </div>
+</div>
+
+<section class="container page-head">
+  <span class="section-kicker">تجهیزات تخصصی، انتخاب آسان</span><h1>برای دقت بیشتر، <span class="accent-text">بهتر انتخاب کنید.</span></h1>
+  <p>فروشگاه محصولات Vaccuject · لوله‌های وکیوم ساخت ایران · قیمت هر بسته ۱۰۰ عددی</p><div class="shop-notes"><span>۲۲ کد محصول</span><span>۷ نوع لوله</span><a href="verify.html">استعلام اصالت ↖</a></div>
+</section>
+
+<section class="container shop-layout">
+
+  <aside class="filters mobile-collapsed">
+    <div class="filter-heading"><h2>انتخاب محصول</h2><button class="reset-btn" type="button" onclick="resetFilters()">پاک کردن</button></div>
+    <label class="sr-only" for="searchInput">جستجوی محصول</label><input id="searchInput" type="text" placeholder="جستجو در کد، نوع، سایز، برند ...">
+
+    <button type="button" class="filter-toggle" aria-expanded="false" onclick="toggleAdvancedFilters(this)">فیلترهای بیشتر و مرتب‌سازی <span aria-hidden="true">＋</span></button><div class="group-label">نوع</div>
+    <select id="filterType" aria-label="نوع لوله" class="sel">
+      <option value="">همه</option>
+      <option value="Plain">Plain</option>
+      <option value="PT-PTT">PT-PTT</option>
+      <option value="CAT">CAT</option>
+      <option value="SST">SST</option>
+      <option value="Heparin">Heparin</option>
+      <option value="CBC">CBC</option>
+      <option value="Glucose">Glucose</option>
+    </select>
+
+    <div class="group-label">سایز</div>
+    <select id="filterSize" aria-label="سایز لوله" class="sel">
+      <option value="">همه</option>
+      <option value="13×75">13×75</option>
+      <option value="13×100">13×100</option>
+      <option value="16×100">16×100</option>
+    </select>
+
+    <div class="group-label">محدوده قیمت (ریال)</div>
+    <div class="price-row">
+      <input type="number" id="minPrice" aria-label="حداقل قیمت به ریال" placeholder="حداقل">
+      <input type="number" id="maxPrice" aria-label="حداکثر قیمت به ریال" placeholder="حداکثر">
+    </div>
+
+    <div class="group-label">مرتب‌سازی</div>
+    <select id="filterSort" aria-label="مرتب‌سازی" class="sel">
+      <option value="">هیچ</option>
+      <option value="price-asc">قیمت ↑</option>
+      <option value="price-desc">قیمت ↓</option>
+      <option value="code-asc">کد A→Z</option>
+      <option value="code-desc">کد Z→A</option>
+    </select>
+
+    <button class="btn btn-block mt-16" onclick="applyFilters()">اعمال فیلتر</button>
+  </aside>
+
+  <div class="results">
+    <div class="results-toolbar"><div id="resultInfo" role="status" aria-live="polite"></div><span>قیمت‌ها به ریال</span></div><div class="type-chips" aria-label="دسته‌بندی محصولات"></div>
+    <div id="products-grid"></div>
+  </div>
+
+</section>
+
+<footer class="site-footer">
+  <div class="container grid grid-3">
+    <div>
+      <h4>STLP — صبا تجهیز لاله پارسه</h4>
+      <div class="muted">شماره ثبت ۶۴۷۲۰۸ &nbsp;|&nbsp; شناسه ملی ۱۴۰۱۴۲۴۵۵۱۹</div>
+    </div>
+    <div>
+      <h4>دسترسی سریع</h4>
+      <div class="muted"><a href="shop.html">فروشگاه</a> &nbsp;·&nbsp; <a href="brands.html">برندها</a> &nbsp;·&nbsp; <a href="about.html">درباره ما</a> &nbsp;·&nbsp; <a href="verify.html">تأیید اصالت</a></div>
+    </div>
+    <div>
+      <h4>تماس</h4>
+      <div class="muted">۰۹۱۲۰۶۱۳۰۰۲ &nbsp;·&nbsp; info@stlp.ir</div>
+    </div>
+  </div>
+  <div class="footer-bottom"><a href="contact.html">تماس و راهنمای خرید</a> · © STLP — تمامی حقوق محفوظ است</div>
+</footer>
+
+<script src="js/site.js"></script><script src="js/store-public.js"></script>
+<script src="js/refresh.js"></script>
+<script>
+// ======================= DATA =========================
+// این آرایه همیشه قبل از هر رندری با محصولات واقعیِ سرور
+// (loadStoreCatalog در store-public.js) جایگزین می‌شود؛ فقط
+// برای این‌که متغیر PRODUCTS از همون اول تعریف‌شده باشد اینجا خالی می‌ماند.
+let PRODUCTS = [];
+
+// ======================= HELPERS ======================
+function typeColor(t){
+  switch(t){
+    case "Plain": return "#8a8a8a";
+    case "PT-PTT": return "#0074ff";
+    case "CAT": return "#e02424";
+    case "SST": return "#f5a623";
+    case "Heparin": return "#21b346";
+    case "CBC": return "#8920d9";
+    case "Glucose": return "#01a3a3";
+    default: return "#8a8a8a";
+  }
+}
+function imageByType(t){
+  switch(t){
+    case "Plain":   return "images/products/grey_700.png";
+    case "PT-PTT":  return "images/products/blue_700.png";
+    case "CAT":     return "images/products/red_700.png";
+    case "SST":     return "images/products/yellow_700.png";
+    case "Heparin": return "images/products/green_700.png";
+    case "CBC":     return "images/products/purple_700.png";
+    case "Glucose": return "images/products/grey_700.png";
+    default:        return "images/products/grey_700.png";
+  }
+}
+function normalize(str){ return (str||"").toString().toLowerCase(); }
+function formatPrice(v){ return v.toLocaleString("fa-IR"); }
+
+// ======================= RENDER =======================
+function renderProducts(list){
+  const grid = document.getElementById("products-grid");
+  grid.innerHTML = "";
+
+  list.forEach(p=>{
+    const card = document.createElement("div");
+    card.className = "p-card";
+    card.style.setProperty('--tube-color', typeColor(p.type));
+    card.innerHTML = `
+      <div class="product-art"><span class="product-brand">${escapeStore(p.brand || "STLP")}</span><span class="product-type" dir="ltr">${escapeStore(p.type)}</span><img loading="lazy" class="pimg" src="${escapeStore(p.image || imageByType(p.type))}" alt="لوله ${escapeStore(p.type)} کد ${p.code}"></div>
+      <div class="product-body"><div class="product-title"><h2 class="p-code">${escapeStore(p.title || p.code)}</h2><span class="pack-label">بستهٔ ۱۰۰ عددی</span></div>
+      <div class="p-meta"><span>سایز <b dir="ltr">${escapeStore(p.size)}</b></span><span>حجم <b dir="ltr">${escapeStore(p.volume)} mL</b></span></div>
+      <div class="p-price">${formatPrice(p.pack)} <small>ریال / بسته</small></div>
+      <div class="online-stock">${p.stock > 0 ? p.stock.toLocaleString("fa-IR") + " بسته موجود" : "ناموجود"}</div><div class="product-actions"><label class="sr-only" for="qty-${p.code}">تعداد بسته ${p.code}</label><input id="qty-${p.code}" class="qty-input" type="number" min="1" step="1" value="1"><button class="btn btn-sm" ${p.stock < 1 ? "disabled" : ""} onclick="addToCart('${p.code}')">افزودن به سبد <span aria-hidden="true">+</span></button></div></div>
+    `;
+    grid.appendChild(card);
+  });
+
+  const info = document.getElementById("resultInfo");
+  info.textContent = list.length ? `${list.length.toLocaleString("fa-IR")} محصول یافت شد` : "هیچ محصولی یافت نشد";
+}
+
+// ======================= FILTER & SEARCH =======================
+function applyFilters(){
+  const searchTerm = normalize(document.getElementById("searchInput").value);
+  const type = document.getElementById("filterType").value;
+  const size = document.getElementById("filterSize").value;
+  const minPrice = parseInt(document.getElementById("minPrice").value || "0", 10);
+  const maxPriceRaw = document.getElementById("maxPrice").value;
+  const maxPrice = maxPriceRaw ? parseInt(maxPriceRaw, 10) : null;
+  const sort = document.getElementById("filterSort").value;
+
+  let filtered = [...PRODUCTS];
+
+  if(searchTerm){
+    filtered = filtered.filter(p=>{
+      const hay = [p.code,p.type,p.size,p.brand].map(normalize).join(" ");
+      return hay.includes(searchTerm);
+    });
+  }
+  if(type) filtered = filtered.filter(p=>p.type===type);
+  if(size) filtered = filtered.filter(p=>p.size===size);
+  if(minPrice && !isNaN(minPrice)) filtered = filtered.filter(p=>p.pack>=minPrice);
+  if(maxPrice && !isNaN(maxPrice)) filtered = filtered.filter(p=>p.pack<=maxPrice);
+
+  if(sort==="price-asc") filtered.sort((a,b)=>a.pack-b.pack);
+  if(sort==="price-desc") filtered.sort((a,b)=>b.pack-a.pack);
+  if(sort==="code-asc") filtered.sort((a,b)=>a.code.localeCompare(b.code,"en"));
+  if(sort==="code-desc") filtered.sort((a,b)=>b.code.localeCompare(a.code,"en"));
+
+  renderProducts(filtered);
+}
+document.getElementById("searchInput").addEventListener("input", applyFilters);
+
+// ======================= CART =======================
+function addToCart(code){
+  const input = document.getElementById("qty-"+code);
+  const qty = Number(input.value);
+  if (!Number.isSafeInteger(qty) || qty < 1) { input.reportValidity(); showToast("تعداد بسته باید عدد صحیح و بیشتر از صفر باشد."); return; }
+  const p = PRODUCTS.find(x=>x.code===code);
+  let cart = safeStoreCart();
+  const already = cart.find(i=>i.code===code)?.qty || 0;
+  if (!p || qty + already > p.stock) { showToast("موجودی انبار آنلاین برای این تعداد کافی نیست."); return; }
+  const idx = cart.findIndex(i=>i.code===code);
+
+  if(idx>=0) cart[idx].qty += qty;
+  else cart.push({code:p.code, title:`${p.code} — ${escapeStore(p.type)} ${escapeStore(p.size)}`, qty:qty, packPrice:p.pack, unitPrice:p.unit, type:p.type, size:p.size, volume:p.volume, brand:p.brand});
+
+  localStorage.setItem("stlpCart", JSON.stringify(cart));
+  updateCartBadge();
+  showToast(`${qty.toLocaleString("fa-IR")} بسته از ${p.code} به سبد اضافه شد.`);
+}
+
+// ======================= INITIAL =======================
+loadStoreCatalog();
+</script>
+</body>
+</html>

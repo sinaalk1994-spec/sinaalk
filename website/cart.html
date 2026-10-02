@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سبد خرید — STLP</title>
+
+
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+
+<style>
+  .cart-wrap{ max-width:960px; margin:0 auto; padding:48px 40px 72px; }
+  .cart-wrap h1{ font-size:24px; margin-bottom:28px; }
+  .cart-layout{ display:flex; gap:28px; align-items:flex-start; flex-wrap:wrap; }
+  .items-card{ flex:1.6 1 380px; min-width:0; background:#fff; border:1px solid var(--line); border-radius:18px; padding:8px 24px; }
+  .cart-line{ display:flex; align-items:center; gap:16px; padding:18px 0; border-bottom:1px solid #eef1ef; }
+  .cart-line:last-child{ border-bottom:none; }
+  .cart-line img{ width:56px; height:56px; object-fit:contain; border-radius:12px; background:var(--panel); flex:none; }
+  .cart-line .info{ flex:1; min-width:0; }
+  .cart-line .title{ font-weight:700; font-size:14.5px; }
+  .cart-line .meta{ font-size:12px; color:var(--muted-2); margin-top:4px; }
+  .cart-line .price{ font-weight:700; font-size:14px; color:var(--accent-dark); white-space:nowrap; }
+  .remove-btn{ background:none; border:none; color:var(--danger); font-size:12px; cursor:pointer; padding:0; }
+
+  .summary-card{ flex:1 1 280px; min-width:0; background:#fff; border:1px solid var(--line); border-radius:18px; padding:24px; }
+  .coupon-row{ display:flex; gap:8px; margin-bottom:20px; }
+  .coupon-row input{ flex:1; background:var(--panel); border:none; border-radius:8px; padding:10px 12px; font-size:12.5px; font-family:inherit; }
+  .sum-line{ display:flex; justify-content:space-between; font-size:13.5px; color:var(--ink-soft); padding:5px 0; }
+  .sum-total{ border-top:1px solid #eef1ef; margin-top:16px; padding-top:16px; display:flex; justify-content:space-between; align-items:baseline; }
+  .sum-total .lbl{ font-size:14px; font-weight:700; }
+  .sum-total .val{ font-size:19px; font-weight:800; color:var(--accent-dark); }
+  .empty-msg{ padding:32px 0; text-align:center; color:var(--muted); font-size:14px; }
+</style>
+<link rel="stylesheet" href="css/refresh.css">
+<link rel="stylesheet" href="css/site-complete.css">
+<link rel="stylesheet" href="css/site-unified.css"></head>
+<body class="refresh">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="STLP">
+      <div><div class="brand-name">STLP</div><div class="brand-sub">صبا تجهیز لاله پارسه</div></div>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" >خانه</a>
+      <a href="shop.html">فروشگاه</a>
+      <a href="brands.html">برندها</a>
+      <a href="about.html">درباره ما</a>
+      <a href="verify.html">تأیید اصالت</a>
+      <a href="track.html">پیگیری سفارش</a>
+    </nav>
+    <div class="header-right">
+      <a href="cart.html" class="active" class="cart-link" aria-label="سبد خرید">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e7efec" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;"></span>
+      </a>
+      
+      <button class="menu-btn" onclick="openMenu()" aria-label="منو">☰</button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-menu">
+  <div class="sheet">
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+    <a href="index.html">خانه</a>
+    <a href="shop.html">فروشگاه</a>
+    <a href="brands.html">برندها</a>
+    <a href="about.html">درباره ما</a>
+    <a href="verify.html">تأیید اصالت</a>
+    <a href="track.html">پیگیری سفارش</a>
+  </div>
+</div>
+
+<section class="cart-wrap">
+  <h1>سبد خرید شما</h1>
+  <div class="cart-layout">
+
+    <div class="items-card">
+      <div id="cartBox"></div>
+    </div>
+
+    <div class="summary-card">
+      <div class="coupon-row">
+        <input id="coupon" placeholder="کد تخفیف">
+        <button class="btn btn-sm" onclick="applyCoupon()">اعمال</button>
+      </div>
+
+      <div class="sum-line"><span>جمع کل</span><b id="sub"></b></div>
+      <div class="sum-line"><span>تخفیف (<span id="percent">0</span>٪)</span><b id="disc"></b></div>
+      <div class="sum-line"><span>مالیات ۰٪</span><b id="tax"></b></div>
+
+      <div class="sum-total">
+        <span class="lbl">مبلغ نهایی</span>
+        <span class="val" id="total"></span>
+      </div>
+
+      <button id="goCheckout" class="btn btn-block mt-24" onclick="goCheckout()">ادامه و ثبت اطلاعات مشتری</button>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container grid grid-3">
+    <div>
+      <h4>STLP — صبا تجهیز لاله پارسه</h4>
+      <div class="muted">شماره ثبت ۶۴۷۲۰۸ &nbsp;|&nbsp; شناسه ملی ۱۴۰۱۴۲۴۵۵۱۹</div>
+    </div>
+    <div>
+      <h4>دسترسی سریع</h4>
+      <div class="muted"><a href="shop.html">محصولات</a> &nbsp;·&nbsp; <a href="brands.html">برندها</a> &nbsp;·&nbsp; <a href="about.html">درباره ما</a> &nbsp;·&nbsp; <a href="verify.html">تأیید اصالت</a></div>
+    </div>
+    <div>
+      <h4>تماس</h4>
+      <div class="muted">۰۹۱۲۰۶۱۳۰۰۲ &nbsp;·&nbsp; info@stlp.ir</div>
+    </div>
+  </div>
+  <div class="footer-bottom"><a href="contact.html">تماس و راهنمای خرید</a> · © STLP — تمامی حقوق محفوظ است</div>
+</footer>
+
+<script src="js/site.js"></script>
+<script>
+let couponRate = 0;
+let appliedCouponCode = "";
+
+function typeImage(t){
+  switch(t){
+    case "Plain":   return "images/products/grey_700.png";
+    case "PT-PTT":  return "images/products/blue_700.png";
+    case "CAT":     return "images/products/red_700.png";
+    case "SST":     return "images/products/yellow_700.png";
+    case "Heparin": return "images/products/green_700.png";
+    case "CBC":     return "images/products/purple_700.png";
+    case "Glucose": return "images/products/grey_700.png";
+    default:        return "images/products/grey_700.png";
+  }
+}
+
+function applyCoupon(){
+  let code = document.getElementById("coupon").value.trim().toUpperCase();
+  if(code==="STLP-5PER") couponRate = 5;
+  else if(code==="STLP-10PER") couponRate = 10;
+  else if(code==="STLP-12PER") couponRate = 12;
+  else if(code==="STLP-15PER") couponRate = 15;
+  else couponRate = 0;
+  // فقط کدی که واقعاً معتبر بود و اعمال شد ذخیره می‌شود — همین متغیر
+  // (نه متنِ خامِ فیلد در لحظه‌ی کلیکِ «ادامه») به تسویه‌حساب فرستاده
+  // می‌شود، وگرنه کدی که تایپ شده ولی هرگز «اعمال» نشده (یا بعد از
+  // اعمال، بدون زدنِ دوباره‌ی اعمال ویرایش/پاک شده) می‌توانست باعث
+  // شود مبلغِ واقعاً دریافت‌شده با مبلغِ نمایش‌داده‌شده در همین صفحه
+  // فرق کند.
+  appliedCouponCode = couponRate > 0 ? code : "";
+  renderCart();
+}
+
+function removeItem(i){
+  let c = getCart();
+  c.splice(i,1);
+  localStorage.setItem("stlpCart", JSON.stringify(c));
+  renderCart();
+  updateCartBadge();
+}
+
+function renderCart(){
+  let cart = getCart();
+  let box = document.getElementById("cartBox");
+  let checkoutBtn = document.getElementById("goCheckout");
+
+  box.innerHTML = "";
+
+  if(cart.length === 0){
+    box.innerHTML = '<div class="empty-msg">سبد خرید شما خالی است. <a href="shop.html">مشاهده محصولات →</a></div>';
+    checkoutBtn.disabled = true;
+    checkoutBtn.style.opacity = ".5";
+    document.getElementById("sub").textContent = "۰ ریال";
+    document.getElementById("disc").textContent = "۰ ریال";
+    document.getElementById("tax").textContent = "۰ ریال";
+    document.getElementById("total").textContent = "۰ ریال";
+    return;
+  }
+
+  checkoutBtn.disabled = false;
+  checkoutBtn.style.opacity = "1";
+
+  let subtotal = 0;
+  cart.forEach((it,index)=>{
+    let totalLine = it.qty * it.packPrice;
+    subtotal += totalLine;
+    const meta = `نوع: ${it.type} | سایز: ${it.size} | حجم: ${it.volume} ml | ${it.qty} بسته`;
+    box.innerHTML += `
+      <div class="cart-line">
+        <img src="${typeImage(it.type)}">
+        <div class="info">
+          <div class="title">${it.title || it.code}</div>
+          <div class="meta">${meta}</div>
+          <label class="sr-only" for="cart-qty-${index}">تعداد بسته ${it.code}</label><input class="cart-quantity" id="cart-qty-${index}" type="number" min="1" step="1" value="${it.qty}" onchange="changeCartQuantity(${index},this)"><button class="remove-btn" onclick="removeItem(${index})">حذف</button>
+        </div>
+        <div class="price">${totalLine.toLocaleString()} ریال</div>
+      </div>
+    `;
+  });
+
+  let discount = subtotal * (couponRate/100);
+  let taxable = subtotal - discount;
+  let tax = 0;
+  let total = taxable + tax;
+
+  document.getElementById("sub").textContent = subtotal.toLocaleString() + " ریال";
+  document.getElementById("disc").textContent = discount.toLocaleString() + " ریال";
+  document.getElementById("tax").textContent = tax.toLocaleString() + " ریال";
+  document.getElementById("total").textContent = total.toLocaleString() + " ریال";
+  document.getElementById("percent").textContent = couponRate;
+}
+
+function changeCartQuantity(index,input){ const qty=Number(input.value); if(!Number.isSafeInteger(qty)||qty<1){input.reportValidity();return;} const cart=getCart();cart[index].qty=qty;localStorage.setItem("stlpCart",JSON.stringify(cart));renderCart();updateCartBadge();}
+function goCheckout(){ localStorage.setItem("stlpCouponCode",appliedCouponCode); localStorage.setItem("stlpDiscountPercent",String(couponRate));
+  window.location.href = "checkout.html";
+}
+
+// اگر کاربر بعد از زدنِ «اعمال»، متنِ کدِ تخفیف را ویرایش/پاک کند
+// بدونِ اینکه دوباره «اعمال» را بزند، تخفیفِ نمایش‌داده‌شده باید
+// همان لحظه لغو شود — وگرنه صفحه هنوز مبلغِ تخفیف‌خورده را نشان
+// می‌دهد در حالی که با کدِ جدید (که اعمال نشده) چیزِ دیگری تسویه
+// می‌شود.
+document.getElementById("coupon")?.addEventListener("input", function(){
+  if (this.value.trim().toUpperCase() !== appliedCouponCode) {
+    couponRate = 0;
+    appliedCouponCode = "";
+    renderCart();
+  }
+});
+
+window.addEventListener("DOMContentLoaded", renderCart);
+</script>
+<script src="js/refresh.js"></script></body>
+</html>

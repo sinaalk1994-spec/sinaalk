@@ -1,0 +1,3306 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="utf-8">
+<script src="storage-sync.js"></script>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        مدیریت انبار - STLP
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+
+<style>
+
+/* =====================================================
+   STLP INVENTORY PRO
+   مدیریت حرفه‌ای انبار
+===================================================== */
+
+#panel {
+
+    max-width: 1550px;
+
+    margin: 0 auto;
+
+}
+
+
+/* =====================================================
+   هدر صفحه
+===================================================== */
+
+.inventory-page-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.inventory-page-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.inventory-page-title .title-icon {
+
+    width: 54px;
+
+    height: 54px;
+
+    border-radius: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #00ffca,
+            #0fa37f
+        );
+
+    font-size: 28px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,255,202,.18);
+
+}
+
+
+.inventory-page-title h2 {
+
+    margin: 0;
+
+    font-size: 25px;
+
+}
+
+
+.inventory-page-title p {
+
+    margin: 5px 0 0;
+
+    color: #aaa;
+
+    font-size: 13px;
+
+}
+
+
+.inventory-header-actions {
+
+    display: flex;
+
+    gap: 9px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.inventory-header-actions button {
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 11px 17px;
+
+    color: #fff;
+
+    font-family: inherit;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.inventory-header-actions button:hover {
+
+    transform: translateY(-2px);
+
+    filter: brightness(1.08);
+
+}
+
+
+/* =====================================================
+   رنگ دکمه‌ها
+===================================================== */
+
+.btn-excel {
+
+    background:
+        linear-gradient(
+            135deg,
+            #198754,
+            #087f5b
+        );
+
+}
+
+
+.btn-print {
+
+    background:
+        linear-gradient(
+            135deg,
+            #495057,
+            #343a40
+        );
+
+}
+
+
+.btn-report {
+
+    background:
+        linear-gradient(
+            135deg,
+            #6941c6,
+            #8b5cf6
+        );
+
+}
+
+
+/* =====================================================
+   کارت‌های آماری
+===================================================== */
+
+.inventory-stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 22px;
+
+}
+
+
+.inventory-stat-box {
+
+    position: relative;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 20px;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.09),
+            rgba(255,255,255,.025)
+        );
+
+    border:
+        1px solid
+        rgba(0,255,202,.16);
+
+    box-shadow:
+        0 8px 30px
+        rgba(0,0,0,.15);
+
+    transition: .25s;
+
+}
+
+
+.inventory-stat-box:hover {
+
+    transform:
+        translateY(-3px);
+
+    border-color:
+        rgba(0,255,202,.4);
+
+}
+
+
+.inventory-stat-box::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 90px;
+
+    height: 90px;
+
+    left: -35px;
+
+    bottom: -45px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(0,255,202,.08);
+
+}
+
+
+.stat-icon {
+
+    width: 52px;
+
+    height: 52px;
+
+    min-width: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background:
+        rgba(0,255,202,.10);
+
+    font-size: 25px;
+
+}
+
+
+.stat-title {
+
+    color: #aaa;
+
+    font-size: 13px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.stat-value {
+
+    color: #fff;
+
+    font-size: 22px;
+
+    font-weight: 900;
+
+}
+
+
+/* =====================================================
+   آمار بیشتر
+===================================================== */
+
+.inventory-extra-stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 22px;
+
+}
+
+
+.inventory-extra-stat {
+
+    padding: 17px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+}
+
+
+.inventory-extra-stat-title {
+
+    color: #aaa;
+
+    font-size: 12px;
+
+    margin-bottom: 7px;
+
+}
+
+
+.inventory-extra-stat-value {
+
+    color: #fff;
+
+    font-size: 18px;
+
+    font-weight: 900;
+
+}
+
+
+/* =====================================================
+   داشبورد
+===================================================== */
+
+.inventory-dashboard {
+
+    display: grid;
+
+    grid-template-columns:
+        1.4fr 1fr;
+
+    gap: 18px;
+
+    margin-bottom: 22px;
+
+}
+
+
+.inventory-dashboard-card {
+
+    padding: 20px;
+
+    border-radius: 16px;
+
+    background:
+        rgba(255,255,255,.055);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+}
+
+
+.dashboard-card-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.dashboard-card-title h3 {
+
+    margin: 0;
+
+    font-size: 16px;
+
+}
+
+
+.dashboard-card-title span {
+
+    font-size: 12px;
+
+    color: #999;
+
+}
+
+
+/* =====================================================
+   عملیات سریع
+===================================================== */
+
+.inventory-quick-actions {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+
+}
+
+
+.quick-action {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    color: #fff;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    text-align: right;
+
+    transition: .2s;
+
+}
+
+
+.quick-action:hover {
+
+    transform:
+        translateY(-2px);
+
+    filter:
+        brightness(1.08);
+
+}
+
+
+.quick-action .qa-icon {
+
+    width: 40px;
+
+    height: 40px;
+
+    min-width: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,.12);
+
+    font-size: 20px;
+
+}
+
+
+.quick-action strong {
+
+    display: block;
+
+    font-size: 14px;
+
+}
+
+
+.quick-action small {
+
+    display: block;
+
+    margin-top: 3px;
+
+    opacity: .7;
+
+    font-size: 11px;
+
+}
+
+
+.quick-in {
+
+    background:
+        linear-gradient(
+            135deg,
+            #087f5b,
+            #0fa37f
+        );
+
+}
+
+
+.quick-out {
+
+    background:
+        linear-gradient(
+            135deg,
+            #b42318,
+            #dc3545
+        );
+
+}
+
+
+.quick-price {
+
+    background:
+        linear-gradient(
+            135deg,
+            #075985,
+            #0d6efd
+        );
+
+}
+
+
+.quick-report {
+
+    background:
+        linear-gradient(
+            135deg,
+            #6941c6,
+            #8b5cf6
+        );
+
+}
+
+
+/* =====================================================
+   هشدارها
+===================================================== */
+
+.inventory-warnings {
+
+    margin-bottom: 20px;
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255,193,7,.08);
+
+    border:
+        1px solid
+        rgba(255,193,7,.35);
+
+}
+
+
+.inventory-warning-title {
+
+    color: #ffc107;
+
+    font-weight: 900;
+
+    font-size: 16px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.inventory-warning-item {
+
+    padding: 9px 0;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.05);
+
+}
+
+
+.inventory-warning-item:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.warning-stock {
+
+    color: #ffb020;
+
+    font-weight: 700;
+
+}
+
+
+.warning-expiry {
+
+    color: #ff5c5c;
+
+    font-weight: 700;
+
+}
+
+
+/* =====================================================
+   فرم کالا
+===================================================== */
+
+.inventory-form-card {
+
+    margin-bottom: 22px;
+
+}
+
+
+.inventory-form {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+
+    margin-top: 20px;
+
+}
+
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+
+.form-group label {
+
+    color: #00ffca;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+}
+
+
+.form-group input,
+.form-group select {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 12px 13px;
+
+    border:
+        1px solid
+        rgba(15,163,127,.45);
+
+    border-radius: 10px;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    background:
+        rgba(255,255,255,.96);
+
+    color: #111;
+
+    outline: none;
+
+    transition: .2s;
+
+}
+
+
+.form-group input:focus,
+.form-group select:focus {
+
+    border-color: #00ffca;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0,255,202,.10);
+
+}
+
+
+/* =====================================================
+   قیمت
+===================================================== */
+
+.price-field {
+
+    position: relative;
+
+}
+
+
+.price-field input {
+
+    padding-left: 55px;
+
+}
+
+
+.price-unit {
+
+    position: absolute;
+
+    left: 12px;
+
+    bottom: 12px;
+
+    color: #777;
+
+    font-size: 11px;
+
+}
+
+
+/* =====================================================
+   دکمه فرم
+===================================================== */
+
+.form-buttons {
+
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 5px;
+
+}
+
+
+.form-buttons button {
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 12px 22px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-weight: 800;
+
+    transition: .2s;
+
+}
+
+
+.save-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #0fa37f,
+            #087f5b
+        );
+
+    color: #fff;
+
+}
+
+
+.cancel-btn {
+
+    background: #555;
+
+    color: #fff;
+
+}
+
+
+.form-buttons button:hover {
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+/* =====================================================
+   لیست کالا
+===================================================== */
+
+.inventory-list-card {
+
+    padding-bottom: 5px;
+
+}
+
+
+/* =====================================================
+   نوار ابزار
+===================================================== */
+
+.inventory-toolbar {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin:
+        15px 0 18px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.inventory-search-box {
+
+    position: relative;
+
+    flex: 1;
+
+    min-width: 280px;
+
+}
+
+
+.inventory-search-box span {
+
+    position: absolute;
+
+    right: 14px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    font-size: 17px;
+
+}
+
+
+.inventory-search-box input {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding:
+        13px 43px 13px 15px;
+
+    border:
+        1px solid
+        rgba(15,163,127,.45);
+
+    border-radius: 10px;
+
+    font-family: inherit;
+
+    outline: none;
+
+}
+
+
+.inventory-search-box input:focus {
+
+    border-color:
+        #00ffca;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0,255,202,.10);
+
+}
+
+
+.inventory-toolbar-actions {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+
+.inventory-tool-btn {
+
+    border: none;
+
+    padding: 11px 15px;
+
+    border-radius: 9px;
+
+    color: #fff;
+
+    font-family: inherit;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.inventory-tool-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    filter:
+        brightness(1.08);
+
+}
+
+
+/* =====================================================
+   جدول
+===================================================== */
+
+.table-container {
+
+    overflow-x: auto;
+
+    border-radius: 13px;
+
+}
+
+
+.table-container table {
+
+    width: 100%;
+
+    min-width: 1700px;
+
+    border-collapse:
+        separate;
+
+    border-spacing: 0;
+
+    overflow: hidden;
+
+    background: #fff;
+
+    color: #111;
+
+}
+
+
+.table-container th {
+
+    padding: 14px 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0fa37f,
+            #087f5b
+        );
+
+    color: #fff;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+}
+
+
+.table-container td {
+
+    padding: 12px 9px;
+
+    border-bottom:
+        1px solid #e8e8e8;
+
+    text-align: center;
+
+    background: #fff;
+
+    font-size: 13px;
+
+}
+
+
+.table-container tbody tr:hover td {
+
+    background:
+        #f0fcf8;
+
+}
+
+
+/* =====================================================
+   موجودی
+===================================================== */
+
+.stock-good {
+
+    color:
+        #198754 !important;
+
+    font-weight:
+        900;
+
+}
+
+
+.stock-low {
+
+    color:
+        #f59f00 !important;
+
+    font-weight:
+        900;
+
+}
+
+
+.stock-zero {
+
+    color:
+        #dc3545 !important;
+
+    font-weight:
+        900;
+
+}
+
+
+/* =====================================================
+   قیمت جدول
+===================================================== */
+
+.price-value {
+
+    color:
+        #075985;
+
+    font-weight:
+        900;
+
+}
+
+
+/* =====================================================
+   وضعیت کالا
+===================================================== */
+
+.inventory-status {
+
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+}
+
+
+.inventory-status-active {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+}
+
+
+.inventory-status-inactive {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+}
+
+
+/* =====================================================
+   دکمه‌های جدول
+===================================================== */
+
+.edit-btn,
+.delete-btn,
+.stock-btn {
+
+    border: none;
+
+    color: #fff;
+
+    padding:
+        7px 10px;
+
+    border-radius:
+        7px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition: .2s;
+
+}
+
+
+.edit-btn {
+
+    background:
+        #0d6efd;
+
+}
+
+
+.delete-btn {
+
+    background:
+        #dc3545;
+
+    margin-right:
+        4px;
+
+}
+
+
+.stock-btn {
+
+    background:
+        #6941c6;
+
+    margin-right:
+        4px;
+
+}
+
+
+.edit-btn:hover,
+.delete-btn:hover,
+.stock-btn:hover {
+
+    transform:
+        translateY(-1px);
+
+    filter:
+        brightness(1.08);
+
+}
+
+
+/* =====================================================
+   بخش پایین
+===================================================== */
+
+.inventory-bottom-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 18px;
+
+    margin-top: 22px;
+
+}
+
+
+.inventory-info-card {
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255,255,255,.05);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+}
+
+
+.inventory-info-card h3 {
+
+    margin-top: 0;
+
+}
+
+
+/* =====================================================
+   نمودار
+===================================================== */
+
+.inventory-chart-placeholder {
+
+    min-height: 180px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    color: #888;
+
+    border:
+        1px dashed
+        rgba(255,255,255,.12);
+
+    border-radius: 12px;
+
+    background:
+        rgba(0,0,0,.10);
+
+    line-height: 2;
+
+}
+
+
+/* =====================================================
+   ریسپانسیو
+===================================================== */
+
+@media (max-width: 1200px) {
+
+    .inventory-stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .inventory-extra-stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .inventory-form {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .inventory-dashboard {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .inventory-stats {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .inventory-extra-stats {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .inventory-form {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .inventory-bottom-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .inventory-toolbar {
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+    }
+
+
+    .inventory-search-box {
+
+        min-width:
+            0;
+
+    }
+
+
+    .inventory-toolbar-actions {
+
+        display:
+            grid;
+
+        grid-template-columns:
+            repeat(3,1fr);
+
+    }
+
+
+    .inventory-toolbar-actions button {
+
+        width:
+            100%;
+
+    }
+
+
+    .inventory-quick-actions {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .form-buttons {
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .form-buttons button {
+
+        width:
+            100%;
+
+    }
+
+
+    .inventory-page-title h2 {
+
+        font-size:
+            20px;
+
+    }
+
+}
+
+
+/* =====================================================
+   چاپ
+===================================================== */
+
+@media print {
+
+    body {
+
+        background:
+            #fff !important;
+
+    }
+
+
+    .top-menu,
+    .inventory-header-actions,
+    .inventory-quick-actions,
+    .inventory-toolbar-actions,
+    .form-buttons,
+    .delete-btn,
+    .edit-btn,
+    .stock-btn {
+
+        display:
+            none !important;
+
+    }
+
+
+    .inventory-stat-box,
+    .inventory-dashboard-card,
+    .inventory-info-card {
+
+        box-shadow:
+            none !important;
+
+        border:
+            1px solid #ddd !important;
+
+    }
+
+
+    .inventory-page-title h2,
+    .inventory-page-title p {
+
+        color:
+            #111 !important;
+
+    }
+
+
+    .table-container table {
+
+        min-width:
+            100%;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="overlay">
+
+
+    <!-- =================================================
+         منوی اصلی
+    ================================================== -->
+
+    <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html" class="active">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+
+
+    <!-- =================================================
+         هدر انبار
+    ================================================== -->
+
+    <div class="inventory-page-header">
+
+
+        <div class="inventory-page-title">
+
+
+            <div class="title-icon">
+
+                📦
+
+            </div>
+
+
+            <div>
+
+                <h2>
+
+                    مدیریت حرفه‌ای انبار
+
+                </h2>
+
+
+                <p>
+
+                    کنترل موجودی، قیمت، ورود و خروج کالا
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="inventory-header-actions">
+
+
+            <button
+                type="button"
+                class="btn-report"
+                onclick="inventoryReport()"
+            >
+
+                📊 گزارش انبار
+
+            </button>
+
+
+            <button
+                type="button"
+                class="btn-excel"
+                onclick="exportInventoryExcel()"
+            >
+
+                📥 Excel
+
+            </button>
+
+
+            <button
+                type="button"
+                class="btn-print"
+                onclick="printInventory()"
+            >
+
+                🖨️ چاپ
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         تب: انبار اصلی / فروشگاه آنلاین (زنده، فقط نمایشی)
+    ================================================== -->
+
+    <div class="inventory-toolbar" style="margin-bottom:16px;">
+        <div class="inventory-toolbar-actions">
+            <button type="button" id="inventoryTabBtnMain" class="inventory-tool-btn btn-report" onclick="stlpInventorySwitchTab('main')">📦 انبار اصلی</button>
+            <button type="button" id="inventoryTabBtnOnline" class="inventory-tool-btn btn-excel" onclick="stlpInventorySwitchTab('online')">🛍️ فروشگاه آنلاین (زنده)</button>
+            <button type="button" id="inventoryTabBtnReserved" class="inventory-tool-btn btn-print" onclick="stlpInventorySwitchTab('reserved')">🔒 رزروشده‌ها</button>
+        </div>
+    </div>
+
+
+    <div id="reservedStockTab" style="display:none;">
+
+        <p style="color:#888; font-size:13px; margin:0 0 16px;">
+            فقط کالاهایی که الان رزرو دارند نشان داده می‌شوند — با تأییدِ نهاییِ حواله/سفارش، رزرو تبدیل به کسرِ واقعی می‌شود؛ با ردِ آن، رزرو خودکار آزاد می‌شود و از این لیست حذف می‌گردد.
+        </p>
+
+        <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+            <button type="button" class="inventory-tool-btn btn-report" onclick="stlpRefreshReservedStockTab()">🔄 بروزرسانی</button>
+        </div>
+
+        <h3>رزروِ فاکتورها (در انتظار تأیید حواله)</h3>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>کد</th>
+                        <th>نام</th>
+                        <th>تعداد رزروشده</th>
+                        <th>حواله‌(های) مرتبط</th>
+                    </tr>
+                </thead>
+                <tbody id="reservedInvoiceTableBody"></tbody>
+            </table>
+        </div>
+
+        <h3 style="margin-top:28px;">رزروِ سفارش‌های آنلاین (در انتظار تأیید)</h3>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>کد</th>
+                        <th>نام</th>
+                        <th>تعداد رزروشده</th>
+                        <th>سفارش‌(های) مرتبط</th>
+                    </tr>
+                </thead>
+                <tbody id="reservedOnlineTableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <div id="onlineStoreLiveTab" style="display:none;">
+
+        <p style="color:#888; font-size:13px; margin:0 0 16px;">
+            این بخش فقط نمایشی است — ویرایش کالا و انتقالِ موجودی (به فروشگاه آنلاین یا بازگشت از آن) فقط از تبِ «انبار اصلی» انجام می‌شود.
+        </p>
+
+        <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+            <button type="button" class="inventory-tool-btn btn-report" onclick="stlpRefreshOnlineStoreLiveTab()">🔄 بروزرسانی</button>
+        </div>
+
+        <canvas id="onlineStoreLiveChart" style="max-height:280px; margin-bottom:24px;"></canvas>
+
+        <div class="inventory-search-box">
+            <span>🔎</span>
+            <input id="onlineStoreProductSearch" type="text" placeholder="جستجوی کد، نام یا برند..." oninput="stlpFilterOnlineStoreLiveTable()">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>کد</th>
+                        <th>نام</th>
+                        <th>برند</th>
+                        <th>موجودی آنلاین (بسته)</th>
+                        <th>انتشار</th>
+                    </tr>
+                </thead>
+                <tbody id="onlineStoreProductsTableBody"></tbody>
+            </table>
+        </div>
+
+        <h3 style="margin-top:28px;">گردش انبار آنلاین</h3>
+
+        <div class="inventory-search-box">
+            <span>🔎</span>
+            <input id="onlineStoreMovementSearch" type="text" placeholder="جستجوی کد، شرح یا سند..." oninput="stlpFilterOnlineStoreMovementTable()">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>کد</th>
+                        <th>نوع</th>
+                        <th>تعداد بسته</th>
+                        <th>شرح</th>
+                        <th>سند</th>
+                        <th>زمان (UTC)</th>
+                    </tr>
+                </thead>
+                <tbody id="onlineStoreMovementsTableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         پنل اصلی
+    ================================================== -->
+
+    <div id="panel">
+
+
+        <!-- این صفحه خیلی طولانی بود؛ این چهار تب فقط نمایشِ بخش‌های
+             از قبل موجودِ همین صفحه رو جدا می‌کنن (هیچ فرم/جدولی
+             جابه‌جا/بازنویسی نشده) تا هربار فقط یه بخش دیده بشه -->
+        <!-- =================================================
+             تب‌بندیِ بخش‌های صفحه‌ی انبار
+        ================================================== -->
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+            <button type="button" id="invSubTabBtnDashboard" class="inventory-tool-btn btn-report" onclick="stlpInventoryMainSubTab('dashboard')">📊 خلاصه</button>
+            <button type="button" id="invSubTabBtnForm" class="inventory-tool-btn btn-excel" onclick="stlpInventoryMainSubTab('form')">➕ ثبت/ویرایش کالا</button>
+            <button type="button" id="invSubTabBtnList" class="inventory-tool-btn btn-print" onclick="stlpInventoryMainSubTab('list')">📋 موجودی کالاها</button>
+            <button type="button" id="invSubTabBtnMovements" class="inventory-tool-btn btn-report" onclick="stlpInventoryMainSubTab('movements')">🔄 گردش کالا</button>
+        </div>
+
+
+        <!-- =================================================
+             آمار اصلی
+        ================================================== -->
+
+        <div class="inventory-stats">
+
+
+            <div class="inventory-stat-box">
+
+                <div class="stat-icon">
+                    📦
+                </div>
+
+                <div>
+
+                    <div class="stat-title">
+                        کل کالاها
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="totalInventoryCount"
+                    >
+                        ۰
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="inventory-stat-box">
+
+                <div class="stat-icon">
+                    ✅
+                </div>
+
+                <div>
+
+                    <div class="stat-title">
+                        کالاهای موجود
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="availableInventoryCount"
+                    >
+                        ۰
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="inventory-stat-box">
+
+                <div class="stat-icon">
+                    ⚠️
+                </div>
+
+                <div>
+
+                    <div class="stat-title">
+                        موجودی کم
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="lowInventoryCount"
+                    >
+                        ۰
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="inventory-stat-box">
+
+                <div class="stat-icon">
+                    ❌
+                </div>
+
+                <div>
+
+                    <div class="stat-title">
+                        موجودی صفر
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="zeroInventoryCount"
+                    >
+                        ۰
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             آمار تکمیلی
+        ================================================== -->
+
+        <div class="inventory-extra-stats">
+
+
+            <div class="inventory-extra-stat">
+
+                <div class="inventory-extra-stat-title">
+
+                    💰 ارزش تقریبی موجودی
+
+                </div>
+
+                <div
+                    class="inventory-extra-stat-value"
+                    id="inventoryTotalValue"
+                >
+
+                    ۰ ریال
+
+                </div>
+
+            </div>
+
+
+            <div class="inventory-extra-stat">
+
+                <div class="inventory-extra-stat-title">
+
+                    📥 ورودهای امروز
+
+                </div>
+
+                <div
+                    class="inventory-extra-stat-value"
+                    id="inventoryTodayEntries"
+                >
+
+                    ۰
+
+                </div>
+
+            </div>
+
+
+            <div class="inventory-extra-stat">
+
+                <div class="inventory-extra-stat-title">
+
+                    📤 خروج‌های امروز
+
+                </div>
+
+                <div
+                    class="inventory-extra-stat-value"
+                    id="inventoryTodayExits"
+                >
+
+                    ۰
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             داشبورد
+        ================================================== -->
+
+        <div class="inventory-dashboard">
+
+
+            <!-- عملیات سریع -->
+
+            <div class="inventory-dashboard-card">
+
+
+                <div class="dashboard-card-title">
+
+
+                    <h3>
+
+                        ⚡ عملیات سریع
+
+                    </h3>
+
+
+                    <span>
+
+                        مدیریت گردش کالا
+
+                    </span>
+
+
+                </div>
+
+
+                <div class="inventory-quick-actions">
+
+
+                    <button
+                        type="button"
+                        class="quick-action quick-in"
+                        onclick="openInventoryEntry()"
+                    >
+
+                        <div class="qa-icon">
+
+                            📥
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                ورود کالا
+                            </strong>
+
+                            <small>
+                                ثبت ورود به انبار
+                            </small>
+
+                        </div>
+
+                    </button>
+
+
+
+                    <button
+                        type="button"
+                        class="quick-action quick-out"
+                        onclick="openInventoryExit()"
+                    >
+
+                        <div class="qa-icon">
+
+                            📤
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                خروج کالا
+                            </strong>
+
+                            <small>
+                                ثبت خروج از انبار
+                            </small>
+
+                        </div>
+
+                    </button>
+
+
+
+                    <button
+                        type="button"
+                        class="quick-action quick-price"
+                        onclick="openInventoryPriceManager()"
+                    >
+
+                        <div class="qa-icon">
+
+                            💰
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                مدیریت قیمت
+                            </strong>
+
+                            <small>
+                                قیمت خرید و فروش
+                            </small>
+
+                        </div>
+
+                    </button>
+
+
+
+                    <button
+                        type="button"
+                        class="quick-action quick-report"
+                        onclick="inventoryReport()"
+                    >
+
+                        <div class="qa-icon">
+
+                            📊
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                گزارش‌گیری
+                            </strong>
+
+                            <small>
+                                گردش کامل انبار
+                            </small>
+
+                        </div>
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- نمودار -->
+
+            <div class="inventory-dashboard-card">
+
+
+                <div class="dashboard-card-title">
+
+
+                    <h3>
+
+                        📈 وضعیت انبار
+
+                    </h3>
+
+
+                    <span>
+
+                        خلاصه موجودی
+
+                    </span>
+
+
+                </div>
+
+
+                <canvas id="inventoryMiniChart" style="max-height:280px;"></canvas>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             هشدارها
+        ================================================== -->
+
+        <div
+            id="inventoryWarnings"
+            class="inventory-warnings"
+            style="display:none;"
+        ></div>
+
+
+
+        <!-- =================================================
+             فرم ثبت کالا
+        ================================================== -->
+
+        <div class="card inventory-form-card">
+
+
+            <div class="dashboard-card-title">
+
+
+                <h3 id="inventoryFormTitle">
+
+                    ➕ ثبت کالای جدید
+
+                </h3>
+
+
+                <span>
+
+                    اطلاعات کامل کالا
+
+                </span>
+
+
+            </div>
+
+
+
+            <div class="inventory-form">
+
+
+
+                <!-- کد کالا -->
+
+                <div class="form-group">
+
+                    <label for="icode">
+                        🏷️ کد کالا
+                    </label>
+
+                    <input
+                        id="icode"
+                        autocomplete="off"
+                        placeholder="مثلاً 10025"
+                    >
+
+                </div>
+
+
+
+                <!-- بارکد -->
+
+                <div class="form-group">
+
+                    <label for="ibarcode">
+                        🔢 بارکد
+                    </label>
+
+                    <input
+                        id="ibarcode"
+                        autocomplete="off"
+                        placeholder="شماره بارکد کالا"
+                    >
+
+                </div>
+
+
+
+                <!-- شرح -->
+
+                <div class="form-group">
+
+                    <label for="iname">
+                        📦 شرح کالا
+                    </label>
+
+                    <input
+                        id="iname"
+                        autocomplete="off"
+                        placeholder="نام و شرح کالا"
+                    >
+
+                </div>
+
+
+
+                <!-- دسته‌بندی -->
+
+                <div class="form-group">
+
+                    <label for="icategory">
+                        🗂️ دسته‌بندی
+                    </label>
+
+                    <select id="icategory">
+
+                        <option value="">
+                            انتخاب دسته‌بندی
+                        </option>
+
+                        <option value="مصرفی">
+                            🧴 مصرفی
+                        </option>
+
+                        <option value="پزشکی">
+                            🏥 پزشکی
+                        </option>
+
+                        <option value="آزمایشگاهی">
+                            🧪 آزمایشگاهی
+                        </option>
+
+                        <option value="تجهیزات">
+                            ⚙️ تجهیزات
+                        </option>
+
+                        <option value="سایر">
+                            📦 سایر
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- برند -->
+
+                <div class="form-group">
+
+                    <label for="ibrand">
+                        🏷️ برند
+                    </label>
+
+                    <input
+                        id="ibrand"
+                        autocomplete="off"
+                        placeholder="نام برند"
+                    >
+
+                </div>
+
+
+
+                <!-- تولیدکننده -->
+
+                <div class="form-group">
+
+                    <label for="imanufacturer">
+                        🏭 تولیدکننده
+                    </label>
+
+                    <input
+                        id="imanufacturer"
+                        autocomplete="off"
+                        placeholder="نام شرکت تولیدکننده"
+                    >
+
+                </div>
+
+
+
+                <!-- واحد -->
+
+                <div class="form-group">
+
+                    <label for="iunit">
+                        📏 واحد
+                    </label>
+
+                    <select id="iunit">
+
+                        <option value="کارتن">
+                            کارتن
+                        </option>
+
+                        <option value="بسته">
+                            بسته
+                        </option>
+
+                        <option value="جعبه">
+                            جعبه
+                        </option>
+
+                        <option value="ست">
+                            ست
+                        </option>
+
+                        <option value="عدد">
+                            عدد
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- نسبت تبدیل کارتن/عدد به بسته -->
+
+                <div class="form-group">
+
+                    <label for="ipackagesPerCarton">
+                        📦 هر کارتن چند بسته؟
+                    </label>
+
+                    <input
+                        id="ipackagesPerCarton"
+                        type="number"
+                        min="1"
+                        value="1"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="ipiecesPerPackage">
+                        🔢 هر بسته چند عدد؟
+                    </label>
+
+                    <input
+                        id="ipiecesPerPackage"
+                        type="number"
+                        min="1"
+                        value="1"
+                    >
+
+                </div>
+
+
+
+                <!-- قیمت خرید -->
+
+                <div class="form-group">
+
+                    <label for="ipurchasePrice">
+                        💵 قیمت خرید
+                    </label>
+
+                    <div class="price-field">
+
+                        <input
+                            id="ipurchasePrice"
+                            type="number"
+                            min="0"
+                            placeholder="قیمت خرید"
+                        >
+
+                        <span class="price-unit">
+                            ریال
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- قیمت فروش -->
+
+                <div class="form-group">
+
+                    <label for="iprice">
+                        💰 قیمت فروش
+                    </label>
+
+                    <div class="price-field">
+
+                        <input
+                            id="iprice"
+                            type="number"
+                            min="0"
+                            placeholder="قیمت فروش"
+                        >
+
+                        <span class="price-unit">
+                            ریال
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- تاریخ تولید -->
+
+                <div class="form-group">
+
+                    <label for="imfg">
+                        📅 تاریخ تولید
+                    </label>
+
+                    <input
+                        id="imfg"
+                        type="date"
+                    >
+
+                </div>
+
+
+
+                <!-- Batch -->
+
+                <div class="form-group">
+
+                    <label for="ibatch">
+                        🔖 Batch / Lot
+                    </label>
+
+                    <input
+                        id="ibatch"
+                        autocomplete="off"
+                        placeholder="شماره Batch یا Lot"
+                    >
+
+                </div>
+
+
+
+                <!-- تاریخ انقضا -->
+
+                <div class="form-group">
+
+                    <label for="iexp">
+                        ⏳ تاریخ انقضا
+                    </label>
+
+                    <input
+                        id="iexp"
+                        type="date"
+                    >
+
+                </div>
+
+
+
+                <!-- موجودی اولیه -->
+
+                <div class="form-group">
+
+                    <label for="istock">
+                        📊 موجودی اولیه
+                    </label>
+
+                    <input
+                        id="istock"
+                        type="number"
+                        min="0"
+                        value="0"
+                    >
+
+                </div>
+
+
+
+                <!-- حداقل موجودی -->
+
+                <div class="form-group">
+
+                    <label for="iminStock">
+                        ⚠️ حداقل موجودی
+                    </label>
+
+                    <input
+                        id="iminStock"
+                        type="number"
+                        min="0"
+                        value="5"
+                        placeholder="مثلاً 5"
+                    >
+
+                </div>
+
+
+
+                <!-- محل نگهداری -->
+
+                <div class="form-group">
+
+                    <label for="ilocation">
+                        📍 محل نگهداری
+                    </label>
+
+                    <input
+                        id="ilocation"
+                        autocomplete="off"
+                        placeholder="مثلاً قفسه A-12"
+                    >
+
+                </div>
+
+
+
+                <!-- تأمین‌کننده -->
+
+                <div class="form-group">
+
+                    <label for="isupplier">
+                        🏢 تأمین‌کننده
+                    </label>
+
+                    <input
+                        id="isupplier"
+                        autocomplete="off"
+                        placeholder="نام تأمین‌کننده"
+                    >
+
+                </div>
+
+
+
+                <!-- وضعیت -->
+
+                <div class="form-group">
+
+                    <label for="istatus">
+                        🟢 وضعیت کالا
+                    </label>
+
+                    <select id="istatus">
+
+                        <option value="active">
+                            🟢 فعال
+                        </option>
+
+                        <option value="inactive">
+                            🔴 غیرفعال
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- عکس کالا -->
+
+                <div
+                    class="form-group"
+                    style="grid-column:1/-1;"
+                >
+
+                    <label for="iimage">
+                        🖼 عکس کالا (برای انتقال به فروشگاه آنلاین)
+                    </label>
+
+                    <input
+                        id="iimage"
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        onchange="stlpInventoryImageChange()"
+                    >
+
+                    <img
+                        id="iimagePreview"
+                        alt="پیش‌نمایش عکس کالا"
+                        style="display:none;max-width:120px;max-height:120px;margin-top:8px;border-radius:8px;object-fit:contain;background:#1c1c1c;"
+                    >
+
+                </div>
+
+
+
+                <!-- توضیحات -->
+
+                <div
+                    class="form-group"
+                    style="grid-column:1/-1;"
+                >
+
+                    <label for="inotes">
+                        📝 توضیحات
+                    </label>
+
+                    <input
+                        id="inotes"
+                        autocomplete="off"
+                        placeholder="توضیحات تکمیلی کالا..."
+                    >
+
+                </div>
+
+
+
+                <!-- دکمه‌ها -->
+
+                <div class="form-buttons">
+
+
+                    <button
+                        id="addBtn"
+                        type="button"
+                        class="save-btn"
+                        onclick="addItem()"
+                    >
+
+                        ➕ ذخیره کالا
+
+                    </button>
+
+
+                    <button
+                        id="cancelInventoryEditBtn"
+                        type="button"
+                        class="cancel-btn"
+                        onclick="cancelInventoryEdit()"
+                        style="display:none;"
+                    >
+
+                        ✖ لغو ویرایش
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             لیست کالاها
+        ================================================== -->
+
+        <div class="card inventory-list-card">
+
+
+            <div class="dashboard-card-title">
+
+
+                <h3>
+
+                    📋 موجودی کالاها
+
+                </h3>
+
+
+                <span>
+
+                    مدیریت و کنترل موجودی
+
+                </span>
+
+
+            </div>
+
+
+
+            <!-- ابزارها -->
+
+            <div class="inventory-toolbar">
+
+
+                <div class="inventory-search-box">
+
+
+                    <span>
+                        🔎
+                    </span>
+
+
+                    <input
+                        id="inventorySearch"
+                        type="text"
+                        placeholder="جستجوی کد، بارکد، شرح، برند، Batch یا کالا..."
+                        oninput="searchInventory()"
+                    >
+
+
+                </div>
+
+
+
+                <div class="inventory-toolbar-actions">
+
+
+                    <button
+                        type="button"
+                        class="inventory-tool-btn btn-excel"
+                        onclick="exportInventoryExcel()"
+                    >
+
+                        📥 Excel
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="inventory-tool-btn btn-print"
+                        onclick="printInventory()"
+                    >
+
+                        🖨️ چاپ
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="inventory-tool-btn btn-report"
+                        onclick="inventoryReport()"
+                    >
+
+                        📊 گزارش
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- جدول -->
+
+            <div class="table-container">
+
+
+                <table>
+
+
+                    <thead>
+
+
+                        <tr>
+
+                            <th>
+                                🏷️ کد
+                            </th>
+
+                            <th>
+                                🔢 بارکد
+                            </th>
+
+                            <th>
+                                📦 شرح کالا
+                            </th>
+
+                            <th>
+                                🗂️ دسته
+                            </th>
+
+                            <th>
+                                🏷️ برند
+                            </th>
+
+                            <th>
+                                📏 واحد
+                            </th>
+
+                            <th>
+                                💵 خرید
+                            </th>
+
+                            <th>
+                                💰 فروش
+                            </th>
+
+                            <th>
+                                🔖 Batch
+                            </th>
+
+                            <th>
+                                ⏳ انقضا
+                            </th>
+
+                            <th>
+                                📊 موجودی
+                            </th>
+
+                            <th>
+                                🛍️ موجود در انبار آنلاین
+                            </th>
+
+                            <th>
+                                🧮 مجموع
+                            </th>
+
+                            <th>
+                                ⚠️ حداقل
+                            </th>
+
+                            <th>
+                                📍 محل
+                            </th>
+
+                            <th>
+                                🟢 وضعیت
+                            </th>
+
+                            <th>
+                                ⚙️ عملیات
+                            </th>
+
+                        </tr>
+
+
+                    </thead>
+
+
+
+                    <tbody id="invTable">
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             اطلاعات پایین
+        ================================================== -->
+
+        <div class="inventory-bottom-grid">
+
+
+        <div
+    class="inventory-info-card"
+    style="grid-column:1/-1;"
+>
+
+    <!-- =========================================
+         عنوان + توضیح
+    ========================================== -->
+
+    <div class="dashboard-card-title">
+
+        <h3>
+            🔄 گردش کالا
+        </h3>
+
+        <span>
+            سوابق ورود و خروج کالا
+        </span>
+
+    </div>
+
+
+    <!-- =========================================
+         ابزارها دقیقاً مثل جدول موجودی کالاها
+    ========================================== -->
+
+  <div class="inventory-toolbar">
+
+    <div class="inventory-search-box">
+
+        <span>
+            🔎
+        </span>
+
+        <input
+            id="inventoryMovementSearch"
+            type="text"
+            placeholder="جستجوی کد، نام کالا، علت، سند یا توضیحات..."
+            oninput="searchInventoryMovements()"
+        >
+
+    </div>
+
+
+    <div class="inventory-toolbar-actions">
+
+        <button
+            type="button"
+            class="inventory-tool-btn btn-excel"
+            onclick="exportInventoryMovementsExcel()"
+        >
+            📥 Excel
+        </button>
+
+
+        <button
+            type="button"
+            class="inventory-tool-btn btn-print"
+            onclick="printInventoryMovements()"
+        >
+            🖨️ چاپ
+        </button>
+
+
+        <button
+            type="button"
+            class="inventory-tool-btn btn-report"
+            onclick="inventoryMovementReport()"
+        >
+            📊 گزارش
+        </button>
+
+    </div>
+
+</div>
+
+
+
+
+
+    <!-- =========================================
+         جدول گردش کالا
+    ========================================== -->
+
+    <div
+        class="table-container"
+        style="margin-top:15px;"
+    >
+
+        <table
+            style="
+                min-width:1100px;
+            "
+        >
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        نوع
+                    </th>
+
+                    <th>
+                        کد کالا
+                    </th>
+
+                    <th>
+                        نام کالا
+                    </th>
+
+                    <th>
+                        تعداد
+                    </th>
+
+                    <th>
+                        تاریخ
+                    </th>
+
+                    <th>
+                        علت
+                    </th>
+
+                    <th>
+                        سند / فاکتور
+                    </th>
+
+                    <th>
+                        قبل
+                    </th>
+
+                    <th>
+                        بعد
+                    </th>
+
+                    <th>
+                        توضیحات
+                    </th>
+
+                    <th>
+                        عملیات
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody
+                id="inventoryMovementsTable"
+            ></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+        </div>
+
+
+    </div>
+
+    </div>
+
+<!-- =================================================
+     MODAL ورود / خروج کالا
+================================================== -->
+
+<div
+    id="inventoryMovementModal"
+    style="
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.75);
+        z-index:99999;
+        align-items:center;
+        justify-content:center;
+        padding:20px;
+    "
+>
+
+    <div
+        style="
+            width:100%;
+            max-width:600px;
+            background:#1d1d1d;
+            border:1px solid rgba(0,255,202,.25);
+            border-radius:18px;
+            padding:25px;
+            box-sizing:border-box;
+            box-shadow:0 20px 60px rgba(0,0,0,.5);
+        "
+    >
+
+        <h2
+            id="movementModalTitle"
+            style="
+                margin-top:0;
+                color:#00ffca;
+            "
+        >
+            📥 ورود کالا
+        </h2>
+
+        <div class="inventory-form">
+
+            <div class="form-group">
+
+                <label>
+                    📦 کالا
+                </label>
+
+                <select id="movementItem">
+                    <option value="">
+                        انتخاب کالا
+                    </option>
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    🔢 تعداد
+                </label>
+
+                <input
+                    id="movementQuantity"
+                    type="number"
+                    min="1"
+                    value="1"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    📅 تاریخ
+                </label>
+
+                <input
+                    id="movementDate"
+                    type="date"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    📝 علت
+                </label>
+
+                <select id="movementReason">
+
+                    <option value="">
+                        انتخاب علت
+                    </option>
+
+                    <option value="خرید">
+                        خرید
+                    </option>
+
+                    <option value="فروش">
+                        فروش
+                    </option>
+
+                    <option value="برگشت">
+                        برگشت کالا
+                    </option>
+
+                    <option value="مصرف">
+                        مصرف
+                    </option>
+
+                    <option value="اصلاح موجودی">
+                        اصلاح موجودی
+                    </option>
+
+                    <option value="انتقال">
+                        انتقال
+                    </option>
+
+                    <option value="امحاء">
+                        امحاء
+                    </option>
+
+                    <option value="سایر">
+                        سایر
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    🧾 شماره سند / فاکتور
+                </label>
+
+                <input
+                    id="movementDocument"
+                    autocomplete="off"
+                    placeholder="اختیاری"
+                >
+
+            </div>
+
+
+            <div
+                class="form-group"
+                style="grid-column:1/-1;"
+            >
+
+                <label>
+                    💬 توضیحات
+                </label>
+
+                <input
+                    id="movementNotes"
+                    autocomplete="off"
+                    placeholder="توضیحات تکمیلی..."
+                >
+
+            </div>
+
+        </div>
+
+
+        <div
+            style="
+                display:flex;
+                gap:10px;
+                margin-top:20px;
+            "
+        >
+
+            <button
+                type="button"
+                class="save-btn"
+                onclick="saveInventoryMovement()"
+            >
+                💾 ثبت
+            </button>
+
+            <button
+                type="button"
+                class="cancel-btn"
+                onclick="closeInventoryMovement()"
+            >
+                ✖ انصراف
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =================================================
+     Chart.js
+================================================== -->
+
+<script src="chart.umd.min.js"></script>
+
+
+<!-- =================================================
+     APP JS
+================================================== -->
+
+<script
+    src="app.js"
+></script>
+
+
+<!-- =================================================
+     بررسی ورود و دسترسی کاربر
+================================================== -->
+
+<script>
+stlpRequirePermission("inventory");
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>برندها — STLP</title>
+
+  
+
+  <style>
+    body{
+      margin:0;
+      font-family:'Vazirmatn',sans-serif;
+      background:url("images/lab-bg.png") no-repeat center top fixed;
+      background-size:cover;
+      color:#fff;
+    }
+
+    /* HEADER */
+    header{
+      width:100%;
+      background:#000;
+      padding:15px 0;
+      border-bottom:2px solid #0fa37f;
+    }
+    nav{
+      max-width:1200px;
+      margin:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    nav ul{
+      display:flex;
+      gap:24px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    nav ul li a{
+      color:white;
+      font-weight:600;
+      text-decoration:none;
+      transition:0.2s;
+    }
+    nav ul li a:hover{
+      color:#0fa37f;
+    }
+    .menu-btn{
+      display:none;
+      font-size:28px;
+      cursor:pointer;
+      color:white;
+    }
+
+    /* CONTAINER */
+    .brands-wrapper{
+      max-width:1200px;
+      margin:60px auto;
+      padding:25px;
+      background:rgba(0,0,0,0.55);
+      border-radius:20px;
+      backdrop-filter:blur(6px);
+    }
+    .brands-wrapper h2{
+      text-align:center;
+      font-size:32px;
+      margin-bottom:35px;
+      font-weight:700;
+    }
+
+    /* GRID */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:25px;
+    }
+
+    /* BRAND CARD */
+    .brand-card{
+      background:#111;
+      border:2px solid #0fa37f;
+      border-radius:16px;
+      padding:25px 18px;
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:480px;   /* FIXED HEIGHT */
+      transition:0.25s;
+    }
+    .brand-card:hover{
+      transform:scale(1.03);
+      box-shadow:0 0 20px rgba(15,163,127,0.7);
+    }
+
+    .brand-card img.logo{
+      width:150px;
+      height:auto;
+      margin:auto;
+      display:block;
+      margin-bottom:10px;
+    }
+
+    .flag{
+      width:32px;
+      margin:auto;
+      margin-bottom:10px;
+    }
+
+    .brand-card h3{
+      color:#0fa37f;
+      font-size:20px;
+      margin:10px 0 12px;
+    }
+    .brand-card p{
+      color:#d8d8d8;
+      font-size:15px;
+      line-height:1.7;
+      flex-grow:1;
+    }
+
+    .btn{
+      display:inline-block;
+      margin-top:15px;
+      padding:10px 18px;
+      background:#0fa37f;
+      color:white;
+      border-radius:8px;
+      text-decoration:none;
+      font-weight:700;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:992px){
+      .grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+    @media(max-width:600px){
+      nav ul{display:none;}
+      .menu-btn{display:block;}
+      .grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/refresh.css">
+<link rel="stylesheet" href="css/site-complete.css">
+<link rel="stylesheet" href="css/site-unified.css"></head>
+
+<body class="refresh">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="STLP">
+      <div><div class="brand-name">STLP</div><div class="brand-sub">صبا تجهیز لاله پارسه</div></div>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" >خانه</a>
+      <a href="shop.html">فروشگاه</a>
+      <a href="brands.html">برندها</a>
+      <a href="about.html">درباره ما</a>
+      <a href="verify.html">تأیید اصالت</a>
+      <a href="track.html">پیگیری سفارش</a>
+    </nav>
+    <div class="header-right">
+      <a href="cart.html" class="cart-link" aria-label="سبد خرید">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e7efec" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;"></span>
+      </a>
+      
+      <button class="menu-btn" onclick="openMenu()" aria-label="منو">☰</button>
+    </div>
+  </div>
+</header><div id="mobile-menu">
+  <div class="sheet">
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+    <a href="index.html">خانه</a>
+    <a href="shop.html">فروشگاه</a>
+    <a href="brands.html">برندها</a>
+    <a href="about.html">درباره ما</a>
+    <a href="verify.html">تأیید اصالت</a>
+    <a href="track.html">پیگیری سفارش</a>
+  </div>
+</div>
+
+<section class="brands-wrapper">
+  <h2>برندهای جهانی تحت پوشش STLP</h2>
+
+  <div class="grid">
+
+    <!-- VACCUEJCT IRAN -->
+    <div class="brand-card">
+      <img src="images/vaccuject.png" class="logo">
+      <img src="images/flag-iran.png" class="flag">
+      <h3>Vaccuject Iran</h3>
+      <p>لوله‌های وکیوم ساخت ایران با کیفیت بالا و قیمت رقابتی، مناسب مراکز درمانی و آزمایشگاهی.</p>
+      <a class="btn" href="products.html">مشاهده محصولات</a>
+    </div>
+
+    <!-- VACUTEST KIMA -->
+    <div class="brand-card">
+      <img src="images/kima.png" class="logo">
+      <img src="images/flag-italy.png" class="flag">
+      <h3>Vacutest Kima</h3>
+      <p>تولیدکننده معتبر اروپایی لوله‌های آزمایشگاهی با کیفیت بسیار بالا و استانداردهای جهانی.</p>
+      <a class="btn" href="products.html">مشاهده محصولات</a>
+    </div>
+
+    <!-- FL MEDICAL -->
+    <div class="brand-card">
+      <img src="images/fl.png" class="logo">
+      <img src="images/flag-italy.png" class="flag">
+      <h3>FL Medical</h3>
+      <p>برند معتبر ایتالیایی با بیش از ۴۰ سال سابقه در تولید لوله‌های وکیوم و تجهیزات مصرفی آزمایشگاهی.</p>
+      <a class="btn" href="products.html">مشاهده محصولات</a>
+    </div>
+
+    <!-- GREINER -->
+    <div class="brand-card">
+      <img src="images/greiner.png" class="logo">
+      <img src="images/flag-austria.png" class="flag">
+      <h3>Greiner Bio-One</h3>
+      <p>از بزرگ‌ترین تولیدکنندگان دنیا در حوزه خونگیری و تجهیزات آزمایشگاهی با استانداردهای CE و ISO.</p>
+      <a class="btn" href="products.html">مشاهده محصولات</a>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container grid grid-3">
+    <div>
+      <h4>STLP — صبا تجهیز لاله پارسه</h4>
+      <div class="muted">شماره ثبت ۶۴۷۲۰۸ &nbsp;|&nbsp; شناسه ملی ۱۴۰۱۴۲۴۵۵۱۹</div>
+    </div>
+    <div>
+      <h4>دسترسی سریع</h4>
+      <div class="muted"><a href="shop.html">محصولات</a> &nbsp;·&nbsp; <a href="brands.html">برندها</a> &nbsp;·&nbsp; <a href="about.html">درباره ما</a> &nbsp;·&nbsp; <a href="verify.html">تأیید اصالت</a></div>
+    </div>
+    <div>
+      <h4>تماس</h4>
+      <div class="muted">۰۹۱۲۰۶۱۳۰۰۲ &nbsp;·&nbsp; info@stlp.ir</div>
+    </div>
+  </div>
+  <div class="footer-bottom"><a href="contact.html">تماس و راهنمای خرید</a> · © STLP — تمامی حقوق محفوظ است</div>
+</footer><script src="js/site.js"></script><script src="js/refresh.js"></script></body>
+</html>

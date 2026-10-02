@@ -1,0 +1,37 @@
+/* Graphic extension of the 21st-inspired STLP home page. */
+.home-page .hero{background:radial-gradient(ellipse at 12% 30%,#c9e5d5 0,transparent 45%),radial-gradient(ellipse at 95% 0,#eff4d7,transparent 42%),#f5faf6;padding-block:78px 85px}
+.home-page .hero:before{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(#16745b05 1px,transparent 1px),linear-gradient(90deg,#16745b05 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(#000,transparent)}
+.home-page .hero-inner{position:relative;gap:65px}
+.home-page .hero-copy h1{font-size:clamp(40px,4.8vw,69px)}
+.home-page .accent-text{background:linear-gradient(100deg,#136847,#39a276);background-clip:text;color:transparent}
+.home-page .hero-visual{border-radius:36px;background:radial-gradient(ellipse at 50% 38%,#3c705655,transparent 65%),linear-gradient(140deg,#183f32,#0c251e);box-shadow:0 35px 70px -35px #0b302666,inset 0 1px 0 #c2e9cd44;padding:26px;overflow:hidden}
+.home-page .hero-visual:before{background-size:22px 22px;opacity:.6}
+.home-page .tube-stage{height:410px;perspective:900px;gap:12px}
+.home-page .tube-stage:before{content:'';position:absolute;width:85%;height:150px;bottom:30px;background:radial-gradient(ellipse,#a4d8b133,transparent 67%);border:1px solid #b5dcbd22;border-radius:50%;transform:rotateX(60deg);box-shadow:0 25px 55px #0004;z-index:-1}
+.home-page .tube{height:265px;filter:drop-shadow(12px 18px 7px #0005);animation:stlp-float 6s ease-in-out infinite;animation-composition:add}
+.home-page .t1{animation-delay:-1s}.home-page .t2{animation-delay:-3s}.home-page .t3{height:300px;animation-delay:-2s}.home-page .t4{animation-delay:-4s}.home-page .t5{animation-delay:-5s}
+.home-page .orbit-one{width:330px;height:330px;border-color:#cee6a536;box-shadow:0 0 55px #bbe5ae0c,inset 0 0 55px #bbe5ae0c}
+.home-page .orbit-two{width:440px;height:440px;border-style:dashed;animation:stlp-orbit 90s linear infinite}
+.visual-glow{position:absolute;width:220px;height:220px;border-radius:50%;top:18%;left:28%;background:#8bcf9925;filter:blur(55px);pointer-events:none;z-index:-1}
+.science-mark{position:absolute;left:7%;top:21%;color:#c6e2cc99;font-size:9px;letter-spacing:2px;writing-mode:vertical-rl}
+.visual-tag{position:absolute;right:12px;top:20px;padding:9px 12px;border:1px solid #c3e0ca33;background:#244938aa;border-radius:10px;font-size:10px;color:#d6e9d8;backdrop-filter:blur(8px)}
+.home-page .visual-label{bottom:8px;right:8px;color:#d0e2cd}
+.home-metrics{display:flex;gap:28px;margin-top:35px;padding-top:22px;border-top:1px solid #b9d1c4;max-width:480px}
+.home-metrics>div{display:flex;gap:10px;align-items:center}.home-metrics strong{font-size:27px;font-weight:800;color:#205840}.home-metrics span{font-size:10px;color:#567461;max-width:70px}
+.home-page .category-card{min-height:180px;border-radius:24px;background:radial-gradient(ellipse at 10% 90%,var(--category-wash,#e8f0e8),transparent 75%),#fff;isolation:isolate}
+.home-page .category-card:before{content:'';position:absolute;width:160px;height:160px;border:1px solid #16372d0c;border-radius:50%;left:-40px;bottom:-65px;z-index:-1}
+.home-page .category-card img{height:128px;width:70px;filter:drop-shadow(4px 8px 3px #0002);transform:rotate(-10deg)}
+.home-page .category-card:hover img{transform:rotate(-17deg) translateY(-5px)}
+.home-page .category-card:nth-child(1){--category-wash:#eee2fa}.home-page .category-card:nth-child(2){--category-wash:#deedfa}.home-page .category-card:nth-child(3){--category-wash:#f8e4df}.home-page .category-card:nth-child(4){--category-wash:#f7efd5}
+.lab-story{position:relative;min-height:370px;border-radius:30px;overflow:hidden;background:#153d30;display:flex;align-items:flex-end;margin-top:10px;isolation:isolate}
+.lab-story>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:.7}
+.lab-story:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#102e2533,#102e25ed);z-index:-1}
+.lab-story-copy{padding:44px;max-width:580px;color:#fff}.lab-story-copy .section-kicker{color:#d4e7a4}.lab-story-copy h2{font-size:32px;line-height:1.7;margin-bottom:15px}.lab-story-copy p{font-size:13px;color:#d1e0d6;line-height:2}.lab-story-copy a{margin-top:24px;display:inline-flex;color:#d4e7a4;font-size:13px}
+.home-page .stat-box{position:relative;overflow:hidden;background:radial-gradient(ellipse at top right,#d9eab2,transparent 70%),#e7f0e9}
+.home-page .stat-box:before{content:'+';position:absolute;left:15px;top:-35px;font-size:170px;font-weight:800;color:#16745b0b}
+@keyframes stlp-float{0%,100%{translate:0 0}50%{translate:0 -12px}}
+@keyframes stlp-orbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@media(max-width:900px){.home-page .hero{padding-block:38px 48px}.home-page .hero-inner{gap:36px}.home-metrics{margin-inline:auto;justify-content:center}.home-page .hero-visual{max-width:620px}.lab-story-copy{padding:30px}.lab-story-copy h2{font-size:27px}}
+@media(max-width:600px){.home-page .hero-copy h1{font-size:43px}.home-page .tube-stage{height:330px;gap:8px}.home-page .tube{height:205px}.home-page .t3{height:230px}.home-page .hero-visual{padding:20px;border-radius:26px}.home-page .orbit-one{width:260px;height:260px}.home-page .orbit-two{width:345px;height:345px}.visual-tag{right:4px;top:10px;font-size:9px;padding:6px 8px}.science-mark{left:2%;font-size:7px}.home-metrics{gap:18px}.home-metrics strong{font-size:23px}.home-page .category-card{min-height:145px}.home-page .category-card img{height:105px;width:55px}.lab-story{min-height:350px;border-radius:22px}.lab-story-copy{padding:25px}.lab-story-copy h2{font-size:23px}}
+@media(max-width:380px){.home-page .hero-copy h1{font-size:37px}.home-metrics{gap:12px}.home-metrics>div{gap:6px}.home-metrics span{font-size:9px}.home-page .tube{height:175px}.home-page .t3{height:205px}.home-page .tube-stage{height:300px}}
+@media(prefers-reduced-motion:reduce){.home-page .tube,.home-page .orbit-two{animation:none}}

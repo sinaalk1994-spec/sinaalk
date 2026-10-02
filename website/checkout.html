@@ -1,0 +1,163 @@
+
+
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>ثبت سفارش — STLP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+  
+
+  
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/refresh.css">
+<link rel="stylesheet" href="css/site-complete.css">
+<link rel="stylesheet" href="css/site-unified.css"></head>
+<body class="refresh">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="STLP">
+      <div><div class="brand-name">STLP</div><div class="brand-sub">صبا تجهیز لاله پارسه</div></div>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" >خانه</a>
+      <a href="shop.html">فروشگاه</a>
+      <a href="brands.html">برندها</a>
+      <a href="about.html">درباره ما</a>
+      <a href="verify.html">تأیید اصالت</a>
+      <a href="track.html">پیگیری سفارش</a>
+    </nav>
+    <div class="header-right">
+      <a href="cart.html" class="cart-link" aria-label="سبد خرید">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e7efec" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;"></span>
+      </a>
+      
+      <button class="menu-btn" onclick="openMenu()" aria-label="منو">☰</button>
+    </div>
+  </div>
+</header><div id="mobile-menu">
+  <div class="sheet">
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+    <a href="index.html">خانه</a>
+    <a href="shop.html">فروشگاه</a>
+    <a href="brands.html">برندها</a>
+    <a href="about.html">درباره ما</a>
+    <a href="verify.html">تأیید اصالت</a>
+    <a href="track.html">پیگیری سفارش</a>
+  </div>
+</div>
+
+
+</div>
+
+<div class="page-box">
+  <h1>ثبت سفارش</h1>
+  <div class="small">
+    ثبت سفارش، موجودی انبار آنلاین را رزرو می‌کند. پرداخت و تأیید نهایی با واحد فروش هماهنگ می‌شود.
+  </div>
+
+  <div id="cart-summary"></div>
+
+  <form id="order-form">
+    <fieldset>
+      <legend>نوع مشتری</legend>
+      <label class="pay-option">
+        <input type="radio" name="customerType" value="individual" id="customerType-individual" checked>
+        حقیقی
+      </label>
+      <label class="pay-option">
+        <input type="radio" name="customerType" value="company" id="customerType-company">
+        حقوقی
+      </label>
+    </fieldset>
+
+    <div id="individual-fields">
+      <label for="nationalId">کد ملی</label>
+      <input id="nationalId" required dir="ltr">
+    </div>
+
+    <div id="company-fields" hidden>
+      <label for="companyName">نام شرکت</label>
+      <input id="companyName">
+
+      <label for="companyNationalId">شناسه ملی</label>
+      <input id="companyNationalId" dir="ltr">
+
+      <label for="regNo">شماره ثبت</label>
+      <input id="regNo" dir="ltr">
+
+      <label for="econCode">کد اقتصادی</label>
+      <input id="econCode" dir="ltr">
+    </div>
+
+    <label for="name">نام و نام خانوادگی مسئول سفارش</label>
+    <input id="name" required>
+
+    <label for="lab">نام آزمایشگاه / مرکز درمانی</label>
+    <input id="lab" required>
+
+    <label for="phone">شماره تماس</label>
+    <input id="phone" required type="tel" autocomplete="tel">
+
+    <label for="email">ایمیل</label>
+    <input id="email" type="email" autocomplete="email">
+
+    <label for="address">آدرس ارسال</label>
+    <textarea id="address" required></textarea>
+
+    <label for="postalCode">کد پستی</label>
+    <input id="postalCode" dir="ltr" inputmode="numeric" maxlength="10">
+
+    <label for="note">توضیحات تکمیلی (اختیاری)</label>
+    <textarea id="note"></textarea>
+
+    <fieldset>
+      <legend>روش پرداخت</legend>
+      <label class="pay-option">
+        <input type="radio" name="paymethod" value="online" disabled>
+        پرداخت آنلاین — هنوز فعال نشده
+      </label>
+      <label class="pay-option">
+        <input type="radio" name="paymethod" value="offline" checked>
+        پرداخت آفلاین (واریز به شماره حساب / کارت)
+      </label>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">
+      ثبت سفارش
+    </button>
+  </form>
+
+  <div id="after-submit" class="small"></div>
+</div>
+
+<!-- اطلاعات شرکت را اینجا دستی ویرایش کن -->
+
+<!-- کتابخانه‌های ساخت PDF (همان html2canvas + jsPDF که در ERP استفاده می‌شود) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="js/stlp-invoice-pdf.js"></script>
+
+<footer class="site-footer">
+  <div class="container grid grid-3">
+    <div>
+      <h4>STLP — صبا تجهیز لاله پارسه</h4>
+      <div class="muted">شماره ثبت ۶۴۷۲۰۸ &nbsp;|&nbsp; شناسه ملی ۱۴۰۱۴۲۴۵۵۱۹</div>
+    </div>
+    <div>
+      <h4>دسترسی سریع</h4>
+      <div class="muted"><a href="shop.html">محصولات</a> &nbsp;·&nbsp; <a href="brands.html">برندها</a> &nbsp;·&nbsp; <a href="about.html">درباره ما</a> &nbsp;·&nbsp; <a href="verify.html">تأیید اصالت</a></div>
+    </div>
+    <div>
+      <h4>تماس</h4>
+      <div class="muted">۰۹۱۲۰۶۱۳۰۰۲ &nbsp;·&nbsp; info@stlp.ir</div>
+    </div>
+  </div>
+  <div class="footer-bottom"><a href="contact.html">تماس و راهنمای خرید</a> · © STLP — تمامی حقوق محفوظ است</div>
+</footer><script src="js/site.js"></script><script src="js/refresh.js"></script><script src="js/checkout-summary.js"></script><script src="js/store-order.js"></script></body>
+</html>

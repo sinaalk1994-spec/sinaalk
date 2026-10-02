@@ -1,0 +1,14 @@
+{
+  "name": "stlp-server",
+  "version": "1.0.0",
+  "description": "بک‌اند سیستم حسابداری و CRM صبا تجهیز لاله پارسه (STLP) - سرور + دیتابیس واقعی به‌جای localStorage. بدون هیچ وابستگی بیرونی — فقط با Node اجرا می‌شود.",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {}
+}

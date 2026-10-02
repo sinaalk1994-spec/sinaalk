@@ -1,0 +1,440 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+<title>پنل مدیریت STLP</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+
+body {
+    padding: 0;
+}
+
+.erp-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =====================================================
+   منوی کناری (سمت راست، چون RTL هستیم)
+===================================================== */
+
+.erp-sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(6px);
+    border-left: 1px solid #0fa37f55;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.erp-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding: 0 6px;
+}
+
+.erp-sidebar-brand img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.erp-sidebar-brand span {
+    color: #00ffca;
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.erp-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 10px;
+    color: #ddd;
+    text-decoration: none;
+    font-size: 14px;
+    transition: .15s;
+}
+
+.erp-nav-link:hover {
+    background: rgba(255,255,255,.08);
+    color: #fff;
+}
+
+.erp-nav-link.active {
+    background: #0fa37f;
+    color: #fff;
+    font-weight: 700;
+}
+
+.erp-nav-link .icon {
+    font-size: 17px;
+    width: 22px;
+    text-align: center;
+}
+
+.erp-sidebar-footer {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,.1);
+}
+
+.erp-user-chip {
+    padding: 10px 12px;
+    font-size: 12.5px;
+    color: #aaa;
+    line-height: 1.7;
+}
+
+.erp-user-chip strong {
+    color: #fff;
+    display: block;
+    font-size: 14px;
+}
+
+.erp-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: rgba(220,53,69,.15);
+    border: 1px solid #dc354588;
+    color: #ff8b96;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.erp-logout-btn:hover {
+    background: rgba(220,53,69,.3);
+}
+
+
+/* =====================================================
+   محتوای اصلی
+===================================================== */
+
+.erp-main {
+    flex: 1;
+    padding: 28px 30px;
+    min-width: 0;
+}
+
+.erp-welcome h2 {
+    margin: 0 0 6px;
+}
+
+.erp-welcome p {
+    color: #aaa;
+    margin: 0 0 26px;
+    font-size: 13.5px;
+}
+
+
+/* =====================================================
+   باکس‌های مربعی ماژول‌ها
+===================================================== */
+
+.erp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 18px;
+}
+
+.erp-box {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+    border: 1px solid rgba(0,255,202,.18);
+    box-shadow: 0 8px 25px rgba(0,0,0,.18);
+    transition: .2s;
+    padding: 14px;
+    text-align: center;
+}
+
+.erp-box:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0,255,202,.5);
+    background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.03));
+}
+
+.erp-box .erp-box-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    background: rgba(0,255,202,.10);
+}
+
+.erp-box .erp-box-title {
+    color: #fff;
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.erp-box.admin-only {
+    border-color: rgba(255,193,7,.35);
+}
+
+.erp-box.admin-only .erp-box-icon {
+    background: rgba(255,193,7,.12);
+}
+
+
+/* =====================================================
+   موبایل: سایدبار افقی بشه
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .erp-shell {
+        flex-direction: column;
+    }
+
+    .erp-sidebar {
+        width: 100%;
+        min-width: 0;
+        flex-direction: row;
+        overflow-x: auto;
+        align-items: center;
+        padding: 12px;
+        gap: 6px;
+    }
+
+    .erp-sidebar-brand {
+        margin-bottom: 0;
+    }
+
+    .erp-sidebar-brand span {
+        display: none;
+    }
+
+    .erp-nav-link span.label {
+        display: none;
+    }
+
+    .erp-sidebar-footer {
+        margin-top: 0;
+        border-top: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .erp-user-chip {
+        display: none;
+    }
+
+    .erp-main {
+        padding: 18px;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="erp-shell">
+
+    <!-- =====================================================
+         سایدبار
+    ===================================================== -->
+
+    <div class="erp-sidebar">
+
+        <div class="erp-sidebar-brand">
+            <img src="assets/logo.png" alt="لوگو" onerror="this.style.display='none'">
+            <span>صبا تجهیز لاله پارسه</span>
+        </div>
+
+        <div id="sidebarNav"></div>
+
+        <div class="erp-sidebar-footer">
+            <div class="erp-user-chip" id="userChip"></div>
+            <button type="button" class="erp-logout-btn" onclick="stlpConfirmLogout()">
+                🚪 خروج از حساب
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         محتوای اصلی
+    ===================================================== -->
+
+    <div class="erp-main">
+
+        <div class="erp-welcome">
+            <h2 id="welcomeTitle">خوش آمدید</h2>
+            <p>یکی از بخش‌ها را برای شروع انتخاب کنید.</p>
+        </div>
+
+        <div class="erp-grid" id="erpGrid"></div>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+stlpRequirePermission("home");
+</script>
+
+<script>
+
+// =====================================================
+// تعریف کامل ماژول‌های ERP (آیکون، عنوان، مسیر، کلید دسترسی)
+// =====================================================
+
+const STLP_ERP_MODULES = [
+    { key: "onlineStore", icon: "🛍️", label: "فروشگاه و انبار آنلاین", href: "store-management.html" },
+
+    { key: "sales",      icon: "🧾", label: "فاکتور فروش",       href: "index.html" },
+    { key: "delivery",   icon: "📦", label: "حواله‌ها",            href: "sales-delivery.html" },
+    { key: "inventory",  icon: "🏬", label: "انبار",               href: "inventory.html" },
+    { key: "customers",  icon: "👥", label: "مشتریان",             href: "costumers.html" },
+    { key: "purchases",  icon: "🚚", label: "تأمین‌کنندگان و خرید", href: "purchases.html" },
+    { key: "treasury",   icon: "🏦", label: "خزانه",               href: "treasury.html" },
+    { key: "payroll",    icon: "💰", label: "حقوق و دستمزد",       href: "payroll.html" },
+    { key: "letters",    icon: "✉️", label: "نامه‌ها",              href: "letters.html" },
+    { key: "reports",    icon: "📊", label: "گزارش و داشبورد",     href: "reports.html" },
+    { key: "crm",        icon: "🎯", label: "CRM (پیگیری مشتریان بالقوه)", href: "crm.html" },
+    { key: "backup",     icon: "🗄️", label: "پشتیبان‌گیری",        href: "backup.html", adminOnly: true },
+    { key: "users",      icon: "👤", label: "کاربران",             href: "users.html",  adminOnly: true },
+    { key: "orgChart",   icon: "🌳", label: "چارت سازمانی",        href: "org-chart.html", adminOnly: true },
+    { key: "activityLog", icon: "🕒", label: "لاگ فعالیت سیستم",   href: "activity-log.html", adminOnly: true }
+
+];
+
+
+function stlpModuleAllowed(user, mod) {
+
+    if (user.isAdmin) return true;
+
+    if (mod.adminOnly) return false;
+
+    return !!(user.permissions && user.permissions[mod.key]);
+
+}
+
+
+// =====================================================
+// ساخت منوی کناری
+// =====================================================
+
+function stlpRenderSidebar(user) {
+
+    const nav = document.getElementById("sidebarNav");
+
+    nav.innerHTML =
+        STLP_ERP_MODULES
+            .filter(function(m) { return stlpModuleAllowed(user, m); })
+            .map(function(m) {
+
+                return (
+                    '<a class="erp-nav-link" href="' + m.href + '">' +
+                    '<span class="icon">' + m.icon + '</span>' +
+                    '<span class="label">' + m.label + '</span>' +
+                    '</a>'
+                );
+
+            })
+            .join("");
+
+    const chip = document.getElementById("userChip");
+
+    chip.innerHTML =
+        "<strong>" + escapeHtml(user.fullName || user.username) + "</strong>" +
+        (user.isAdmin ? "مدیر سیستم" : "کاربر عادی");
+
+}
+
+
+// =====================================================
+// ساخت باکس‌های مربعی صفحه اصلی
+// =====================================================
+
+function stlpRenderGrid(user) {
+
+    const grid = document.getElementById("erpGrid");
+
+    const allowedModules =
+        STLP_ERP_MODULES.filter(function(m) { return stlpModuleAllowed(user, m); });
+
+    if (allowedModules.length === 0) {
+
+        grid.innerHTML =
+            '<p style="color:#999;">شما به هیچ بخشی دسترسی ندارید. با مدیر سیستم هماهنگ کنید.</p>';
+
+        return;
+
+    }
+
+    grid.innerHTML =
+        allowedModules.map(function(m) {
+
+            return (
+                '<a class="erp-box' + (m.adminOnly ? ' admin-only' : '') + '" href="' + m.href + '">' +
+                '<div class="erp-box-icon">' + m.icon + '</div>' +
+                '<div class="erp-box-title">' + m.label + '</div>' +
+                '</a>'
+            );
+
+        }).join("");
+
+}
+
+
+function stlpConfirmLogout() {
+
+    if (confirm("آیا می‌خواهید از حساب کاربری خارج شوید؟")) {
+
+        stlpLogout();
+
+    }
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const user = stlpCurrentUser();
+
+    if (!user) {
+        location.href = "login.html";
+        return;
+    }
+
+    document.getElementById("welcomeTitle").textContent =
+        "خوش آمدید، " + (user.fullName || user.username);
+
+    stlpRenderSidebar(user);
+    stlpRenderGrid(user);
+
+});
+
+</script>
+
+</body>
+</html>

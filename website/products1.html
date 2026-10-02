@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>محصولات — STLP</title>
+
+
+
+<style>
+  body{
+    margin:0;
+    font-family:'Vazirmatn',sans-serif;
+    background:url("images/lab-bg-products.jpg");
+     background-size:cover;
+    color:#fff;
+  }
+
+  /* HEADER */
+  header{
+    width:100%;
+    background:#000;
+    padding:15px 0;
+    border-bottom:2px solid #0fa37f;
+  }
+  nav{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  nav ul{
+    display:flex;
+    gap:24px;
+    list-style:none;
+    margin:0; padding:0;
+  }
+  nav ul li a{
+    color:#fff;
+    font-weight:600;
+    text-decoration:none;
+  }
+  nav ul li a:hover{
+    color:#0fa37f;
+  }
+
+  /* PAGE */
+  .page-box{
+    max-width:1200px;
+    margin:50px auto;
+    padding:40px;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(6px);
+    border-radius:20px;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    font-size:14px;
+  }
+  th,td{
+    padding:10px;
+    border-bottom:1px solid #333;
+    text-align:center;
+  }
+  th{
+    color:#b8b8b8;
+    font-weight:700;
+    background:rgba(255,255,255,0.07);
+  }
+
+  .btn-download{
+    display:inline-block;
+    background:#0fa37f;
+    padding:12px 20px;
+    color:#fff;
+    border-radius:8px;
+    font-weight:700;
+    text-decoration:none;
+  }
+
+  .product-logo{
+    height:90px;
+    margin-bottom:20px;
+    filter:drop-shadow(0 0 6px rgba(0,0,0,0.4));
+  }
+
+  @media(max-width:768px){
+    .page-box{
+      margin:20px;
+      padding:20px;
+    }
+    table{
+      font-size:12px;
+    }
+  }
+</style>
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/refresh.css">
+<link rel="stylesheet" href="css/site-complete.css">
+<link rel="stylesheet" href="css/site-unified.css"></head>
+
+<body class="refresh">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="STLP">
+      <div><div class="brand-name">STLP</div><div class="brand-sub">صبا تجهیز لاله پارسه</div></div>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" >خانه</a>
+      <a href="shop.html">فروشگاه</a>
+      <a href="brands.html">برندها</a>
+      <a href="about.html">درباره ما</a>
+      <a href="verify.html">تأیید اصالت</a>
+      <a href="track.html">پیگیری سفارش</a>
+    </nav>
+    <div class="header-right">
+      <a href="cart.html" class="cart-link" aria-label="سبد خرید">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e7efec" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;"></span>
+      </a>
+      
+      <button class="menu-btn" onclick="openMenu()" aria-label="منو">☰</button>
+    </div>
+  </div>
+</header><div id="mobile-menu">
+  <div class="sheet">
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+    <a href="index.html">خانه</a>
+    <a href="shop.html">فروشگاه</a>
+    <a href="brands.html">برندها</a>
+    <a href="about.html">درباره ما</a>
+    <a href="verify.html">تأیید اصالت</a>
+    <a href="track.html">پیگیری سفارش</a>
+  </div>
+</div>
+
+<div class="page-box">
+
+  <img class="product-logo" src="images/vaccuject-logo.png" alt="Vaccuject Logo">
+  <h1>لیست محصولات Vaccuject</h1>
+
+  <a class="btn-download" href="files/product-list.pdf" download>📄 دانلود لیست قیمت کامل (PDF)</a>
+
+  <!-- TABLE -->
+  <div class="table-scroll"><table>
+    <thead>
+      <tr>
+        <th>کد</th>
+        <th>نوع</th>
+        <th>سایز</th>
+        <th>حجم (ml)</th>
+        <th>قیمت واحد</th>
+        <th>قیمت بسته</th>
+        <th>قیمت کارتن</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr><td>PL-40</td><td>Plain</td><td>13×75</td><td>4</td><td>60,000</td><td>6,000,000</td><td>72,000,000</td></tr>
+      <tr><td>PL-60</td><td>Plain</td><td>13×100</td><td>6</td><td>68,000</td><td>6,800,000</td><td>81,600,000</td></tr>
+      <tr><td>PL-90</td><td>Plain</td><td>16×100</td><td>9</td><td>85,000</td><td>8,500,000</td><td>102,000,000</td></tr>
+
+      <tr><td>PT-18</td><td>PT-PTT</td><td>13×75</td><td>1.8</td><td>65,000</td><td>6,500,000</td><td>78,000,000</td></tr>
+      <tr><td>PT-27</td><td>PT-PTT</td><td>13×75</td><td>2.7</td><td>65,000</td><td>6,500,000</td><td>78,000,000</td></tr>
+
+      <tr><td>CA-40</td><td>CAT</td><td>13×75</td><td>4</td><td>62,000</td><td>6,200,000</td><td>74,400,000</td></tr>
+      <tr><td>CA-60</td><td>CAT</td><td>13×100</td><td>6</td><td>76,000</td><td>7,600,000</td><td>91,200,000</td></tr>
+      <tr><td>CA-90</td><td>CAT</td><td>16×100</td><td>9</td><td>76,000</td><td>7,600,000</td><td>91,200,000</td></tr>
+
+      <tr><td>GC-35</td><td>SST</td><td>13×100</td><td>3.5</td><td>70,000</td><td>7,000,000</td><td>84,000,000</td></tr>
+      <tr><td>GC-50</td><td>SST</td><td>13×100</td><td>5</td><td>80,000</td><td>8,000,000</td><td>96,000,000</td></tr>
+      <tr><td>GC-90</td><td>SST</td><td>16×100</td><td>9</td><td>99,000</td><td>9,900,000</td><td>118,800,000</td></tr>
+
+      <tr><td>LH-30</td><td>Heparin</td><td>13×75</td><td>3</td><td>67,000</td><td>6,700,000</td><td>80,400,000</td></tr>
+      <tr><td>LH-60</td><td>Heparin</td><td>13×100</td><td>5</td><td>75,000</td><td>7,500,000</td><td>90,000,000</td></tr>
+
+      <tr><td>SH-30</td><td>Heparin</td><td>13×75</td><td>3</td><td>67,000</td><td>6,700,000</td><td>80,400,000</td></tr>
+      <tr><td>SH-60</td><td>Heparin</td><td>13×100</td><td>6</td><td>75,000</td><td>7,500,000</td><td>90,000,000</td></tr>
+
+      <tr><td>K3-20</td><td>CBC</td><td>13×75</td><td>2</td><td>51,000</td><td>5,100,000</td><td>61,200,000</td></tr>
+      <tr><td>K3-30</td><td>CBC</td><td>13×75</td><td>4</td><td>51,000</td><td>5,100,000</td><td>61,200,000</td></tr>
+      <tr><td>K3-60</td><td>CBC</td><td>13×100</td><td>6</td><td>55,000</td><td>5,500,000</td><td>66,000,000</td></tr>
+
+      <tr><td>K2-20</td><td>CBC</td><td>13×75</td><td>2</td><td>51,000</td><td>5,100,000</td><td>61,200,000</td></tr>
+      <tr><td>K2-30</td><td>CBC</td><td>13×75</td><td>3</td><td>51,000</td><td>5,100,000</td><td>61,200,000</td></tr>
+      <tr><td>K2-60</td><td>CBC</td><td>13×100</td><td>6</td><td>55,000</td><td>5,500,000</td><td>66,000,000</td></tr>
+
+      <tr><td>GL-30</td><td>Glucose</td><td>13×75</td><td>3</td><td>55,000</td><td>5,500,000</td><td>66,000,000</td></tr>
+
+      <tr><td>ES-12</td><td>ESR</td><td>120×9</td><td>1.28</td><td>به‌زودی</td><td>به‌زودی</td><td>به‌زودی</td></tr>
+      <tr><td>ES-16</td><td>ESR</td><td>13×75</td><td>1.6</td><td>به‌زودی</td><td>به‌زودی</td><td>به‌زودی</td></tr>
+      <tr><td>ES-18</td><td>ESR</td><td>13×75</td><td>1.8</td><td>به‌زودی</td><td>به‌زودی</td><td>به‌زودی</td></tr>
+      <tr><td>ES-24</td><td>ESR</td><td>13×75</td><td>2.4</td><td>به‌زودی</td><td>به‌زودی</td><td>به‌زودی</td></tr>
+
+    </tbody>
+  </table></div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="container grid grid-3">
+    <div>
+      <h4>STLP — صبا تجهیز لاله پارسه</h4>
+      <div class="muted">شماره ثبت ۶۴۷۲۰۸ &nbsp;|&nbsp; شناسه ملی ۱۴۰۱۴۲۴۵۵۱۹</div>
+    </div>
+    <div>
+      <h4>دسترسی سریع</h4>
+      <div class="muted"><a href="shop.html">محصولات</a> &nbsp;·&nbsp; <a href="brands.html">برندها</a> &nbsp;·&nbsp; <a href="about.html">درباره ما</a> &nbsp;·&nbsp; <a href="verify.html">تأیید اصالت</a></div>
+    </div>
+    <div>
+      <h4>تماس</h4>
+      <div class="muted">۰۹۱۲۰۶۱۳۰۰۲ &nbsp;·&nbsp; info@stlp.ir</div>
+    </div>
+  </div>
+  <div class="footer-bottom"><a href="contact.html">تماس و راهنمای خرید</a> · © STLP — تمامی حقوق محفوظ است</div>
+</footer><script src="js/site.js"></script><script src="js/refresh.js"></script><script src="js/live-prices.js"></script></body>
+</html>

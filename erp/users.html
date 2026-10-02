@@ -1,0 +1,498 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+<title>کاربران و دسترسی‌ها - STLP</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+
+.perm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+    margin: 12px 0;
+    background: rgba(255,255,255,.05);
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.perm-grid label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.users-table {
+    width: 100%;
+    background: #fff;
+    color: #000;
+    border-collapse: collapse;
+}
+
+.users-table th {
+    background: #0fa37f;
+    color: #fff;
+    padding: 8px;
+}
+
+.users-table td {
+    padding: 7px;
+    text-align: center;
+    background: #fafafa;
+}
+
+.badge-admin {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.badge-inactive {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.small-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    margin: 2px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.small-btn.edit { background: #0d6efd; }
+.small-btn.del { background: #dc3545; }
+.small-btn.toggle { background: #6c757d; }
+
+</style>
+</head>
+<body>
+
+<div class="overlay">
+
+    <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html" class="active">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+    <h2>مدیریت کاربران</h2>
+
+    <div class="card">
+
+        <h3>افزودن / ویرایش کاربر</h3>
+
+        <p style="color:#aaa; font-size:12px; margin-top:-6px;">
+            این‌جا فقط حساب کاربری ساخته می‌شود (نام کاربری، رمز، نام، اتصال به کارمند). تعیین دسترسی‌ها، نقش‌ها
+            (مدیر سیستم، عضو هیات مدیره، مدیر بخش و...) و امضای نامه‌ها همه از صفحه‌ی «🌳 چارت سازمانی» انجام می‌شود —
+            روی اسم هر کاربر در چارت کلیک کن.
+        </p>
+
+        <input type="hidden" id="userEditId" value="">
+
+        <label>نام کاربری:</label>
+        <input id="userUsername" type="text"><br><br>
+
+        <label>رمز عبور:</label>
+        <input id="userPassword" type="text" placeholder="برای ویرایش، خالی بگذارید تا تغییر نکند"><br><br>
+
+        <label>نام و نام خانوادگی:</label>
+        <input id="userFullName" type="text"><br><br>
+
+        <label>اتصال به کارمند در سیستم حقوق (برای ثبت درخواست مرخصی):</label>
+        <select id="userEmployeeId" style="width:100%; padding:8px;"><option value="">— بدون اتصال —</option></select><br><br>
+
+        <br>
+        <button type="button" onclick="saveUserForm()">💾 ذخیره کاربر</button>
+        <button type="button" onclick="resetUserForm()" style="background:#6c757d;">✖ لغو ویرایش</button>
+
+    </div>
+
+    <div class="card">
+
+        <h3>لیست کاربران</h3>
+
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>نام کاربری</th>
+                    <th>نام</th>
+                    <th>نوع</th>
+                    <th>وضعیت</th>
+                    <th>دسترسی‌ها</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+
+<script>
+
+// stlpRequirePermission فقط location.href را صف می‌کند و false
+// برمی‌گرداند؛ خودش اجرای بقیه‌ی اسکریپت را متوقف نمی‌کند — برای
+// همین اگر false برگرداند، همین‌جا با throw از ادامه‌ی این تگِ
+// اسکریپت (renderUsers/stlpFillUserEmployeeSelect که چند خط پایین‌تر
+// در DOMContentLoaded صدا زده می‌شوند) جلوگیری می‌کنیم، وگرنه قبل از
+// کامل‌شدنِ ریدایرکت، یک کاربرِ غیرادمین برای یک لحظه داده‌های این
+// صفحه را می‌دید.
+if (!stlpRequirePermission("admin-only")) {
+    throw new Error("STLP: access denied, redirecting");
+}
+
+
+// پر کردن سلکت اتصال به کارمند — از همان کلید localStorage
+// «stlp_employees» که سیستم حقوق (payroll.html) استفاده می‌کند
+function stlpFillUserEmployeeSelect() {
+
+    const sel = document.getElementById("userEmployeeId");
+    if (!sel) return;
+
+    let employees = [];
+    try {
+        employees = JSON.parse(localStorage.getItem("stlp_employees") || "[]");
+    } catch (e) {
+        employees = [];
+    }
+
+    const currentValue = sel.value;
+
+    sel.innerHTML =
+        '<option value="">— بدون اتصال —</option>' +
+        employees
+            .filter(function(e) { return e.active !== false; })
+            .map(function(e) {
+                return '<option value="' + e.id + '">' + escapeHtml(e.name) + '</option>';
+            }).join("");
+
+    if (currentValue) sel.value = currentValue;
+
+}
+
+
+// =====================================================
+// ذخیره فرم کاربر (افزودن یا ویرایش)
+// =====================================================
+
+async function saveUserForm() {
+
+    const username =
+        document.getElementById("userUsername").value.trim();
+
+    if (!username) {
+        alert("لطفاً نام کاربری را وارد کنید.");
+        return;
+    }
+
+    const editId =
+        document.getElementById("userEditId").value;
+
+    const users = stlpLoadUsers();
+
+    const duplicate =
+        users.some(function(u) {
+            return u.username === username && u.id !== editId;
+        });
+
+    if (duplicate) {
+        alert("❌ این نام کاربری قبلاً استفاده شده است.");
+        return;
+    }
+
+    // رمز عبور دیگر این‌جا در مرورگر هش نمی‌شود — فقط تریم و به‌صورت
+    // متن‌ساده به سرور فرستاده می‌شود (دقیقاً همان‌طور که در
+    // erp/server/lib/passwords.js از اول مستند شده بود) و خودِ سرور،
+    // با scrypt نمک‌دار، هش واقعی را می‌سازد. قبلاً این‌جا با یک
+    // SHA-256 ساده و بدون نمک (stlpHashPassword) هش می‌شد که خیلی
+    // سریع و در برابر جدول‌های آماده/brute-force ضعیف است — دقیقاً
+    // همان ضعفی که scrypt سمت سرور قرار بود برطرفش کند، ولی چون
+    // این صفحه هیچ‌وقت رمزِ متن‌ساده به سرور نمی‌فرستاد، رمزِ هر
+    // کاربرِ تازه‌ساز/ری‌ست‌شده همیشه همون هشِ ضعیف می‌ماند.
+    const rawPassword =
+        document.getElementById("userPassword").value.trim();
+
+    if (rawPassword && rawPassword.length < 4) {
+        alert("رمز عبور باید حداقل ۴ کاراکتر باشد.");
+        return;
+    }
+
+    if (editId) {
+
+        const index =
+            users.findIndex(function(u) { return u.id === editId; });
+
+        if (index < 0) {
+            alert("❌ کاربر پیدا نشد.");
+            return;
+        }
+
+        users[index].username = username;
+        users[index].fullName = document.getElementById("userFullName").value.trim();
+        users[index].employeeId = document.getElementById("userEmployeeId").value || null;
+        // نقش‌ها و دسترسی‌ها (مدیر سیستم، هیات مدیره، امضای نامه، تأیید مرخصی و...)
+        // اینجا دست‌نخورده می‌مانند — فقط از «چارت سازمانی» ویرایش می‌شوند
+
+        if (rawPassword) {
+            users[index].password = rawPassword;
+        }
+
+    } else {
+
+        if (!rawPassword) {
+            alert("لطفاً برای کاربر جدید رمز عبور وارد کنید.");
+            return;
+        }
+
+        users.push({
+
+            id: "u_" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
+            username: username,
+            password: rawPassword,
+            fullName: document.getElementById("userFullName").value.trim(),
+            employeeId: document.getElementById("userEmployeeId").value || null,
+            isAdmin: false,
+            canSignLetters: false,
+            canApproveLeaveFinance: false,
+            isBoardMember: false,
+            permissions: {},
+            active: true,
+            createdAt: new Date().toISOString()
+
+        });
+
+    }
+
+    stlpSaveUsers(users);
+
+    stlpLogActivity("کاربران", editId ? "ویرایش کاربر" : "افزودن کاربر", "«" + username + "»" + (editId ? "" : " — دسترسی‌هایش را از چارت سازمانی تنظیم کن"));
+
+    resetUserForm();
+
+    renderUsers();
+
+}
+
+function resetUserForm() {
+
+    document.getElementById("userEditId").value = "";
+    document.getElementById("userUsername").value = "";
+    document.getElementById("userPassword").value = "";
+    document.getElementById("userFullName").value = "";
+    document.getElementById("userEmployeeId").value = "";
+
+}
+
+function editUser(id) {
+
+    const users = stlpLoadUsers();
+
+    const user =
+        users.find(function(u) { return u.id === id; });
+
+    if (!user) return;
+
+    document.getElementById("userEditId").value = user.id;
+    document.getElementById("userUsername").value = user.username;
+    document.getElementById("userPassword").value = "";
+    document.getElementById("userFullName").value = user.fullName || "";
+    stlpFillUserEmployeeSelect();
+    document.getElementById("userEmployeeId").value = user.employeeId || "";
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+}
+
+function toggleUserActive(id) {
+
+    const users = stlpLoadUsers();
+
+    const user =
+        users.find(function(u) { return u.id === id; });
+
+    if (!user) return;
+
+    if (user.isAdmin && user.active !== false) {
+
+        const remainingActiveAdmins =
+            users.filter(function(u) { return u.isAdmin && u.active !== false; });
+
+        if (remainingActiveAdmins.length <= 1) {
+            alert("❌ حداقل باید یک مدیر سیستم فعال باقی بماند.");
+            return;
+        }
+
+    }
+
+    user.active = user.active === false ? true : false;
+
+    stlpSaveUsers(users);
+
+    stlpLogActivity("کاربران", user.active ? "فعال‌سازی کاربر" : "غیرفعال‌سازی کاربر", "«" + user.username + "»");
+
+    renderUsers();
+
+}
+
+function deleteUser(id) {
+
+    const currentUser = stlpCurrentUser();
+
+    if (currentUser && currentUser.id === id) {
+        alert("❌ نمی‌توانید حساب کاربری خودتان را حذف کنید.");
+        return;
+    }
+
+    let users = stlpLoadUsers();
+
+    const target =
+        users.find(function(u) { return u.id === id; });
+
+    if (target && target.isAdmin) {
+
+        const remainingActiveAdmins =
+            users.filter(function(u) { return u.isAdmin && u.active !== false && u.id !== id; });
+
+        if (remainingActiveAdmins.length === 0) {
+            alert("❌ حداقل باید یک مدیر سیستمِ فعال باقی بماند.");
+            return;
+        }
+
+    }
+
+    if (!confirm("آیا از حذف این کاربر مطمئن هستید؟")) return;
+
+    users = users.filter(function(u) { return u.id !== id; });
+
+    stlpSaveUsers(users);
+
+    stlpLogActivity("کاربران", "حذف کاربر", target ? "«" + target.username + "»" : "");
+
+    renderUsers();
+
+}
+
+
+// =====================================================
+// رندر جدول کاربران
+// =====================================================
+
+function renderUsers() {
+
+    const users = stlpLoadUsers();
+
+    const tbody = document.getElementById("usersTable");
+
+    tbody.innerHTML =
+        users.map(function(u) {
+
+            const permsText =
+                u.isAdmin
+                    ? "همه بخش‌ها"
+                    : (
+                        STLP_MODULES
+                            .filter(function(m) { return u.permissions && u.permissions[m.key]; })
+                            .map(function(m) { return m.label; })
+                            .join("، ") || "—"
+                    );
+
+            return (
+                "<tr>" +
+                "<td>" + escapeHtml(u.username) + "</td>" +
+                "<td>" + escapeHtml(u.fullName || "-") + "</td>" +
+                "<td>" + (u.isAdmin ? '<span class="badge-admin">مدیر سیستم</span>' : "کاربر عادی") +
+                    (u.canSignLetters ? ' <span class="badge-admin" style="background:#dbeafe; color:#1e40af;">✍️ امضاکننده نامه</span>' : "") +
+                "</td>" +
+                "<td>" + (u.active === false ? '<span class="badge-inactive">غیرفعال</span>' : "فعال") + "</td>" +
+                "<td style='font-size:12px;'>" + escapeHtml(permsText) + "</td>" +
+                "<td>" +
+                    '<button type="button" class="small-btn edit" onclick="editUser(\'' + u.id + '\')">✏️ ویرایش</button>' +
+                    '<button type="button" class="small-btn toggle" onclick="toggleUserActive(\'' + u.id + '\')">' +
+                        (u.active === false ? "✅ فعال‌سازی" : "⏸ غیرفعال کردن") +
+                    '</button>' +
+                    '<button type="button" class="small-btn del" onclick="deleteUser(\'' + u.id + '\')">🗑 حذف</button>' +
+                "</td>" +
+                "</tr>"
+            );
+
+        }).join("");
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    stlpFillUserEmployeeSelect();
+    renderUsers();
+
+});
+
+</script>
+
+<section id="online-store-access" style="margin:24px;padding:20px;border:1px solid #ffffff30;border-radius:12px"><h3>دسترسی مدیریت فروشگاه آنلاین</h3><label for="store-access-user">کاربر</label><select id="store-access-user"></select><label><input type="checkbox" id="store-access-enabled"> مدیریت محصولات، انبار آنلاین و سفارش‌ها</label><button type="button" id="store-access-save">ذخیره دسترسی</button><p id="store-access-status" role="status"></p></section>
+<script>
+(function(){
+ if(!stlpRequirePermission('admin-only'))return;
+ const select=document.getElementById('store-access-user'),check=document.getElementById('store-access-enabled'),status=document.getElementById('store-access-status');
+ function refresh(){const selected=select.value;select.replaceChildren();stlpLoadUsers().forEach(u=>{const o=document.createElement('option');o.value=u.id;o.textContent=(u.fullName||u.username)+(u.isAdmin?' (مدیر سیستم)':'');select.append(o);});if(selected)select.value=selected;update();}
+ function update(){const u=stlpLoadUsers().find(u=>u.id===select.value);check.checked=!!(u&&(u.isAdmin||u.permissions?.onlineStore));check.disabled=!!u?.isAdmin;}
+ select.onchange=update;
+ document.getElementById('store-access-save').onclick=async()=>{
+ // اینجا عمداً از stlpLoadUsers() (که کشِ لحظه‌ی بازشدنِ این تب را
+ // می‌خواند، شاید دقایق/ساعت‌ها قدیمی) استفاده نمی‌شود — چون این دکمه
+ // کلِ آرایه‌ی کاربران را جای‌گزین می‌کند، یک کشِ قدیمی یعنی هر کاربرِ
+ // تازه‌ای که از جای دیگری (مثلاً فرمِ بالای همین صفحه، در یک تبِ
+ // دیگر) اضافه شده، همین‌جا بی‌سروصدا حذف می‌شد. به‌جایش، درست قبل از
+ // نوشتن، آخرین نسخه مستقیماً از سرور خوانده می‌شود.
+ let users;
+ try{
+  const freshResponse=await fetch('/api/store/stlp_users');
+  if(!freshResponse.ok)throw Error('خواندنِ آخرین لیستِ کاربران ناموفق بود');
+  const freshData=await freshResponse.json();
+  users=JSON.parse(freshData.value||'[]');
+ }catch(e){status.textContent='خواندنِ آخرین لیستِ کاربران ناموفق بود؛ دوباره تلاش کنید.';return;}
+ const u=users.find(u=>u.id===select.value);if(!u)return;if(u.isAdmin){status.textContent='مدیر سیستم به این بخش دسترسی دارد.';return;}u.permissions={...u.permissions,onlineStore:check.checked};
+ try{const response=await fetch('/api/store/stlp_users',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({value:JSON.stringify(users)})});if(!response.ok)throw Error('ذخیره دسترسی انجام نشد');status.textContent='دسترسی ذخیره شد؛ در درخواست بعدی کاربر اعمال می‌شود.';location.reload();}catch(e){status.textContent=e.message;}};
+ refresh();
+})();
+</script></body>
+</html>

@@ -1,0 +1,498 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+<title>پشتیبان‌گیری - STLP</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+
+.backup-summary {
+    width: 100%;
+    background: #fff;
+    color: #000;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.backup-summary th {
+    background: #0fa37f;
+    color: #fff;
+    padding: 8px;
+    text-align: center;
+}
+
+.backup-summary td {
+    padding: 7px;
+    text-align: center;
+    background: #fafafa;
+}
+
+.big-btn {
+    padding: 14px 26px;
+    font-size: 15px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.import-box {
+    border: 2px dashed #0fa37f88;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.warn-box {
+    background: rgba(220,53,69,.15);
+    border: 1px solid #dc3545;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    color: #ffb3ba;
+}
+
+#restorePreview {
+    display: none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="overlay">
+
+    <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html" class="active">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+    <h2>پشتیبان‌گیری و بازیابی اطلاعات</h2>
+
+    <div class="warn-box">
+        ⚠️ تمام اطلاعات این سیستم (فاکتورها، انبار، مشتریان، خزانه، حقوق و...) الان روی خودِ سرور
+        (پایگاه‌داده‌ی server/data/stlp.db) ذخیره می‌شود، نه فقط در مرورگر — یعنی از هر دستگاهی
+        وارد شوید همان اطلاعات را می‌بینید. با این حال، همین فایلِ دیتابیس روی سرور تنها نسخه‌ی
+        واقعی است؛ پیشنهاد می‌شود مرتب (مثلاً هر هفته) هم یک نسخه پشتیبانِ JSON از همین صفحه
+        دانلود کنید و هم یک کپی از خودِ فایل server/data/stlp.db در جای امن دیگری نگه دارید.
+    </div>
+
+    <div class="card">
+
+        <h3>📦 وضعیت فعلی داده‌ها</h3>
+
+        <table class="backup-summary">
+            <thead>
+                <tr>
+                    <th>بخش</th>
+                    <th>تعداد رکورد</th>
+                </tr>
+            </thead>
+            <tbody id="dataSummaryTable"></tbody>
+        </table>
+
+        <button type="button" class="big-btn" onclick="downloadBackup()">
+            ⬇️ دانلود پشتیبان کامل (JSON)
+        </button>
+
+        <button type="button" class="big-btn" onclick="renderDataSummary()" style="background:#6c757d;">
+            🔄 بروزرسانی جدول بالا
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <h3>♻️ بازیابی از فایل پشتیبان</h3>
+
+        <div class="warn-box">
+            ⚠️ بازیابی، اطلاعات فعلی همین مرورگر را با اطلاعات داخل فایل پشتیبان
+            <b>جایگزین می‌کند</b> (نه اضافه). قبل از بازیابی، اگر اطلاعات فعلی مهم است،
+            حتماً یک نسخه پشتیبان از وضعیت فعلی هم بگیرید.
+        </div>
+
+        <div class="import-box">
+            <input type="file" id="restoreFile" accept=".json" onchange="previewRestoreFile()">
+        </div>
+
+        <div id="restorePreview">
+
+            <h3 style="margin-top:20px;">محتوای فایل انتخاب‌شده:</h3>
+
+            <table class="backup-summary">
+                <thead>
+                    <tr>
+                        <th>بخش</th>
+                        <th>تعداد رکورد در فایل</th>
+                    </tr>
+                </thead>
+                <tbody id="restorePreviewTable"></tbody>
+            </table>
+
+            <div style="margin:14px 0;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                    <input type="checkbox" id="restoreIncludeUsers">
+                    حساب‌های کاربری و رمزهای عبور فعلی هم با فایل پشتیبان جایگزین شوند
+                    (پیش‌فرض: خاموش — یعنی کاربران و رمزهای فعلی دست‌نخورده می‌مانند)
+                </label>
+            </div>
+
+            <button type="button" class="big-btn" style="background:#dc3545;" onclick="confirmRestore()">
+                ♻️ بازیابی و جایگزینی اطلاعات
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+stlpRequirePermission("admin-only");
+</script>
+
+<script>
+
+// =====================================================
+// کلیدهای داده‌ای که پشتیبان‌گیری می‌شوند
+// (اطلاعات کسب‌وکار - نه وضعیت نشست/سبد خرید سایت عمومی)
+// =====================================================
+
+const STLP_BACKUP_KEYS = [
+
+    { key: "customers", label: "مشتریان" },
+    { key: "invoices", label: "فاکتورهای فروش" },
+    { key: "salesDeliveries", label: "حواله‌های فروش" },
+    { key: "stlp_suppliers", label: "تأمین‌کنندگان" },
+    { key: "stlp_inventory", label: "کالاهای انبار" },
+    { key: "stlp_inventory_lots", label: "دسته‌های خرید انبار (FIFO)" },
+    { key: "inventoryMovements", label: "گردش انبار" },
+    { key: "stlp_inventory_transactions", label: "تراکنش‌های انبار" },
+    { key: "stlp_treasury", label: "تراکنش‌های خزانه" },
+    { key: "stlp_treasury_accounts", label: "حساب‌های خزانه" },
+    { key: "stlp_delivery_treasury_settings", label: "تنظیمات حساب نقدیِ حواله‌ها" },
+    { key: "stlp_online_store_settings", label: "تنظیمات حسابداری فروش آنلاین" },
+    { key: "stlp_chart_of_accounts", label: "کدینگ حسابداری" },
+    { key: "stlp_journal_entries", label: "اسناد حسابداری (دفتر روزنامه)" },
+    { key: "stlp_accounting_entries", label: "سندهای حسابداریِ تراکنش‌های خزانه" },
+    { key: "stlp_journal_counter", label: "شمارنده‌ی اسناد حسابداری" },
+    { key: "stlp_delivery_counter", label: "شمارنده‌ی حواله‌ها" },
+    { key: "stlp_letter_counter", label: "شمارنده‌ی نامه‌ها" },
+    { key: "stlp_official_letter_counter", label: "شمارنده‌ی نامه‌های رسمی" },
+    { key: "stlp_employees", label: "کارمندان" },
+    { key: "stlp_departments", label: "دپارتمان‌ها" },
+    { key: "stlp_leave_requests", label: "درخواست‌های مرخصی" },
+    { key: "stlp_payroll", label: "فیش‌های حقوقی" },
+    { key: "stlp_payroll_employer_insurance_rate", label: "درصد بیمه‌ی کارفرما" },
+    { key: "stlp_payroll_extras", label: "مزایای اضافی حقوق" },
+    { key: "stlp_payroll_leave_carryover_cap", label: "سقف انتقال مرخصی" },
+    { key: "stlp_payroll_leave_sell_max_days", label: "سقف فروش مرخصی" },
+    { key: "stlp_payroll_maternity_leave_days", label: "روزهای مرخصی زایمان" },
+    { key: "stlp_payroll_minimum_wage", label: "حداقل دستمزد" },
+    { key: "stlp_payroll_sick_unpaid_days", label: "روزهای مرخصی استعلاجی بدون حقوق" },
+    { key: "stlp_payroll_tax_brackets", label: "پلکان‌های مالیاتی" },
+    { key: "stlp_payroll_tax_exemption_ceiling", label: "سقف معافیت مالیاتی" },
+    { key: "stlp_letters", label: "نامه‌ها" },
+    { key: "stlp_letter_templates", label: "قالب‌های نامه" },
+    { key: "stlp_official_letter_requests", label: "درخواست‌های نامه‌ی رسمی" },
+    { key: "stlp_crm_records", label: "رکوردهای CRM" },
+    { key: "stlp_crm_settings", label: "تنظیمات CRM" },
+    { key: "stlp_activity_log", label: "لاگ فعالیت سیستم" },
+    { key: "stlp_users", label: "کاربران سیستم (شامل رمز عبور هش‌شده)" }
+
+];
+
+
+function stlpCountRecords(rawValue) {
+
+    if (!rawValue) return 0;
+
+    try {
+
+        const parsed = JSON.parse(rawValue);
+
+        if (Array.isArray(parsed)) return parsed.length;
+
+        if (parsed && typeof parsed === "object") {
+            return Object.keys(parsed).length;
+        }
+
+        return 1;
+
+    } catch (error) {
+
+        return 0;
+
+    }
+
+}
+
+
+// =====================================================
+// جدول وضعیت فعلی داده‌ها
+// =====================================================
+
+function renderDataSummary() {
+
+    const tbody =
+        document.getElementById("dataSummaryTable");
+
+    tbody.innerHTML =
+        STLP_BACKUP_KEYS.map(function(item) {
+
+            const raw = localStorage.getItem(item.key);
+            const count = stlpCountRecords(raw);
+
+            return (
+                "<tr><td>" + item.label + "</td><td>" + count + "</td></tr>"
+            );
+
+        }).join("");
+
+}
+
+
+// =====================================================
+// دانلود پشتیبان کامل
+// =====================================================
+
+function downloadBackup() {
+
+    const backup = {
+
+        stlpBackupVersion: 1,
+        exportedAt: new Date().toISOString(),
+        exportedAtFa: new Date().toLocaleString("fa-IR"),
+        data: {}
+
+    };
+
+    STLP_BACKUP_KEYS.forEach(function(item) {
+
+        const raw = localStorage.getItem(item.key);
+
+        if (raw !== null) {
+            backup.data[item.key] = raw;
+        }
+
+    });
+
+    const blob =
+        new Blob(
+            [JSON.stringify(backup, null, 2)],
+            { type: "application/json" }
+        );
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    const dateStamp =
+        new Date().toISOString().slice(0, 10);
+
+    a.href = url;
+    a.download = "STLP-Backup-" + dateStamp + ".json";
+
+    document.body.appendChild(a);
+    a.click();
+
+    setTimeout(function() {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 1500);
+
+    alert("✅ فایل پشتیبان دانلود شد.");
+
+    stlpLogActivity("پشتیبان‌گیری", "دانلود پشتیبان", "STLP-Backup-" + dateStamp + ".json");
+
+}
+
+
+// =====================================================
+// پیش‌نمایش فایل انتخاب‌شده برای بازیابی
+// =====================================================
+
+let stlpPendingRestoreData = null;
+
+function previewRestoreFile() {
+
+    const fileInput =
+        document.getElementById("restoreFile");
+
+    const file = fileInput.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+        let parsed;
+
+        try {
+
+            parsed = JSON.parse(event.target.result);
+
+        } catch (error) {
+
+            alert("❌ این فایل یک JSON معتبر نیست.");
+            fileInput.value = "";
+            stlpPendingRestoreData = null;
+            document.getElementById("restorePreview").style.display = "none";
+            return;
+
+        }
+
+        if (!parsed || typeof parsed !== "object" || !parsed.data) {
+
+            alert("❌ ساختار این فایل با فایل پشتیبان STLP مطابقت ندارد.");
+            fileInput.value = "";
+            stlpPendingRestoreData = null;
+            document.getElementById("restorePreview").style.display = "none";
+            return;
+
+        }
+
+        stlpPendingRestoreData = parsed.data;
+
+        const tbody =
+            document.getElementById("restorePreviewTable");
+
+        tbody.innerHTML =
+            STLP_BACKUP_KEYS.map(function(item) {
+
+                const raw = parsed.data[item.key];
+
+                const count =
+                    raw !== undefined
+                        ? stlpCountRecords(raw)
+                        : "—";
+
+                return (
+                    "<tr><td>" + item.label + "</td><td>" + count + "</td></tr>"
+                );
+
+            }).join("");
+
+        document.getElementById("restorePreview").style.display = "block";
+
+    };
+
+    reader.readAsText(file, "utf-8");
+
+}
+
+
+// =====================================================
+// اجرای نهایی بازیابی
+// =====================================================
+
+async function confirmRestore() {
+
+    if (!stlpPendingRestoreData) {
+        alert("❌ ابتدا یک فایل پشتیبان انتخاب کنید.");
+        return;
+    }
+
+    if (!confirm(
+        "⚠️ با این کار، تمام اطلاعات فعلی این مرورگر با محتوای فایل پشتیبان جایگزین می‌شود " +
+        "و قابل بازگشت نیست (مگر اینکه خودتان قبلاً از وضعیت فعلی هم پشتیبان گرفته باشید).\n\n" +
+        "آیا مطمئن هستید؟"
+    )) return;
+
+    if (!confirm("برای اطمینان کامل، یک‌بار دیگر تأیید کنید: بازیابی انجام شود؟")) return;
+
+    const includeUsers = document.getElementById("restoreIncludeUsers").checked;
+
+    if (includeUsers && !confirm(
+        "⚠️ گزینه‌ی «جایگزینیِ کاربران» فعال است — یعنی همه‌ی حساب‌های کاربری و " +
+        "رمزهای عبورِ فعلی هم با فایل پشتیبان جایگزین می‌شوند و ممکن است بعد از این، " +
+        "با رمز فعلی‌تان نتوانید وارد شوید.\n\nادامه می‌دهید؟"
+    )) return;
+
+    // این بازیابی مستقیماً از یک درخواست به سرور استفاده می‌کند
+    // (نه یک PUT جدا برای هر کلید) تا هم سریع‌تر باشد و هم قانونِ
+    // «بدون تیک، کاربران دست‌نخورده می‌مانند» را خودِ سرور هم دوباره
+    // بررسی کند، نه فقط این صفحه.
+    let result;
+
+    try {
+
+        const response = await fetch("/api/admin/import-backup", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: stlpPendingRestoreData, includeUsers: includeUsers })
+        });
+
+        result = await response.json();
+
+        if (!response.ok) throw new Error(result.error || "بازیابی ناموفق بود.");
+
+    } catch (error) {
+
+        alert("❌ بازیابی ناموفق بود: " + error.message);
+        return;
+
+    }
+
+    alert(
+        "✅ بازیابی انجام شد (" + result.importedCount + " بخش).\n" +
+        "صفحه مجدداً بارگذاری می‌شود."
+    );
+
+    stlpLogActivity("پشتیبان‌گیری", "بازیابی از فایل", result.importedCount + " بخش جایگزین شد.");
+
+    stlpPendingRestoreData = null;
+
+    location.reload();
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    // چکِ بالای فایل (stlpRequirePermission در یک تگِ <script> جدا)
+    // فقط ریدایرکت را صف می‌کند، جلوی اجرای این تگِ اسکریپتِ دیگر را
+    // نمی‌گیرد — برای همین همین‌جا هم دوباره (و این‌بار با توقفِ
+    // واقعی) چک می‌شود، وگرنه یک کاربرِ غیرادمین قبل از کامل‌شدنِ
+    // ریدایرکت، برای یک لحظه خلاصه‌ی داده‌های پشتیبان را می‌دید.
+    if (!stlpRequirePermission("admin-only")) {
+        return;
+    }
+
+    renderDataSummary();
+
+});
+
+</script>
+
+</body>
+</html>

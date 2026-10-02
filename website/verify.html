@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تأیید اصالت کالا — STLP</title>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+
+<style>
+  .verify-wrap{ max-width:900px; margin:0 auto; padding:52px 40px 72px; text-align:center; }
+  .verify-wrap h1{ font-size:26px; margin-bottom:10px; }
+  .verify-wrap > p{ font-size:14px; color:var(--muted); max-width:520px; margin:0 auto 36px; }
+
+  .verify-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; text-align:right; }
+  @media (max-width:720px){ .verify-grid{ grid-template-columns:1fr; } }
+
+  .v-card{ background:#fff; border:1px solid var(--line); border-radius:20px; padding:28px; }
+  .v-card h2{ font-size:14px; margin-bottom:16px; }
+
+  #reader{ border-radius:16px; overflow:hidden; }
+  .qr-placeholder{
+    background:var(--bg-dark); border-radius:16px; height:220px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  }
+  .qr-placeholder span{ color:#9db3ac; font-size:12px; }
+
+  #manual-code{ width:100%; background:var(--panel); border:none; border-radius:10px; padding:14px; font-size:13px; font-family:inherit; margin-bottom:14px; box-sizing:border-box; }
+
+  #result-box, #result-box-manual{
+    margin-top:15px; padding:14px; border-radius:10px; font-size:13px; font-weight:700; display:none;
+  }
+  .ok{ background:var(--accent-soft); border:1px solid var(--accent); color:var(--accent-dark); }
+  .bad{ background:#fdecec; border:1px solid #e0736b; color:var(--danger); }
+</style>
+<link rel="stylesheet" href="css/refresh.css">
+<link rel="stylesheet" href="css/site-complete.css">
+<link rel="stylesheet" href="css/site-unified.css"></head>
+<body class="refresh">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="STLP">
+      <div><div class="brand-name">STLP</div><div class="brand-sub">صبا تجهیز لاله پارسه</div></div>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" >خانه</a>
+      <a href="shop.html">فروشگاه</a>
+      <a href="brands.html">برندها</a>
+      <a href="about.html">درباره ما</a>
+      <a href="verify.html" class="active">تأیید اصالت</a>
+      <a href="track.html">پیگیری سفارش</a>
+    </nav>
+    <div class="header-right">
+      <a href="cart.html" class="cart-link" aria-label="سبد خرید">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e7efec" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;"></span>
+      </a>
+      
+      <button class="menu-btn" onclick="openMenu()" aria-label="منو">☰</button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-menu">
+  <div class="sheet">
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+    <a href="index.html">خانه</a>
+    <a href="shop.html">فروشگاه</a>
+    <a href="brands.html">برندها</a>
+    <a href="about.html">درباره ما</a>
+    <a href="verify.html">تأیید اصالت</a>
+    <a href="track.html">پیگیری سفارش</a>
+  </div>
+</div>
+
+<section class="verify-wrap">
+  <h1>تأیید اصالت کالا</h1>
+  <p>کد روی برچسب هر بسته STLP را اسکن یا وارد کنید تا اصالت آن بررسی شود.</p>
+
+  <div class="verify-grid">
+
+    <div class="v-card">
+      <h2>اسکن QR Code</h2>
+      <div id="reader"></div>
+      <div id="qr-placeholder" class="qr-placeholder">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0fa37f" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 14h2M14 19h2M19 19h2"/></svg>
+        <span>دوربین را روی QR بگیرید</span>
+      </div>
+      <button id="start-btn" class="btn btn-block mt-16">شروع اسکن</button>
+      <button id="stop-btn" class="btn btn-dark btn-block mt-16" style="display:none;">توقف اسکن</button>
+      <div id="result-box"></div>
+    </div>
+
+    <div class="v-card">
+      <h2>بررسی دستی کد</h2>
+      <input id="manual-code" placeholder="مثال: STLP-2025-000123-7">
+      <button id="validate-btn" class="btn btn-dark btn-block">بررسی کد</button>
+      <div id="result-box-manual"></div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container grid grid-3">
+    <div>
+      <h4>STLP — صبا تجهیز لاله پارسه</h4>
+      <div class="muted">شماره ثبت ۶۴۷۲۰۸ &nbsp;|&nbsp; شناسه ملی ۱۴۰۱۴۲۴۵۵۱۹</div>
+    </div>
+    <div>
+      <h4>دسترسی سریع</h4>
+      <div class="muted"><a href="shop.html">محصولات</a> &nbsp;·&nbsp; <a href="brands.html">برندها</a> &nbsp;·&nbsp; <a href="about.html">درباره ما</a> &nbsp;·&nbsp; <a href="verify.html">تأیید اصالت</a></div>
+    </div>
+    <div>
+      <h4>تماس</h4>
+      <div class="muted">۰۹۱۲۰۶۱۳۰۰۲ &nbsp;·&nbsp; info@stlp.ir</div>
+    </div>
+  </div>
+  <div class="footer-bottom"><a href="contact.html">تماس و راهنمای خرید</a> · © STLP — تمامی حقوق محفوظ است</div>
+</footer>
+
+<script src="js/site.js"></script>
+<script>
+/* --- Checksum Validation Function --- */
+function checksum(year, seq) {
+    let sum = 0;
+    (year + seq).split("").forEach(d => sum += parseInt(d));
+    return String((sum % 11) % 10);
+}
+function validate(code) {
+    code = code.trim();
+    const m = code.match(/^STLP-(\d{4})-(\d{6})-(\d)$/);
+    if (!m) return { ok:false, msg:"فرمت کد نامعتبر است" };
+    const year = m[1], seq = m[2], c = m[3];
+    const expected = checksum(year, seq);
+    return (expected === c)
+        ? { ok:true, msg:"ساختار کد معتبر است؛ برای تأیید نهایی با STLP تماس بگیرید" }
+        : { ok:false, msg:"کد نامعتبر است" };
+}
+
+document.getElementById("validate-btn").onclick = () => {
+    const code = document.getElementById("manual-code").value.trim();
+    const res = validate(code);
+    const box = document.getElementById("result-box-manual");
+    box.style.display = "block";
+    box.className = res.ok ? "ok" : "bad";
+    box.innerText = res.msg + "\n" + code;
+};
+
+/* QR Scanner */
+let scanner = null;
+document.getElementById("reader").style.display = "none";
+
+document.getElementById("start-btn").onclick = () => {
+    document.getElementById("qr-placeholder").style.display = "none";
+    document.getElementById("reader").style.display = "block";
+    scanner = new Html5Qrcode("reader");
+
+    Html5Qrcode.getCameras().then(cameras => {
+        if (!cameras.length) throw new Error("دوربین موجود نیست");
+        return scanner.start(
+            cameras[cameras.length - 1].id,
+            { fps: 10, qrbox: 250 },
+            (text) => {
+                const res = validate(text);
+                const box = document.getElementById("result-box");
+                box.style.display = "block";
+                box.className = res.ok ? "ok" : "bad";
+                box.innerText = res.msg + "\n" + text;
+            }
+        );
+    }).catch(() => {
+        alert("دسترسی به دوربین امکان‌پذیر نشد.");
+        document.getElementById("start-btn").style.display = "block";
+        document.getElementById("stop-btn").style.display = "none";
+        document.getElementById("qr-placeholder").style.display = "flex";
+        document.getElementById("reader").style.display = "none";
+    });
+
+    document.getElementById("start-btn").style.display = "none";
+    document.getElementById("stop-btn").style.display = "block";
+};
+
+document.getElementById("stop-btn").onclick = () => {
+    if (scanner) { scanner.stop(); scanner.clear(); }
+    document.getElementById("stop-btn").style.display = "none";
+    document.getElementById("start-btn").style.display = "block";
+    document.getElementById("qr-placeholder").style.display = "flex";
+    document.getElementById("reader").style.display = "none";
+};
+</script>
+<script src="js/refresh.js"></script></body>
+</html>

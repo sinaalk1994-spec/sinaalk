@@ -1,0 +1,5584 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+<title>حقوق و دستمزد - STLP</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+
+.payroll-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.payroll-tab-btn {
+    background: rgba(255,255,255,.08);
+    border: 1px solid #0fa37f66;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.payroll-tab-btn:hover {
+    background: rgba(255,255,255,.15);
+}
+
+.payroll-tab-btn.active {
+    background: #0fa37f;
+    border-color: #0fa37f;
+}
+
+.payroll-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+    align-items: stretch;
+}
+
+.payroll-form-grid > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.payroll-form-grid label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #ccc;
+}
+
+.payroll-form-grid input,
+.payroll-form-grid select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.payroll-period-bar {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.payroll-period-bar .field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.payroll-period-bar label {
+    font-size: 12px;
+    color: #ccc;
+}
+
+.payroll-period-bar input,
+.payroll-period-bar select {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    font-family: inherit;
+}
+
+table.payroll-table input[type="number"] {
+    width: 70px;
+    padding: 4px;
+    font-size: 12px;
+}
+
+.pay-btn {
+    background: #0fa37f;
+    border: none;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.pay-btn:hover { background: #0c8b6a; }
+
+.pay-btn.paid {
+    background: #2f855a;
+    cursor: default;
+}
+
+.del-emp-btn {
+    background: #dc3545;
+    border: none;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.edit-emp-btn {
+    background: #0d6efd;
+    border: none;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.payroll-badge-paid {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 10px;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.payroll-badge-unpaid {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 4px 10px;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 12px;
+    display: inline-block;
+}
+
+</style>
+</head>
+<body>
+
+<div class="overlay">
+
+    <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html" class="active">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+    <h2>مدیریت حقوق و دستمزد</h2>
+
+    <div class="payroll-tabs">
+
+        <button type="button" id="tabBtnRun" class="payroll-tab-btn active" onclick="stlpShowPayrollTab('run')">
+            💰 فیش حقوقی این ماه
+        </button>
+
+        <button type="button" id="tabBtnEmployees" class="payroll-tab-btn" onclick="stlpShowPayrollTab('employees')">
+            👤 کارمندان
+        </button>
+
+        <button type="button" id="tabBtnHistory" class="payroll-tab-btn" onclick="stlpShowPayrollTab('history')">
+            📜 سوابق پرداخت
+        </button>
+
+        <button type="button" id="tabBtnEidiSanavat" class="payroll-tab-btn" onclick="stlpShowPayrollTab('eidisanavat')">
+            🎁 عیدی و سنوات
+        </button>
+
+        <button type="button" id="tabBtnLeave" class="payroll-tab-btn" onclick="stlpShowPayrollTab('leave')">
+            🌴 مرخصی و استعلاجی
+        </button>
+
+        <button type="button" id="tabBtnTermination" class="payroll-tab-btn" onclick="stlpShowPayrollTab('termination')">
+            🧾 تسویه پایان کار
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         تب: فیش حقوقی این ماه
+    ===================================================== -->
+
+    <div id="tabPanelRun" class="card">
+
+        <h3>محاسبه و پرداخت حقوق</h3>
+
+        <div class="payroll-period-bar">
+
+            <div class="field">
+                <label>دوره (سال/ماه شمسی)</label>
+                <input id="payrollPeriod" type="text" placeholder="مثلاً 1404/06" style="width:130px;">
+            </div>
+
+            <button type="button" onclick="stlpSetCurrentPeriod()">📅 ماه جاری</button>
+
+            <div class="field">
+                <label>حساب پرداخت (خزانه)</label>
+                <select id="payrollAccount" style="min-width:180px;"></select>
+            </div>
+
+            <div class="field">
+                <label>سقف معافیت مالیاتی ماهانه (ریال)</label>
+                <input id="payrollTaxExemptionCeiling" type="number" style="width:160px;" onchange="stlpSaveTaxExemptionCeiling()">
+            </div>
+
+            <button type="button" onclick="renderPayrollRun()">🔄 بارگذاری</button>
+
+            <button type="button" onclick="payAllUnpaidEmployees()" style="background:#0d6efd;">
+                💳 پرداخت همه (پرداخت‌نشده‌ها)
+            </button>
+
+            <button type="button" onclick="downloadPayrollPeriodExcel()" style="background:#6c757d;">
+                📊 خروجی اکسل کل این دوره
+            </button>
+
+            <button type="button" onclick="downloadOfficialPayslipsBulk()" style="background:#8b5cf6;">
+                🖨 فیش رسمی کارمندان انتخاب‌شده (چندصفحه‌ای)
+            </button>
+
+            <button type="button" onclick="stlpOpenKartexModal()" style="background:#20c997;">
+                📇 وارد کردن از کارتکس (CSV)
+            </button>
+
+        </div>
+
+        <p style="color:#aaa; font-size:12px; margin-top:-6px;">
+            💡 حق مسکن، حق اولاد، حق تأهل و بن خواروبار طبق ماده ۳۶ قانون کار از مالیات معافند و همیشه مالیات نمی‌خورند.
+            بقیه‌ی اقلام (حقوق پایه، سنوات، جذب، مسئولیت، اضافه‌کاری، پاداش) تا سقف معافیت بالا مالیات نمی‌خورند و فقط
+            مازاد آن، به‌صورت <b>پلکانی</b> طبق جدول زیر مالیات می‌خورد. این سقف و بازه‌های پلکانی هرسال توسط دولت
+            تغییر می‌کند — لطفاً هرسال بررسی و به‌روز کنید.
+        </p>
+
+        <p style="color:#aaa; font-size:12px; margin-top:-6px;">
+            💡 سقف مزد مشمول کسر حق بیمه (هم سهم ۷٪ کارگر، هم سهم ۲۳٪ کارفرما) معادل ۷ برابر «حداقل دستمزد قانونی
+            ماهانه» است — همان عددی که در تب «عیدی و سنوات» تنظیم می‌کنید؛ اگر آنجا صفر باشد، سقفی اعمال نمی‌شود.
+        </p>
+
+        <!-- =====================================================
+             بازه‌های پلکانی مالیات — روی مازاد سقف معافیت اعمال
+             می‌شود؛ کاملاً دستی و قابل تنظیم است (نه محاسبه‌ی خودکار
+             طبق قانون)، چون نرخ‌ها هرسال تغییر می‌کنند
+        ===================================================== -->
+        <div class="card" style="margin-bottom:14px; border:1px solid #444;">
+
+            <h3>🪜 بازه‌های پلکانی مالیات (روی مازاد سقف معافیت)</h3>
+
+            <p style="color:#aaa; font-size:12px;">
+                هر بازه یعنی: «تا این مقدار مازاد، با این درصد مالیات بگیر»؛ باقیِ مازاد به بازه‌ی بعدی می‌رود.
+                آخرین بازه همیشه نامحدود است. این جدول دستی‌ست — با توجه به دستورالعمل هرساله‌ی دولت، بازه‌ها و
+                درصدها را خودتان تنظیم کنید.
+            </p>
+
+            <table class="payroll-table" style="width:100%; max-width:520px; background:#fff; color:#000;">
+                <thead>
+                    <tr style="background:#0fa37f; color:#fff;">
+                        <th>طول بازه (ریال)</th>
+                        <th>درصد مالیات این بازه</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="taxBracketsTable"></tbody>
+            </table>
+
+            <div style="margin-top:8px;">
+                <button type="button" onclick="stlpAddTaxBracketRow()">➕ افزودن بازه</button>
+                <button type="button" onclick="stlpSaveTaxBrackets()" style="background:#0d6efd;">💾 ذخیره‌ی بازه‌ها</button>
+                <button type="button" onclick="stlpResetTaxBrackets()" style="background:#6c757d;">↩️ بازگشت به پیش‌فرض</button>
+            </div>
+
+        </div>
+
+        <div style="overflow-x:auto;">
+            <table class="payroll-table" style="width:100%; background:#fff; color:#000;">
+                <thead>
+                    <tr style="background:#0fa37f; color:#fff;">
+                        <th><input type="checkbox" id="payrollSelectAll" onchange="stlpToggleAllPayrollChecks(this)"></th>
+                        <th>کارمند</th>
+                        <th>نوع حقوق</th>
+                        <th>روزهای کارکرد</th>
+                        <th>ساعات اضافه‌کاری</th>
+                        <th>پاداش</th>
+                        <th>مساعده</th>
+                        <th>سایر کسورات</th>
+                        <th>مبلغ پایه</th>
+                        <th>اضافه‌کاری</th>
+                        <th>مزایا (مسکن/اولاد/بن/سنوات...)</th>
+                        <th>ناخالص</th>
+                        <th>بیمه (کسر)</th>
+                        <th>مالیات (کسر)</th>
+                        <th>خالص پرداختی</th>
+                        <th>وضعیت / عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="payrollRunTable"></tbody>
+            </table>
+        </div>
+
+        <!-- =====================================================
+             تسویه بیمه و مالیات دوره (سهم کارگر + سهم کارفرما)
+             این جدا از پرداخت خالص حقوق است و خودکار ثبت نمی‌شود؛
+             فقط با تأیید صریح مالی، یک تراکنش خزانه ثبت می‌شود
+        ===================================================== -->
+        <div class="card" style="margin-top:16px; border:1px solid #444;">
+
+            <h3>🏦 تسویه حق بیمه و مالیات دوره (پرداخت به تأمین اجتماعی / دارایی)</h3>
+
+            <p style="color:#aaa; font-size:12px;">
+                سهم بیمه و مالیات کسرشده از حقوق کارگران، خودکار در پرداخت خالص حقوق آن‌ها منظور نمی‌شود و به آن‌ها
+                پرداخت نمی‌گردد؛ این مبالغ باید به‌همراه سهم بیمه‌ی کارفرما، جداگانه و با تأیید مالی، در یک
+                تراکنش خزانه به‌عنوان بدهی به سازمان تأمین اجتماعی و امور مالیاتی ثبت و پرداخت شود.
+            </p>
+
+            <div class="payroll-period-bar">
+                <div class="field">
+                    <label>درصد سهم بیمه‌ی کارفرما (٪)</label>
+                    <input id="payrollEmployerInsuranceRate" type="number" style="width:120px;" onchange="stlpSaveEmployerInsuranceRate()">
+                </div>
+                <div class="field">
+                    <label>حساب پرداخت (خزانه)</label>
+                    <select id="insuranceTaxAccount" style="min-width:180px;"></select>
+                </div>
+                <button type="button" onclick="renderInsuranceTaxSettlement()">🔄 محاسبه‌ی دوره</button>
+            </div>
+
+            <table class="payroll-table" style="width:100%; max-width:560px; background:#fff; color:#000; margin-top:8px;">
+                <tbody id="insuranceTaxSummaryTable"></tbody>
+            </table>
+
+            <div style="display:flex; gap:24px; flex-wrap:wrap; margin-top:12px;">
+
+                <div>
+                    <div id="insuranceSettleStatus" style="margin-bottom:6px; font-size:13px;"></div>
+                    <button type="button" id="btnSettleInsurance" onclick="stlpSettleInsurance()"
+                        style="background:#dc3545;">
+                        ✅ ثبت پرداخت بیمه (تأمین اجتماعی)
+                    </button>
+                </div>
+
+                <div>
+                    <div id="taxSettleStatus" style="margin-bottom:6px; font-size:13px;"></div>
+                    <button type="button" id="btnSettleTax" onclick="stlpSettleTax()"
+                        style="background:#dc3545;">
+                        ✅ ثبت پرداخت مالیات (دارایی)
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         تب: کارمندان
+    ===================================================== -->
+
+    <div id="tabPanelEmployees" class="card" style="display:none;">
+
+        <h3>افزودن / ویرایش کارمند</h3>
+
+        <input type="hidden" id="empEditId" value="">
+
+        <div class="payroll-form-grid">
+
+            <div>
+                <label>نام و نام خانوادگی</label>
+                <input id="empName" type="text">
+            </div>
+
+            <div>
+                <label>سمت</label>
+                <input id="empPosition" type="text">
+            </div>
+
+            <div>
+                <label>تلفن</label>
+                <input id="empPhone" type="text">
+            </div>
+
+            <div>
+                <label>کد ملی</label>
+                <input id="empNationalId" type="text">
+            </div>
+
+            <div>
+                <label>شماره پرسنلی</label>
+                <input id="empPersonnelNo" type="text">
+            </div>
+
+            <div>
+                <label>تاریخ استخدام (شمسی مثلاً 1402/03/15)</label>
+                <input id="empHireDate" type="text" placeholder="1402/03/15">
+            </div>
+
+            <div>
+                <label>سهمیه مرخصی استحقاقی سالانه (روز)</label>
+                <input id="empAnnualLeaveDays" type="number" value="26" style="width:100%;">
+            </div>
+
+            <div id="empDepartmentWrap">
+                <label>بخش (دپارتمان)</label>
+                <select id="empDepartmentId" style="width:100%;"><option value="">— بدون بخش —</option></select>
+            </div>
+
+            <div>
+                <label>نوع جایگاه</label>
+                <select id="empOrgKind" onchange="stlpToggleEmpOrgFields()" style="width:100%;">
+                    <option value="dept">در یک بخش</option>
+                    <option value="board">هیات مدیره</option>
+                </select>
+            </div>
+
+            <div id="empOrgRoleWrap">
+                <label>نقش در بخش</label>
+                <select id="empOrgRole" style="width:100%;">
+                    <option value="employee">کارمند عادی</option>
+                    <option value="manager">مدیر بخش</option>
+                    <option value="deputy">معاون بخش</option>
+                </select>
+            </div>
+
+            <div id="empBoardPostWrap" style="display:none;">
+                <label>پست در هیات مدیره</label>
+                <select id="empBoardPost" style="width:100%;">
+                    <option value="chairman">رئیس هیات مدیره</option>
+                    <option value="vice_chairman">نایب رئیس هیات مدیره</option>
+                    <option value="ceo">مدیرعامل</option>
+                    <option value="member">عضو هیات مدیره</option>
+                </select>
+            </div>
+
+            <div>
+                <label>نوع حقوق</label>
+                <select id="empSalaryType" onchange="stlpUpdateSalaryTypeHint()">
+                    <option value="monthly">ماهانه ثابت</option>
+                    <option value="daily">روزمزد</option>
+                    <option value="hourly">ساعتی</option>
+                </select>
+            </div>
+
+            <div>
+                <label id="empBaseSalaryLabel">حقوق پایه ماهانه (ریال)</label>
+                <input id="empBaseSalary" type="number" value="0">
+            </div>
+
+            <div>
+                <label>روزهای کاری استاندارد ماه</label>
+                <input id="empWorkDays" type="number" value="30">
+            </div>
+
+            <div>
+                <label>درصد بیمه (کسر از حقوق)</label>
+                <input id="empInsuranceRate" type="number" value="7">
+            </div>
+
+            <div>
+                <label>ضریب اضافه‌کاری</label>
+                <input id="empOvertimeMultiplier" type="number" value="1.4" step="0.1">
+            </div>
+
+            <div>
+                <label>معاف از بیمه؟</label>
+                <select id="empInsuranceExempt">
+                    <option value="false">خیر</option>
+                    <option value="true">بله</option>
+                </select>
+            </div>
+
+            <div>
+                <label>درصد مالیات</label>
+                <div style="font-size:12px; color:#aaa; padding-top:6px;">
+                    از «بازه‌های پلکانی مالیات» در بالای صفحه محاسبه می‌شود
+                </div>
+            </div>
+
+            <div>
+                <label>معاف از مالیات؟</label>
+                <select id="empTaxExempt">
+                    <option value="true">بله</option>
+                    <option value="false">خیر</option>
+                </select>
+            </div>
+
+            <div>
+                <label>تعداد اولاد</label>
+                <input id="empChildrenCount" type="number" value="0">
+            </div>
+
+            <div>
+                <label>حق اولاد (ریال)</label>
+                <input id="empChildAllowance" type="number" value="0">
+            </div>
+
+            <div>
+                <label>حق تأهل (ریال)</label>
+                <input id="empMaritalAllowance" type="number" value="0">
+            </div>
+
+            <div>
+                <label>حق مسکن (ریال)</label>
+                <input id="empHousingAllowance" type="number" value="0">
+            </div>
+
+            <div>
+                <label>بن و خواربار (ریال)</label>
+                <input id="empFoodAllowance" type="number" value="0">
+            </div>
+
+            <div>
+                <label>حق جذب (ریال)</label>
+                <input id="empAttractionAllowance" type="number" value="0">
+            </div>
+
+            <div>
+                <label>حق مسئولیت (ریال)</label>
+                <input id="empResponsibilityAllowance" type="number" value="0">
+            </div>
+
+            <div>
+                <label>پایه سنوات (ریال)</label>
+                <input id="empSeniorityBase" type="number" value="0">
+            </div>
+
+        </div>
+
+        <button type="button" onclick="saveEmployeeForm()">➕ ذخیره کارمند</button>
+        <button type="button" onclick="resetEmployeeForm()" style="background:#6c757d;">✖ لغو ویرایش</button>
+
+        <h3 style="margin-top:25px;">لیست کارمندان</h3>
+
+        <div style="margin-bottom:12px;">
+            <button type="button" onclick="stlpExportEmployeesCsv()">📤 خروجی اکسل (CSV) همه‌ی کارمندان</button>
+            <button type="button" onclick="document.getElementById('employeesCsvFileInput').click()" style="background:#0d6efd;">📥 ورود گروهی از فایل CSV</button>
+            <input type="file" id="employeesCsvFileInput" accept=".csv" style="display:none;" onchange="stlpImportEmployeesCsv(this.files[0])">
+        </div>
+
+        <p style="color:#aaa; font-size:12px; margin-top:-6px;">
+            💡 برای ورود گروهی، اول همین دکمه‌ی «خروجی اکسل» رو بزن، فایل رو با Excel باز کن، ردیف‌های جدید رو اضافه یا
+            ویرایش کن (ستون «شماره پرسنلی» کلید شناسایی است — اگر پر باشد و از قبل وجود داشته باشد، همان کارمند
+            به‌روزرسانی می‌شود، وگرنه کارمند جدید ساخته می‌شود)، بعد ذخیره‌اش کن به فرمت CSV و از همین‌جا آپلودش کن.
+        </p>
+
+        <table style="width:100%; background:#fff; color:#000;">
+            <thead>
+                <tr style="background:#0fa37f; color:#fff;">
+                    <th>نام</th>
+                    <th>سمت</th>
+                    <th>نوع حقوق</th>
+                    <th>حقوق پایه</th>
+                    <th>بیمه</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="employeesTable"></tbody>
+        </table>
+
+    </div>
+
+
+    <!-- =====================================================
+         تب: سوابق پرداخت
+    ===================================================== -->
+
+    <div id="tabPanelHistory" class="card" style="display:none;">
+
+        <h3>سوابق فیش‌های حقوقی</h3>
+
+        <input id="historySearch" oninput="renderPayrollHistory()"
+               placeholder="جستجوی نام کارمند یا دوره..."
+               style="padding:10px; width:280px; margin-bottom:15px;">
+
+        <table style="width:100%; background:#fff; color:#000;">
+            <thead>
+                <tr style="background:#0fa37f; color:#fff;">
+                    <th>کارمند</th>
+                    <th>دوره</th>
+                    <th>روز کارکرد</th>
+                    <th>اضافه‌کاری (ساعت)</th>
+                    <th>ناخالص</th>
+                    <th>کسورات</th>
+                    <th>خالص پرداختی</th>
+                    <th>وضعیت</th>
+                    <th>حساب</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="payrollHistoryTable"></tbody>
+        </table>
+
+    </div>
+
+
+    <!-- =====================================================
+         تب: عیدی و سنوات سالانه
+    ===================================================== -->
+
+    <div id="tabPanelEidiSanavat" class="card" style="display:none;">
+
+        <h3>🎁 عیدی و سنوات سالانه</h3>
+
+        <p style="color:#aaa; font-size:12px;">
+            عیدی معادل دو برابر حقوق ماهانه‌ی پایه است، اما هرگز از سه برابر «حداقل دستمزد قانونی ماهانه» (که هرسال
+            توسط شورای عالی کار تعیین می‌شود) بیشتر نمی‌شود؛ برای کارکرد کمتر از یک سال، نسبت به مدت کارکرد در همان
+            سال شمسی تناسب می‌گیرد. سنوات، به‌ازای هر سال کامل خدمت از تاریخ استخدام (یا آخرین تسویه)، معادل یک ماه
+            حقوق پایه است. هر دو معاف از بیمه و مشمول مالیات پلکانی (همان جدول بالای صفحه) هستند. هیچ‌کدام خودکار
+            پرداخت نمی‌شوند — فقط با زدن دکمه‌ی پرداخت هر کارمند (یا «پرداخت همه») ثبت می‌شوند.
+        </p>
+
+        <div class="payroll-period-bar">
+
+            <div class="field">
+                <label>سال شمسی</label>
+                <input id="payrollEidiSanavatYear" type="number" style="width:100px;" onchange="renderEidiSanavatTable()">
+            </div>
+
+            <div class="field">
+                <label>حداقل دستمزد قانونی ماهانه (ریال)</label>
+                <input id="payrollMinimumWage" type="number" style="width:160px;" onchange="stlpSaveMinimumWage()">
+            </div>
+
+            <div class="field">
+                <label>حساب پرداخت (خزانه)</label>
+                <select id="payrollEidiSanavatAccount" style="min-width:180px;"></select>
+            </div>
+
+            <button type="button" onclick="renderEidiSanavatTable()">🔄 محاسبه‌ی دوباره</button>
+
+            <button type="button" onclick="stlpPayAllEidiSanavat()" style="background:#0d6efd;">
+                💳 پرداخت همه (پرداخت‌نشده‌ها)
+            </button>
+
+        </div>
+
+        <div style="overflow-x:auto;">
+            <table class="payroll-table" style="width:100%; background:#fff; color:#000;">
+                <thead>
+                    <tr style="background:#0fa37f; color:#fff;">
+                        <th>کارمند</th>
+                        <th>عیدی</th>
+                        <th>سال‌های سابقه (سنوات)</th>
+                        <th>سنوات</th>
+                        <th>مالیات پلکانی</th>
+                        <th>خالص قابل پرداخت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="eidiSanavatTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         تب: مرخصی، استعلاجی و زایمان
+    ===================================================== -->
+
+    <div id="tabPanelLeave" class="card" style="display:none;">
+
+        <h3>🌴 مرخصی، استعلاجی و زایمان</h3>
+
+        <p style="color:#aaa; font-size:12px;">
+            مانده‌ی مرخصی هر کارمند به‌صورت خودکار، ماه‌به‌ماه (سهمیه‌ی سالانه ÷ ۱۲) به‌محض پرداخت فیش همان ماه
+            تعلق می‌گیرد و از «روزهای مرخصی استفاده‌شده این ماه» (در پنجره‌ی جزئیات بیشتر هر فیش) کم می‌شود. سقف
+            ذخیره و روزهای استعلاجی/زایمان صرفاً برای ثبت و پیگیری هستند و روی محاسبه‌ی حقوق اثر نمی‌گذارند.
+        </p>
+
+        <div class="payroll-period-bar">
+
+            <div class="field">
+                <label>سقف قابل‌ذخیره‌ی مرخصی به سال بعد (روز)</label>
+                <input id="payrollLeaveCarryoverCap" type="number" style="width:100px;" onchange="stlpSaveLeaveCarryoverCap()">
+            </div>
+
+            <div class="field">
+                <label>روزهای اول استعلاجی بدون پرداخت (روز)</label>
+                <input id="payrollSickUnpaidDays" type="number" style="width:100px;" onchange="stlpSaveSickUnpaidDays()">
+            </div>
+
+            <div class="field">
+                <label>مدت مرخصی زایمان طبق آخرین مصوبه (روز)</label>
+                <input id="payrollMaternityLeaveDays" type="number" style="width:110px;" onchange="stlpSaveMaternityLeaveDays()">
+            </div>
+
+            <div class="field">
+                <label>حداکثر روز قابل بازخرید مرخصی در سال</label>
+                <input id="payrollLeaveSellMaxDays" type="number" style="width:100px;" onchange="stlpSaveLeaveSellMaxDays()">
+            </div>
+
+            <button type="button" onclick="renderLeaveTable()">🔄 به‌روزرسانی</button>
+
+        </div>
+
+        <p style="color:#aaa; font-size:12px; margin-top:-6px;">
+            💡 بازخرید مرخصی نباید از «مانده‌ی مرخصی» کارمند و نه از سقف سالانه‌ی بالا بیشتر شود؛ مبلغ آن (حقوق پایه ÷
+            ۳۰ × روز) طبق همان جدول پلکانی مالیات بالای صفحه مشمول مالیات می‌شود.
+        </p>
+
+        <div style="overflow-x:auto;">
+            <table class="payroll-table" style="width:100%; background:#fff; color:#000;">
+                <thead>
+                    <tr style="background:#0fa37f; color:#fff;">
+                        <th>کارمند</th>
+                        <th>سهمیه سالانه</th>
+                        <th>مانده مرخصی</th>
+                        <th>استعلاجی با حقوق (امسال)</th>
+                        <th>استعلاجی بدون حقوق (امسال)</th>
+                        <th>وضعیت مرخصی زایمان</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="leaveTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         تب: تسویه‌حساب پایان همکاری
+    ===================================================== -->
+
+    <div id="tabPanelTermination" class="card" style="display:none;">
+
+        <h3>🧾 تسویه‌حساب پایان همکاری</h3>
+
+        <p style="color:#aaa; font-size:12px;">
+            این محاسبه فقط «سنوات» (از تاریخ استخدام یا آخرین تسویه تا تاریخ پایان کار) + «عیدی نسبی همان سال» +
+            «بازخرید کامل مانده‌ی مرخصی» (بدون محدودیت سقف سالانه، چون تسویه‌ی نهایی است) را با هم جمع می‌زند و
+            یک‌بار مشمول مالیات پلکانی می‌کند. مزایای دیگر (مثل آخرین حقوق ماه جاری) را باید جدا از تب «فیش حقوقی این
+            ماه» تسویه کنید.
+        </p>
+
+        <div class="payroll-period-bar">
+
+            <div class="field">
+                <label>کارمند</label>
+                <select id="terminationEmployeeId" onchange="stlpCalcTermination()" style="min-width:220px;"></select>
+            </div>
+
+            <div class="field">
+                <label>تاریخ پایان همکاری (شمسی)</label>
+                <input id="terminationDate" type="text" placeholder="1404/07/15" onchange="stlpCalcTermination()" style="width:130px;">
+            </div>
+
+            <div class="field">
+                <label>حساب پرداخت (خزانه)</label>
+                <select id="terminationAccount" style="min-width:180px;"></select>
+            </div>
+
+            <button type="button" onclick="stlpCalcTermination()">🔄 محاسبه</button>
+
+        </div>
+
+        <table style="width:100%; background:#fff; color:#000;" id="terminationResultTable">
+            <tbody></tbody>
+        </table>
+
+        <button type="button" onclick="stlpFinalizeTermination()" style="background:#dc3545; margin-top:15px;">
+            ✅ ثبت تسویه‌ی نهایی و غیرفعال کردن کارمند
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     پنجره جزئیات بیشتر (فیلدهای متغیر این دوره)
+===================================================== -->
+
+<div id="payrollExtrasModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:200; align-items:center; justify-content:center;">
+
+    <div class="card" style="max-width:420px; width:92%; max-height:85vh; overflow-y:auto;">
+
+        <h3 id="payrollExtrasTitle">جزئیات بیشتر فیش حقوقی</h3>
+
+        <p style="color:#aaa; font-size:11px; margin-top:-6px;">
+            💡 با ثبت مرخصی/استعلاجی بدون حقوق/غیبت/مرخصی ساعتی، «روزهای کارکرد» همین فیش خودکار محاسبه و در جدول
+            اصلی جایگزین می‌شود.
+        </p>
+
+        <input type="hidden" id="extrasEmployeeId" value="">
+
+        <label>روزهای مأموریت با اقامت</label>
+        <input id="extraMissionDaysWithStay" type="number" value="0" style="width:100%; margin-bottom:10px;"><br>
+
+        <label>روزهای مأموریت بدون اقامت</label>
+        <input id="extraMissionDaysNoStay" type="number" value="0" style="width:100%; margin-bottom:10px;"><br>
+
+        <label>حق مأموریت (ریال)</label>
+        <input id="extraMissionAllowance" type="number" value="0" style="width:100%; margin-bottom:10px;"><br>
+
+        <label>روزهای مرخصی استفاده‌شده این ماه</label>
+        <input id="extraLeaveUsedDays" type="number" value="0" style="width:100%; margin-bottom:10px;" onchange="stlpAutoCalcPresentDaysFromModal()"><br>
+
+        <label>روزهای استعلاجی با حقوق این ماه</label>
+        <input id="extraSickLeaveDaysPaid" type="number" value="0" style="width:100%; margin-bottom:10px;"><br>
+
+        <label>روزهای استعلاجی بدون حقوق این ماه</label>
+        <input id="extraSickLeaveDaysUnpaid" type="number" value="0" style="width:100%; margin-bottom:10px;" onchange="stlpAutoCalcPresentDaysFromModal()"><br>
+
+        <label>روزهای غیبت (بدون حقوق) این ماه</label>
+        <input id="extraAbsentDays" type="number" value="0" style="width:100%; margin-bottom:10px;" onchange="stlpAutoCalcPresentDaysFromModal()"><br>
+
+        <label>ساعت مرخصی ساعتی این ماه</label>
+        <input id="extraHourlyLeaveHours" type="number" value="0" style="width:100%; margin-bottom:10px;" onchange="stlpAutoCalcPresentDaysFromModal()"><br>
+
+        <label>وام (ریال)</label>
+        <input id="extraLoan" type="number" value="0" style="width:100%; margin-bottom:10px;"><br>
+
+        <label>ساعت شب‌کاری این ماه</label>
+        <input id="extraNightShiftHours" type="number" value="0" style="width:100%; margin-bottom:10px;"><br>
+
+        <label>ساعت نوبت‌کاری این ماه</label>
+        <input id="extraShiftWorkHours" type="number" value="0" style="width:100%; margin-bottom:10px;"><br>
+
+        <label>حق نوبت‌کاری (ریال)</label>
+        <input id="extraShiftWorkPay" type="number" value="0" style="width:100%; margin-bottom:15px;"><br>
+
+        <p style="color:#888; font-size:12px;">
+            💡 مالیات و بیمه دیگر نیازی به وارد کردن دستی ندارند — بر اساس درصد و وضعیت معافیتی که در پروفایل هر کارمند
+            تنظیم کرده‌اید، خودکار محاسبه می‌شوند.<br><br>
+            💡 مجموع «مأموریت با اقامت» و «بدون اقامت» به‌عنوان جمع روزهای مأموریت در فیش رسمی نشان داده می‌شود
+            (قالب اکسل رسمی فقط یک ردیف مجموع دارد).
+        </p>
+
+        <button type="button" onclick="savePayrollExtrasModal()">💾 ذخیره</button>
+        <button type="button" onclick="closePayrollExtrasModal()" style="background:#6c757d;">✖ انصراف</button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     پنجره‌ی وارد کردن حضور و غیاب از خروجی کارتکس (CSV)
+===================================================== -->
+
+<div id="kartexModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:200; align-items:center; justify-content:center;">
+
+    <div class="card" style="max-width:680px; width:94%; max-height:90vh; overflow-y:auto;">
+
+        <h3>📇 وارد کردن حضور و غیاب از فایل کارتکس</h3>
+
+        <p style="color:#aaa; font-size:12px;">
+            چون فرمت خروجی هر دستگاه/نرم‌افزار کارتکس با مدل و تنظیمات فرق می‌کند، اینجا از خودت می‌پرسیم کدام ستون
+            فایل CSV‌ات چه معنایی دارد. اگر یک «دستگاه» را یک‌بار تنظیم کنی، دفعات بعد فقط فایل جدید را آپلود کن —
+            تطبیق ستون‌ها را خودش به‌خاطر می‌سپارد.
+        </p>
+
+        <div style="margin-bottom:12px;">
+            <label>دستگاه / پروفایل</label><br>
+            <select id="kartexProfileSelect" onchange="stlpKartexProfileChanged()" style="width:70%;"></select>
+            <button type="button" onclick="stlpKartexNewProfile()" style="background:#0d6efd;">+ دستگاه جدید</button>
+            <button type="button" onclick="stlpKartexDeleteProfile()" style="background:#dc3545;">🗑 حذف این پروفایل</button>
+        </div>
+
+        <div style="margin-bottom:12px;">
+            <label>فایل CSV خروجی دستگاه (خلاصه‌ی ماهانه — هر ردیف یک نفر)</label><br>
+            <input type="file" id="kartexFileInput" accept=".csv" onchange="stlpKartexFileSelected(this.files[0])">
+        </div>
+
+        <div id="kartexMappingArea" style="display:none;">
+
+            <h4>تطبیق ستون‌ها</h4>
+
+            <table style="width:100%; margin-bottom:12px;">
+                <tr>
+                    <td style="padding:4px;">شناسه‌ی کارمند (شماره پرسنلی یا نام)</td>
+                    <td><select id="kartexColId" style="width:100%;"></select></td>
+                </tr>
+                <tr>
+                    <td style="padding:4px;">روزهای حضور (اگر دستگاه این را می‌دهد)</td>
+                    <td><select id="kartexColPresent" style="width:100%;"></select></td>
+                </tr>
+                <tr>
+                    <td style="padding:4px;">روزهای غیبت (اگر دستگاه این را می‌دهد)</td>
+                    <td><select id="kartexColAbsent" style="width:100%;"></select></td>
+                </tr>
+                <tr>
+                    <td style="padding:4px;">ساعت اضافه‌کاری</td>
+                    <td><select id="kartexColOvertime" style="width:100%;"></select></td>
+                </tr>
+            </table>
+
+            <p style="color:#aaa; font-size:11px;">
+                💡 فقط یکی از دو ستون «روزهای حضور» یا «روزهای غیبت» کافی است (اگر هر دو را انتخاب کنی، «روزهای حضور»
+                در اولویت است). ستون‌هایی که دستگاهت ندارد را روی «— ندارد —» بگذار.
+            </p>
+
+            <button type="button" onclick="stlpKartexPreview()">🔍 پیش‌نمایش</button>
+
+            <div id="kartexPreviewArea" style="margin-top:12px;"></div>
+
+            <button type="button" onclick="stlpKartexApply()" id="kartexApplyBtn" style="display:none; background:#198754; margin-top:10px;">
+                ✅ اعمال به جدول این ماه
+            </button>
+
+        </div>
+
+        <br>
+        <button type="button" onclick="stlpCloseKartexModal()" style="background:#6c757d;">✖ بستن</button>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+
+<script>
+stlpRequirePermission("payroll");
+</script>
+
+<script src="payroll_excel_engine.js"></script>
+
+<script>
+
+// =====================================================
+// جابجایی بین تب‌ها
+// =====================================================
+
+function stlpShowPayrollTab(tab) {
+
+    document.getElementById("tabPanelRun").style.display =
+        tab === "run" ? "block" : "none";
+
+    document.getElementById("tabPanelEmployees").style.display =
+        tab === "employees" ? "block" : "none";
+
+    document.getElementById("tabPanelHistory").style.display =
+        tab === "history" ? "block" : "none";
+
+    document.getElementById("tabPanelEidiSanavat").style.display =
+        tab === "eidisanavat" ? "block" : "none";
+
+    document.getElementById("tabPanelLeave").style.display =
+        tab === "leave" ? "block" : "none";
+
+    document.getElementById("tabPanelTermination").style.display =
+        tab === "termination" ? "block" : "none";
+
+    document.getElementById("tabBtnRun").classList.toggle("active", tab === "run");
+    document.getElementById("tabBtnEmployees").classList.toggle("active", tab === "employees");
+    document.getElementById("tabBtnHistory").classList.toggle("active", tab === "history");
+    document.getElementById("tabBtnEidiSanavat").classList.toggle("active", tab === "eidisanavat");
+    document.getElementById("tabBtnLeave").classList.toggle("active", tab === "leave");
+    document.getElementById("tabBtnTermination").classList.toggle("active", tab === "termination");
+
+    if (tab === "run") renderPayrollRun();
+    if (tab === "eidisanavat") {
+        stlpFillPayrollAccountSelect();
+        const eidiSel = document.getElementById("payrollEidiSanavatAccount");
+        const mainSel = document.getElementById("payrollAccount");
+        if (eidiSel && mainSel) eidiSel.innerHTML = mainSel.innerHTML;
+        renderEidiSanavatTable();
+    }
+    if (tab === "leave") renderLeaveTable();
+    if (tab === "termination") {
+        stlpFillPayrollAccountSelect();
+        const termSel = document.getElementById("terminationAccount");
+        const mainSel2 = document.getElementById("payrollAccount");
+        if (termSel && mainSel2) termSel.innerHTML = mainSel2.innerHTML;
+        stlpFillTerminationEmployeeSelect();
+    }
+    if (tab === "employees") {
+        stlpFillEmployeeDepartmentSelect();
+        renderEmployees();
+    }
+    if (tab === "history") renderPayrollHistory();
+
+}
+
+
+// =====================================================
+// ذخیره/بارگذاری کارمندان
+// =====================================================
+
+// توابع loadEmployees و saveEmployees به app.js منتقل شدند تا
+// letters.html هم بتواند هنگام تأیید درخواست مرخصی از آن‌ها
+// استفاده کند (بدون دوباره‌تعریف‌شدن اینجا)
+
+
+// =====================================================
+// ذخیره/بارگذاری فیش‌های حقوقی
+// =====================================================
+
+function loadPayrollRecords() {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem("stlp_payroll") || "[]"
+        );
+
+    } catch (error) {
+
+        return [];
+
+    }
+
+}
+
+function savePayrollRecords(list) {
+
+    localStorage.setItem(
+        "stlp_payroll",
+        JSON.stringify(list)
+    );
+
+}
+
+
+// =====================================================
+// راهنمای برچسب حقوق پایه بر اساس نوع
+// =====================================================
+
+function stlpUpdateSalaryTypeHint() {
+
+    const type =
+        document.getElementById("empSalaryType").value;
+
+    const label =
+        document.getElementById("empBaseSalaryLabel");
+
+    if (type === "monthly") {
+        label.textContent = "حقوق پایه ماهانه (ریال)";
+    } else if (type === "daily") {
+        label.textContent = "دستمزد هر روز (ریال)";
+    } else {
+        label.textContent = "دستمزد هر ساعت (ریال)";
+    }
+
+}
+
+
+// =====================================================
+// افزودن / ویرایش کارمند
+// =====================================================
+
+function saveEmployeeForm() {
+
+    const name =
+        document.getElementById("empName").value.trim();
+
+    if (!name) {
+        alert("لطفاً نام کارمند را وارد کنید.");
+        return;
+    }
+
+    const employees = loadEmployees();
+
+    const editId =
+        document.getElementById("empEditId").value;
+
+    const employee = {
+
+        id:
+            editId ||
+            "emp_" + Date.now().toString(36) +
+            Math.random().toString(36).substring(2, 6),
+
+        name: name,
+
+        position:
+            document.getElementById("empPosition").value.trim(),
+
+        phone:
+            document.getElementById("empPhone").value.trim(),
+
+        nationalId:
+            document.getElementById("empNationalId").value.trim(),
+
+        personnelNo:
+            document.getElementById("empPersonnelNo").value.trim(),
+
+        hireDate:
+            document.getElementById("empHireDate").value.trim(),
+
+        annualLeaveDays:
+            Number(document.getElementById("empAnnualLeaveDays").value || 26),
+
+        departmentId:
+            document.getElementById("empOrgKind").value === "board"
+                ? ""
+                : (document.getElementById("empDepartmentId").value || ""),
+
+        orgRole:
+            document.getElementById("empOrgKind").value === "board"
+                ? "board"
+                : document.getElementById("empOrgRole").value,
+
+        boardPost:
+            document.getElementById("empOrgKind").value === "board"
+                ? document.getElementById("empBoardPost").value
+                : "",
+
+        salaryType:
+            document.getElementById("empSalaryType").value,
+
+        baseSalary:
+            Number(document.getElementById("empBaseSalary").value || 0),
+
+        workDays:
+            Number(document.getElementById("empWorkDays").value || 30),
+
+        insuranceRate:
+            Number(document.getElementById("empInsuranceRate").value || 0),
+
+        overtimeMultiplier:
+            Number(document.getElementById("empOvertimeMultiplier").value || 1.4),
+
+        insuranceExempt:
+            document.getElementById("empInsuranceExempt").value === "true",
+
+        taxExempt:
+            document.getElementById("empTaxExempt").value === "true",
+
+        childrenCount:
+            Number(document.getElementById("empChildrenCount").value || 0),
+
+        childAllowance:
+            Number(document.getElementById("empChildAllowance").value || 0),
+
+        maritalAllowance:
+            Number(document.getElementById("empMaritalAllowance").value || 0),
+
+        housingAllowance:
+            Number(document.getElementById("empHousingAllowance").value || 0),
+
+        foodAllowance:
+            Number(document.getElementById("empFoodAllowance").value || 0),
+
+        attractionAllowance:
+            Number(document.getElementById("empAttractionAllowance").value || 0),
+
+        responsibilityAllowance:
+            Number(document.getElementById("empResponsibilityAllowance").value || 0),
+
+        seniorityBase:
+            Number(document.getElementById("empSeniorityBase").value || 0),
+
+        active: true
+
+    };
+
+    // هر بخش فقط یک مدیر می‌تونه داشته باشه — اگه یکی دیگه از قبل
+    // مدیرِ همین بخشه، با تأیید کاربر به «کارمند عادی» تنزل می‌کنه
+    if (employee.orgRole === "manager" && employee.departmentId) {
+
+        const previousManager =
+            employees.find(function(e) {
+                return e.id !== employee.id &&
+                    e.departmentId === employee.departmentId &&
+                    e.orgRole === "manager" &&
+                    e.active !== false;
+            });
+
+        if (previousManager) {
+
+            if (!confirm(
+                "کارمند «" + previousManager.name + "» از قبل مدیرِ همین بخشه.\n" +
+                "اگه ادامه بدی، ایشون به «کارمند عادی» همین بخش تنزل پیدا می‌کنه و «" + employee.name + "» مدیر جدید می‌شه. ادامه بدم؟"
+            )) {
+                return;
+            }
+
+            previousManager.orgRole = "employee";
+
+        }
+
+    }
+
+    if (editId) {
+
+        const index =
+            employees.findIndex(function(e) { return e.id === editId; });
+
+        if (index >= 0) {
+            // حفظ فیلدهای غیرفرمی (مثل تاریخ آخرین تسویه‌ی سنوات) که در فرم نیستند
+            employee.lastSanavatSettlementDate = employees[index].lastSanavatSettlementDate || "";
+
+            // این فرم هیچ کنترلی برای «فعال/غیرفعال» یا «تاریخ تسویه‌ی
+            // پایان‌کار» ندارد (این دو فقط از طریقِ تبِ «تسویه‌ی پایان
+            // کار» تنظیم می‌شوند) — پس نباید با یک ویرایشِ معمولی (مثلاً
+            // فقط تغییرِ شماره‌تلفن) بی‌سروصدا بازنویسی شوند. قبلاً چون
+            // employee.active همیشه true ساخته می‌شد و اینجا اصلاً
+            // بازنویسی نمی‌شد، ذخیره‌ی هر ویرایشی روی یک کارمندِ
+            // تسویه‌شده، او را دوباره فعال می‌کرد.
+            const wasTerminated = employees[index].active === false;
+            employee.active = !wasTerminated;
+            employee.terminationDate = wasTerminated ? (employees[index].terminationDate || "") : "";
+
+            // تغییر «حقوق پایه» معمولاً یعنی سال مالی جدید شروع شده (افزایش حقوق سالانه)
+            // پس این لحظه، مرخصی هم برای سال جدید تازه می‌شود: مانده‌ی قبلی تا سقف
+            // «قابل‌ذخیره» نگه داشته و بقیه‌اش با سهمیه‌ی سالانه‌ی جدید جمع می‌شود
+            const oldBaseSalary = employees[index].baseSalary;
+            const salaryChanged = oldBaseSalary !== employee.baseSalary;
+
+            if (wasTerminated) {
+
+                // مانده‌ی مرخصیِ یک کارمندِ تسویه‌شده قبلاً در همان لحظه‌ی
+                // تسویه محاسبه/صفر شده؛ یک ویرایشِ معمولی نباید دوباره
+                // با سهمیه‌ی سالانه پرش کند
+                employee.leaveBalance = employees[index].leaveBalance || 0;
+
+            } else if (salaryChanged) {
+
+                const carryoverCap =
+                    typeof stlpGetLeaveCarryoverCap === "function" ? stlpGetLeaveCarryoverCap() : 9;
+
+                const oldBalance = employees[index].leaveBalance || 0;
+                const carried = Math.min(oldBalance, carryoverCap);
+
+                employee.leaveBalance = carried + (employee.annualLeaveDays || 26);
+
+                alert(
+                    "💡 چون حقوق پایه تغییر کرد، فرض شد سال مالی جدید شروع شده:\n" +
+                    "مانده‌ی مرخصی از " + oldBalance.toFixed(1) + " به " + employee.leaveBalance.toFixed(1) + " روز ریست شد\n" +
+                    "(" + carried.toFixed(1) + " روز ذخیره‌شده از سال قبل + " + (employee.annualLeaveDays || 26) + " روز سهمیه‌ی سال جدید)"
+                );
+
+            } else {
+
+                // اگر مانده‌ی مرخصی هنوز صفر/تنظیم‌نشده است، از همین سهمیه‌ی سالانه پر می‌شود
+                employee.leaveBalance =
+                    employees[index].leaveBalance
+                        ? employees[index].leaveBalance
+                        : employee.annualLeaveDays || 26;
+
+            }
+
+            employees[index] = employee;
+        }
+
+    } else {
+
+        employee.lastSanavatSettlementDate = "";
+        employee.leaveBalance = employee.annualLeaveDays || 26;
+        employees.push(employee);
+
+        // کارمندِ جدید اتمیک روی سرور اضافه می‌شود (نه خواندنِ کاملِ
+        // آرایه + نوشتنِ کاملِ آن) تا اگر دو نفر هم‌زمان کارمند اضافه
+        // کنند، یکی گم نشود
+        if (typeof stlpAppendToStoreArraySync === "function") {
+            stlpAppendToStoreArraySync("stlp_employees", employee, "id", employee.id);
+        } else {
+            saveEmployees(employees);
+        }
+
+        if (typeof stlpLogActivity === "function") {
+            stlpLogActivity("حقوق و دستمزد", "افزودن کارمند", "«" + name + "»");
+        }
+
+        resetEmployeeForm();
+        renderEmployees();
+
+        return;
+
+    }
+
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", editId ? "ویرایش کارمند" : "افزودن کارمند", "«" + name + "»");
+    }
+
+    resetEmployeeForm();
+
+    renderEmployees();
+
+}
+
+// =====================================================
+// ورود/خروج گروهی کارمندان با فایل CSV (قابل باز شدن در Excel)
+//
+// خروجی: تمام فیلدهای قابل‌ویرایش هر کارمند + مانده‌ی مرخصی
+// (فقط برای اطلاع، در ورود دوباره نادیده گرفته می‌شود)
+//
+// ورودی: بر اساس ستون «شماره پرسنلی» تطبیق داده می‌شود — اگر با
+// یک کارمند موجود یکی باشد، همان به‌روزرسانی می‌شود؛ اگر خالی
+// باشد یا با هیچ‌کدام مطابقت نداشته باشد، کارمند جدید ساخته می‌شود
+// =====================================================
+
+const STLP_EMPLOYEE_CSV_COLUMNS = [
+    "personnelNo", "name", "position", "phone", "nationalId", "hireDate",
+    "annualLeaveDays", "salaryType", "baseSalary", "workDays",
+    "insuranceRate", "overtimeMultiplier", "insuranceExempt", "taxExempt",
+    "childrenCount", "childAllowance", "maritalAllowance", "housingAllowance",
+    "foodAllowance", "attractionAllowance", "responsibilityAllowance",
+    "seniorityBase", "active"
+];
+
+const STLP_EMPLOYEE_CSV_HEADERS_FA = [
+    "شماره پرسنلی", "نام و نام خانوادگی", "سمت", "تلفن", "کد ملی",
+    "تاریخ استخدام", "سهمیه مرخصی سالانه", "نوع حقوق", "حقوق پایه",
+    "روزهای کارکرد استاندارد", "درصد بیمه", "ضریب اضافه‌کاری",
+    "معاف از بیمه (true/false)", "معاف از مالیات (true/false)",
+    "تعداد فرزند", "حق اولاد", "حق تأهل", "حق مسکن", "بن خواروبار",
+    "حق جذب", "حق مسئولیت", "پایه سنوات", "فعال (true/false)"
+];
+
+
+function stlpCsvEscapeCell(value) {
+
+    const str = (value === null || value === undefined) ? "" : String(value);
+
+    if (/[",\n\r]/.test(str)) {
+        return '"' + str.replace(/"/g, '""') + '"';
+    }
+
+    return str;
+
+}
+
+
+function stlpCsvParseLine(line) {
+
+    const cells = [];
+    let current = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+
+        const ch = line[i];
+
+        if (inQuotes) {
+
+            if (ch === '"' && line[i + 1] === '"') {
+                current += '"';
+                i++;
+            } else if (ch === '"') {
+                inQuotes = false;
+            } else {
+                current += ch;
+            }
+
+        } else {
+
+            if (ch === '"') {
+                inQuotes = true;
+            } else if (ch === ",") {
+                cells.push(current);
+                current = "";
+            } else {
+                current += ch;
+            }
+
+        }
+
+    }
+
+    cells.push(current);
+    return cells;
+
+}
+
+
+function stlpExportEmployeesCsv() {
+
+    const employees = loadEmployees();
+
+    const header =
+        STLP_EMPLOYEE_CSV_HEADERS_FA.concat(["مانده مرخصی فعلی (فقط اطلاعاتی)"]);
+
+    const rows = employees.map(function(employee) {
+
+        const row = STLP_EMPLOYEE_CSV_COLUMNS.map(function(key) {
+            return employee[key] === undefined || employee[key] === null ? "" : employee[key];
+        });
+
+        row.push(employee.leaveBalance || 0);
+
+        return row;
+
+    });
+
+    const csvLines =
+        [header].concat(rows).map(function(row) {
+            return row.map(stlpCsvEscapeCell).join(",");
+        });
+
+    const csvContent = "\uFEFF" + csvLines.join("\r\n");
+
+    const blob =
+        new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+    stlpDownloadBlob(blob, "کارمندان-STLP-" + new Date().toISOString().slice(0, 10) + ".csv");
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "خروجی CSV کارمندان", employees.length + " کارمند");
+    }
+
+}
+
+
+function stlpImportEmployeesCsv(file) {
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        try {
+
+            const text = String(e.target.result).replace(/^\uFEFF/, "");
+            const lines = text.split(/\r\n|\n|\r/).filter(function(l) { return l.trim() !== ""; });
+
+            if (lines.length < 2) {
+                alert("❌ فایل خالی است یا فقط سطر عنوان دارد.");
+                return;
+            }
+
+            const dataLines = lines.slice(1); // سطر اول = عنوان ستون‌ها، نادیده گرفته می‌شود
+
+            const employees = loadEmployees();
+
+            let newCount = 0;
+            let updateCount = 0;
+
+            dataLines.forEach(function(line) {
+
+                const cells = stlpCsvParseLine(line);
+                if (cells.every(function(c) { return c.trim() === ""; })) return;
+
+                const record = {};
+                STLP_EMPLOYEE_CSV_COLUMNS.forEach(function(key, i) {
+                    record[key] = cells[i] !== undefined ? cells[i].trim() : "";
+                });
+
+                if (!record.name) return; // بدون نام، ردیف نامعتبر است و رد می‌شود
+
+                const personnelNo = record.personnelNo;
+
+                const existingIndex =
+                    personnelNo
+                        ? employees.findIndex(function(emp) { return emp.personnelNo && emp.personnelNo === personnelNo; })
+                        : -1;
+
+                const numericFields = [
+                    "annualLeaveDays", "baseSalary", "workDays", "insuranceRate",
+                    "overtimeMultiplier", "childrenCount", "childAllowance",
+                    "maritalAllowance", "housingAllowance", "foodAllowance",
+                    "attractionAllowance", "responsibilityAllowance", "seniorityBase"
+                ];
+
+                numericFields.forEach(function(f) {
+                    record[f] = Number(record[f] || 0);
+                });
+
+                record.insuranceExempt = String(record.insuranceExempt).trim() === "true";
+                record.taxExempt = String(record.taxExempt).trim() === "true";
+                record.active = String(record.active).trim() !== "false"; // پیش‌فرض فعال
+
+                if (existingIndex >= 0) {
+
+                    // حفظ فیلدهای اجرایی (مانده مرخصی، استعلاجی، زایمان، سنوات) که در CSV نیستند
+                    const preserved = {
+                        id: employees[existingIndex].id,
+                        leaveBalance: employees[existingIndex].leaveBalance,
+                        sickLeavePaidUsedThisYear: employees[existingIndex].sickLeavePaidUsedThisYear,
+                        sickLeaveUnpaidUsedThisYear: employees[existingIndex].sickLeaveUnpaidUsedThisYear,
+                        maternityLeaveActive: employees[existingIndex].maternityLeaveActive,
+                        maternityLeaveStartDate: employees[existingIndex].maternityLeaveStartDate,
+                        lastSanavatSettlementDate: employees[existingIndex].lastSanavatSettlementDate,
+                        leaveSoldByYear: employees[existingIndex].leaveSoldByYear,
+                        // ستونِ CSV برای تاریخِ تسویه‌ی پایانِ کار وجود ندارد؛
+                        // بدونِ این، بازخوانیِ CSV یک کارمندِ غیرفعالِ
+                        // ازقبل‌تسویه‌شده را دست‌نخورده نگه می‌داشت ولی
+                        // تاریخِ تسویه‌اش را بی‌سروصدا پاک می‌کرد
+                        terminationDate: employees[existingIndex].terminationDate
+                    };
+
+                    employees[existingIndex] = Object.assign({}, record, preserved);
+                    updateCount++;
+
+                } else {
+
+                    record.id =
+                        "emp_" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6) + newCount;
+
+                    record.leaveBalance = record.annualLeaveDays || 26;
+
+                    employees.push(record);
+                    newCount++;
+
+                }
+
+            });
+
+            if (!confirm(
+                "نتیجه‌ی بررسی فایل:\n" +
+                "کارمند جدید: " + newCount + "\n" +
+                "کارمند به‌روزرسانی‌شده: " + updateCount + "\n\n" +
+                "آیا این تغییرات اعمال شود؟"
+            )) return;
+
+            saveEmployees(employees);
+
+            if (typeof stlpLogActivity === "function") {
+                stlpLogActivity("حقوق و دستمزد", "ورود گروهی CSV کارمندان", newCount + " جدید، " + updateCount + " به‌روزرسانی");
+            }
+
+            alert("✅ ورود گروهی با موفقیت انجام شد.");
+
+            renderEmployees();
+
+        } catch (error) {
+
+            alert("❌ خطا در خواندن فایل CSV:\n\n" + error.message);
+
+        } finally {
+
+            document.getElementById("employeesCsvFileInput").value = "";
+
+        }
+
+    };
+
+    reader.readAsText(file, "UTF-8");
+
+}
+
+
+// =====================================================
+// وارد کردن حضور و غیاب از خروجی CSV دستگاه کارتکس
+//
+// چون فرمت خروجی هر دستگاه فرق دارد، کاربر خودش ستون‌های فایل
+// را به فیلدهای موردنیاز (شناسه، حضور/غیبت، اضافه‌کاری) تطبیق
+// می‌دهد؛ این تطبیق در یک «پروفایل دستگاه» ذخیره می‌شود تا دفعات
+// بعد دوباره لازم نباشد
+// =====================================================
+
+let stlpKartexHeaders = [];
+let stlpKartexRows = [];
+let stlpKartexPreviewResult = [];
+
+function stlpKartexProfilesKey() {
+    return "stlp_payroll_kartex_profiles";
+}
+
+function stlpLoadKartexProfiles() {
+    try {
+        return JSON.parse(localStorage.getItem(stlpKartexProfilesKey())) || [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function stlpSaveKartexProfiles(profiles) {
+    localStorage.setItem(stlpKartexProfilesKey(), JSON.stringify(profiles));
+}
+
+
+function stlpOpenKartexModal() {
+
+    const period = document.getElementById("payrollPeriod").value.trim();
+    if (!period) {
+        alert("لطفاً ابتدا دوره را در تب «فیش حقوقی این ماه» مشخص کنید.");
+        return;
+    }
+
+    stlpKartexHeaders = [];
+    stlpKartexRows = [];
+    stlpKartexPreviewResult = [];
+
+    document.getElementById("kartexMappingArea").style.display = "none";
+    document.getElementById("kartexApplyBtn").style.display = "none";
+    document.getElementById("kartexPreviewArea").innerHTML = "";
+    document.getElementById("kartexFileInput").value = "";
+
+    stlpKartexRenderProfileSelect();
+
+    document.getElementById("kartexModal").style.display = "flex";
+
+}
+
+
+function stlpCloseKartexModal() {
+    document.getElementById("kartexModal").style.display = "none";
+}
+
+
+function stlpKartexRenderProfileSelect() {
+
+    const sel = document.getElementById("kartexProfileSelect");
+    const profiles = stlpLoadKartexProfiles();
+
+    if (profiles.length === 0) {
+        sel.innerHTML = '<option value="">— هنوز دستگاهی تعریف نشده —</option>';
+        return;
+    }
+
+    sel.innerHTML =
+        profiles.map(function(p) {
+            return '<option value="' + p.id + '">' + escapeHtml(p.name) + '</option>';
+        }).join("");
+
+}
+
+
+function stlpKartexNewProfile() {
+
+    const name = prompt("نام دستگاه/پروفایل جدید (مثلاً «کارتکس دفتر مرکزی»):", "");
+    if (!name) return;
+
+    const profiles = stlpLoadKartexProfiles();
+
+    const profile = {
+        id: "kx_" + Date.now().toString(36),
+        name: name,
+        columnMap: null // بعد از اولین تطبیق پر می‌شود
+    };
+
+    profiles.push(profile);
+    stlpSaveKartexProfiles(profiles);
+
+    stlpKartexRenderProfileSelect();
+    document.getElementById("kartexProfileSelect").value = profile.id;
+
+}
+
+
+function stlpKartexDeleteProfile() {
+
+    const sel = document.getElementById("kartexProfileSelect");
+    const id = sel.value;
+    if (!id) return;
+
+    if (!confirm("این پروفایل دستگاه حذف شود؟ (فقط تنظیمات تطبیق ستون حذف می‌شود، داده‌ای پاک نمی‌شود)")) return;
+
+    let profiles = stlpLoadKartexProfiles();
+    profiles = profiles.filter(function(p) { return p.id !== id; });
+    stlpSaveKartexProfiles(profiles);
+
+    stlpKartexRenderProfileSelect();
+
+}
+
+
+function stlpKartexProfileChanged() {
+    // اگر فایلی از قبل انتخاب شده، تطبیق ذخیره‌شده‌ی پروفایل جدید را روی همان اعمال کن
+    if (stlpKartexHeaders.length > 0) stlpKartexApplySavedMapping();
+}
+
+
+function stlpKartexFileSelected(file) {
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        const text = String(e.target.result).replace(/^\uFEFF/, "");
+        const lines = text.split(/\r\n|\n|\r/).filter(function(l) { return l.trim() !== ""; });
+
+        if (lines.length < 2) {
+            alert("❌ فایل خالی است یا فقط سطر عنوان دارد.");
+            return;
+        }
+
+        stlpKartexHeaders = stlpCsvParseLine(lines[0]);
+        stlpKartexRows = lines.slice(1).map(stlpCsvParseLine);
+
+        const options =
+            '<option value="-1">— ندارد —</option>' +
+            stlpKartexHeaders.map(function(h, i) {
+                return '<option value="' + i + '">' + escapeHtml(h) + '</option>';
+            }).join("");
+
+        ["kartexColId", "kartexColPresent", "kartexColAbsent", "kartexColOvertime"].forEach(function(id) {
+            document.getElementById(id).innerHTML = options;
+        });
+
+        document.getElementById("kartexMappingArea").style.display = "block";
+        document.getElementById("kartexApplyBtn").style.display = "none";
+        document.getElementById("kartexPreviewArea").innerHTML = "";
+
+        stlpKartexApplySavedMapping();
+
+    };
+
+    reader.readAsText(file, "UTF-8");
+
+}
+
+
+function stlpKartexApplySavedMapping() {
+
+    const profileId = document.getElementById("kartexProfileSelect").value;
+    if (!profileId) return;
+
+    const profiles = stlpLoadKartexProfiles();
+    const profile = profiles.find(function(p) { return p.id === profileId; });
+    if (!profile || !profile.columnMap) return;
+
+    const map = profile.columnMap;
+
+    // تطبیق بر اساس نام ستون (نه اندیس)، چون ترتیب ستون‌ها ممکن است بین فایل‌ها فرق کند
+    function findIndexByHeaderName(headerName) {
+        if (!headerName) return -1;
+        return stlpKartexHeaders.indexOf(headerName);
+    }
+
+    document.getElementById("kartexColId").value = findIndexByHeaderName(map.idHeader);
+    document.getElementById("kartexColPresent").value = findIndexByHeaderName(map.presentHeader);
+    document.getElementById("kartexColAbsent").value = findIndexByHeaderName(map.absentHeader);
+    document.getElementById("kartexColOvertime").value = findIndexByHeaderName(map.overtimeHeader);
+
+}
+
+
+function stlpKartexSaveMappingToProfile() {
+
+    const profileId = document.getElementById("kartexProfileSelect").value;
+    if (!profileId) return;
+
+    const idIdx = Number(document.getElementById("kartexColId").value);
+    const presentIdx = Number(document.getElementById("kartexColPresent").value);
+    const absentIdx = Number(document.getElementById("kartexColAbsent").value);
+    const overtimeIdx = Number(document.getElementById("kartexColOvertime").value);
+
+    const headerAt = function(idx) { return idx >= 0 ? stlpKartexHeaders[idx] : null; };
+
+    const profiles = stlpLoadKartexProfiles();
+    const profile = profiles.find(function(p) { return p.id === profileId; });
+    if (!profile) return;
+
+    profile.columnMap = {
+        idHeader: headerAt(idIdx),
+        presentHeader: headerAt(presentIdx),
+        absentHeader: headerAt(absentIdx),
+        overtimeHeader: headerAt(overtimeIdx)
+    };
+
+    stlpSaveKartexProfiles(profiles);
+
+}
+
+
+function stlpKartexPreview() {
+
+    const idIdx = Number(document.getElementById("kartexColId").value);
+
+    if (idIdx < 0) {
+        alert("❌ ستون «شناسه‌ی کارمند» را انتخاب کن.");
+        return;
+    }
+
+    const presentIdx = Number(document.getElementById("kartexColPresent").value);
+    const absentIdx = Number(document.getElementById("kartexColAbsent").value);
+    const overtimeIdx = Number(document.getElementById("kartexColOvertime").value);
+
+    if (presentIdx < 0 && absentIdx < 0) {
+        alert("❌ حداقل یکی از ستون‌های «روزهای حضور» یا «روزهای غیبت» را انتخاب کن.");
+        return;
+    }
+
+    const employees = loadEmployees().filter(function(e) { return e.active !== false; });
+
+    stlpKartexPreviewResult = stlpKartexRows.map(function(cells) {
+
+        const idValue = (cells[idIdx] || "").trim();
+
+        const employee =
+            employees.find(function(e) { return e.personnelNo && e.personnelNo === idValue; }) ||
+            employees.find(function(e) { return e.name === idValue; });
+
+        const standardDays = employee ? (employee.workDays || 30) : 30;
+
+        let presentDays = null;
+
+        if (presentIdx >= 0 && cells[presentIdx] !== undefined && cells[presentIdx] !== "") {
+            presentDays = Number(cells[presentIdx]);
+        } else if (absentIdx >= 0 && cells[absentIdx] !== undefined && cells[absentIdx] !== "") {
+            presentDays = standardDays - Number(cells[absentIdx]);
+        }
+
+        const overtimeHours =
+            (overtimeIdx >= 0 && cells[overtimeIdx] !== undefined && cells[overtimeIdx] !== "")
+                ? Number(cells[overtimeIdx])
+                : null;
+
+        return {
+            idValue: idValue,
+            employee: employee,
+            presentDays: presentDays,
+            overtimeHours: overtimeHours
+        };
+
+    });
+
+    const matchedCount = stlpKartexPreviewResult.filter(function(r) { return r.employee; }).length;
+    const unmatchedRows = stlpKartexPreviewResult.filter(function(r) { return !r.employee; });
+
+    let html =
+        "<p>✅ " + matchedCount + " کارمند تطبیق داده شد از مجموع " + stlpKartexPreviewResult.length + " ردیف.</p>";
+
+    if (unmatchedRows.length > 0) {
+        html +=
+            "<p style='color:#dc3545;'>⚠️ ردیف‌های تطبیق‌نیافته (شماره پرسنلی/نام در سیستم پیدا نشد): " +
+            unmatchedRows.map(function(r) { return escapeHtml(r.idValue); }).join("، ") +
+            "</p>";
+    }
+
+    html +=
+        "<table style='width:100%; background:#fff; color:#000; font-size:12px;'><thead><tr style='background:#0fa37f; color:#fff;'>" +
+        "<th>شناسه</th><th>کارمند</th><th>روز کارکرد جدید</th><th>اضافه‌کاری جدید</th></tr></thead><tbody>" +
+        stlpKartexPreviewResult.map(function(r) {
+            return (
+                "<tr><td style='padding:4px;'>" + escapeHtml(r.idValue) + "</td>" +
+                "<td style='padding:4px;'>" + (r.employee ? escapeHtml(r.employee.name) : "—") + "</td>" +
+                "<td style='padding:4px;'>" + (r.presentDays === null ? "—" : r.presentDays) + "</td>" +
+                "<td style='padding:4px;'>" + (r.overtimeHours === null ? "—" : r.overtimeHours) + "</td></tr>"
+            );
+        }).join("") +
+        "</tbody></table>";
+
+    document.getElementById("kartexPreviewArea").innerHTML = html;
+    document.getElementById("kartexApplyBtn").style.display =
+        matchedCount > 0 ? "inline-block" : "none";
+
+}
+
+
+function stlpKartexApply() {
+
+    const matched = stlpKartexPreviewResult.filter(function(r) { return r.employee; });
+
+    if (matched.length === 0) return;
+
+    if (!confirm("روز کارکرد/اضافه‌کاری " + matched.length + " کارمند در جدول این ماه جایگزین شود؟")) return;
+
+    matched.forEach(function(r) {
+
+        const row = document.querySelector('tr[data-emp="' + r.employee.id + '"]');
+        if (!row) return;
+
+        if (r.presentDays !== null) {
+            const daysInput = row.querySelector(".pr-days");
+            if (daysInput) daysInput.value = Math.max(0, Math.round(r.presentDays * 100) / 100);
+        }
+
+        if (r.overtimeHours !== null) {
+            const otInput = row.querySelector(".pr-ot");
+            if (otInput) otInput.value = r.overtimeHours;
+        }
+
+        stlpRecalcRunRow(r.employee.id);
+
+    });
+
+    stlpKartexSaveMappingToProfile();
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "ورود کارتکس", matched.length + " کارمند به‌روزرسانی شدند");
+    }
+
+    alert("✅ اعمال شد. تطبیق ستون‌ها برای دفعه‌ی بعد در همین پروفایل ذخیره شد.");
+
+    stlpCloseKartexModal();
+
+}
+
+
+function resetEmployeeForm() {
+
+    document.getElementById("empEditId").value = "";
+    document.getElementById("empName").value = "";
+    document.getElementById("empPosition").value = "";
+    document.getElementById("empPhone").value = "";
+    document.getElementById("empNationalId").value = "";
+    document.getElementById("empPersonnelNo").value = "";
+    document.getElementById("empHireDate").value = "";
+    document.getElementById("empAnnualLeaveDays").value = 26;
+    document.getElementById("empOrgKind").value = "dept";
+    document.getElementById("empOrgRole").value = "employee";
+    document.getElementById("empBoardPost").value = "member";
+    stlpToggleEmpOrgFields();
+    document.getElementById("empSalaryType").value = "monthly";
+    document.getElementById("empDepartmentId").value = "";
+    document.getElementById("empBaseSalary").value = "0";
+    document.getElementById("empWorkDays").value = "30";
+    document.getElementById("empInsuranceRate").value = "7";
+    document.getElementById("empOvertimeMultiplier").value = "1.4";
+    document.getElementById("empInsuranceExempt").value = "false";
+    document.getElementById("empTaxExempt").value = "true";
+    document.getElementById("empChildrenCount").value = "0";
+    document.getElementById("empChildAllowance").value = "0";
+    document.getElementById("empMaritalAllowance").value = "0";
+    document.getElementById("empHousingAllowance").value = "0";
+    document.getElementById("empFoodAllowance").value = "0";
+    document.getElementById("empAttractionAllowance").value = "0";
+    document.getElementById("empResponsibilityAllowance").value = "0";
+    document.getElementById("empSeniorityBase").value = "0";
+
+    stlpUpdateSalaryTypeHint();
+
+}
+
+function editEmployee(id) {
+
+    const employees = loadEmployees();
+
+    const employee =
+        employees.find(function(e) { return e.id === id; });
+
+    if (!employee) return;
+
+    document.getElementById("empEditId").value = employee.id;
+    document.getElementById("empName").value = employee.name || "";
+    document.getElementById("empPosition").value = employee.position || "";
+    document.getElementById("empPhone").value = employee.phone || "";
+    document.getElementById("empNationalId").value = employee.nationalId || "";
+    document.getElementById("empPersonnelNo").value = employee.personnelNo || "";
+    document.getElementById("empHireDate").value = employee.hireDate || "";
+    document.getElementById("empAnnualLeaveDays").value = employee.annualLeaveDays || 26;
+    stlpFillEmployeeDepartmentSelect();
+    document.getElementById("empDepartmentId").value = employee.departmentId || "";
+    document.getElementById("empOrgKind").value = employee.orgRole === "board" ? "board" : "dept";
+    document.getElementById("empOrgRole").value =
+        (employee.orgRole === "manager" || employee.orgRole === "deputy") ? employee.orgRole : "employee";
+    document.getElementById("empBoardPost").value = employee.boardPost || "member";
+    stlpToggleEmpOrgFields();
+    document.getElementById("empSalaryType").value = employee.salaryType || "monthly";
+    document.getElementById("empBaseSalary").value = employee.baseSalary || 0;
+    document.getElementById("empWorkDays").value = employee.workDays || 30;
+    document.getElementById("empInsuranceRate").value = employee.insuranceRate || 0;
+    document.getElementById("empOvertimeMultiplier").value = employee.overtimeMultiplier || 1.4;
+    document.getElementById("empInsuranceExempt").value = employee.insuranceExempt ? "true" : "false";
+    document.getElementById("empTaxExempt").value = employee.taxExempt === false ? "false" : "true";
+    document.getElementById("empChildrenCount").value = employee.childrenCount || 0;
+    document.getElementById("empChildAllowance").value = employee.childAllowance || 0;
+    document.getElementById("empMaritalAllowance").value = employee.maritalAllowance || 0;
+    document.getElementById("empHousingAllowance").value = employee.housingAllowance || 0;
+    document.getElementById("empFoodAllowance").value = employee.foodAllowance || 0;
+    document.getElementById("empAttractionAllowance").value = employee.attractionAllowance || 0;
+    document.getElementById("empResponsibilityAllowance").value = employee.responsibilityAllowance || 0;
+    document.getElementById("empSeniorityBase").value = employee.seniorityBase || 0;
+
+    stlpUpdateSalaryTypeHint();
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+}
+
+function deleteEmployee(id) {
+
+    const payrollRecords = loadPayrollRecords();
+
+    const hasRecords =
+        payrollRecords.some(function(r) { return r.employeeId === id; });
+
+    if (hasRecords) {
+
+        if (!confirm(
+            "⚠️ برای این کارمند سابقه‌ی فیش حقوقی ثبت شده است.\n" +
+            "با حذف کارمند، سوابق قبلی حذف نمی‌شوند ولی دیگر در لیست کارمندان فعال نمایش داده نمی‌شود.\n" +
+            "آیا کارمند غیرفعال/حذف شود؟"
+        )) return;
+
+    } else {
+
+        if (!confirm("آیا از حذف این کارمند مطمئن هستید؟")) return;
+
+    }
+
+    let employees = loadEmployees();
+
+    const target = employees.find(function(e) { return e.id === id; });
+
+    employees = employees.filter(function(e) { return e.id !== id; });
+
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "حذف کارمند", target ? "«" + target.name + "»" : "");
+    }
+
+    renderEmployees();
+
+}
+
+function stlpSalaryTypeName(type) {
+
+    if (type === "daily") return "روزمزد";
+    if (type === "hourly") return "ساعتی";
+    return "ماهانه ثابت";
+
+}
+
+function renderEmployees() {
+
+    const tbody =
+        document.getElementById("employeesTable");
+
+    if (!tbody) return;
+
+    const employees = loadEmployees();
+
+    if (employees.length === 0) {
+
+        tbody.innerHTML =
+            '<tr><td colspan="7">هنوز کارمندی ثبت نشده است.</td></tr>';
+
+        return;
+
+    }
+
+    tbody.innerHTML =
+        employees.map(function(e) {
+
+            return (
+                "<tr>" +
+                "<td>" + escapeHtml(e.name) + "</td>" +
+                "<td>" + escapeHtml(e.position || "-") + "</td>" +
+                "<td>" + stlpSalaryTypeName(e.salaryType) + "</td>" +
+                "<td>" + stlpTreasuryMoney(e.baseSalary) + "</td>" +
+                "<td>" + (e.insuranceExempt ? "معاف" : (e.insuranceRate + "%")) + "</td>" +
+                "<td>" + (e.active !== false
+                    ? '<span class="payroll-badge-paid">فعال</span>'
+                    : '<span class="payroll-badge-unpaid">غیرفعال</span>') + "</td>" +
+                "<td>" +
+                    '<button type="button" class="edit-emp-btn" onclick="editEmployee(\'' + e.id + '\')">✏️ ویرایش</button>' +
+                    '<button type="button" class="del-emp-btn" onclick="deleteEmployee(\'' + e.id + '\')">🗑 حذف</button>' +
+                "</td>" +
+                "</tr>"
+            );
+
+        }).join("");
+
+}
+
+
+// =====================================================
+// دوره‌ی جاری (شمسی)
+// =====================================================
+
+function stlpSetCurrentPeriod() {
+
+    try {
+
+        const formatter =
+            new Intl.DateTimeFormat(
+                "fa-IR-u-ca-persian",
+                { year: "numeric", month: "2-digit" }
+            );
+
+        const parts =
+            formatter.formatToParts(new Date());
+
+        let year = "";
+        let month = "";
+
+        parts.forEach(function(p) {
+
+            if (p.type === "year") year = p.value;
+            if (p.type === "month") month = p.value;
+
+        });
+
+        // تبدیل اعداد فارسی به انگلیسی در صورت نیاز
+
+        const toEnglishDigits = function(str) {
+
+            return String(str).replace(/[۰-۹]/g, function(d) {
+                return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);
+            });
+
+        };
+
+        year = toEnglishDigits(year);
+        month = toEnglishDigits(month).padStart(2, "0");
+
+        if (year && month) {
+
+            document.getElementById("payrollPeriod").value =
+                year + "/" + month;
+
+        }
+
+    } catch (error) {
+
+        console.warn("تشخیص خودکار ماه جاری ممکن نشد.", error);
+
+    }
+
+    renderPayrollRun();
+
+}
+
+
+// =====================================================
+// پر کردن سلکت حساب خزانه از روی لیست پویا
+// =====================================================
+
+// پر کردن سلکت «بخش» فرم کارمند از همان کلید مشترک «stlp_departments»
+// که در users.html تعریف/ویرایش می‌شود
+function stlpFillEmployeeDepartmentSelect() {
+
+    const sel = document.getElementById("empDepartmentId");
+    if (!sel) return;
+
+    const departments =
+        typeof stlpLoadDepartments === "function" ? stlpLoadDepartments() : [];
+
+    const currentValue = sel.value;
+
+    sel.innerHTML =
+        '<option value="">— بدون بخش —</option>' +
+        departments.map(function(d) {
+            return '<option value="' + d.id + '">' + escapeHtml(d.name) + '</option>';
+        }).join("");
+
+    if (currentValue) sel.value = currentValue;
+
+}
+
+
+// نمایش/مخفی‌سازی فیلد بخش+نقش در برابر پستِ هیات‌مدیره، بسته به
+// اینکه «نوع جایگاه» چی انتخاب شده
+function stlpToggleEmpOrgFields() {
+
+    const kind = document.getElementById("empOrgKind").value;
+    const isBoard = kind === "board";
+
+    document.getElementById("empDepartmentWrap").style.display = isBoard ? "none" : "block";
+    document.getElementById("empOrgRoleWrap").style.display = isBoard ? "none" : "block";
+    document.getElementById("empBoardPostWrap").style.display = isBoard ? "block" : "none";
+
+}
+
+
+function stlpFillPayrollAccountSelect() {
+
+    const sel =
+        document.getElementById("payrollAccount");
+
+    if (!sel) return;
+
+    if (
+        typeof stlpTreasuryAccounts !== "undefined" &&
+        Array.isArray(stlpTreasuryAccounts)
+    ) {
+
+        sel.innerHTML =
+            stlpTreasuryAccounts.map(function(acc) {
+
+                return (
+                    '<option value="' + acc.id + '">' +
+                    (acc.icon || "") + " " + escapeHtml(acc.name) +
+                    "</option>"
+                );
+
+            }).join("");
+
+    } else {
+
+        sel.innerHTML = '<option value="cash">صندوق</option>';
+
+    }
+
+    const sel2 = document.getElementById("insuranceTaxAccount");
+    if (sel2) sel2.innerHTML = sel.innerHTML;
+
+}
+
+
+// =====================================================
+// تسویه‌ی بیمه و مالیات دوره — این دو کاملاً از هم جدا هستند:
+// بیمه (سهم کارگر + سهم کارفرما) به تأمین اجتماعی می‌رود و
+// مالیات به اداره‌ی امور مالیاتی؛ هرکدام رکورد تسویه، دکمه‌ی
+// تأیید و تراکنش خزانه‌ی مستقل خودش را دارد و خودکار ثبت نمی‌شود
+// =====================================================
+
+function stlpInsuranceSettlementsKey() {
+    return "stlp_payroll_insurance_settlements";
+}
+
+function stlpTaxSettlementsKey() {
+    return "stlp_payroll_tax_settlements";
+}
+
+function stlpLoadSettlements(key) {
+    try {
+        return JSON.parse(localStorage.getItem(key)) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function stlpSaveSettlements(key, obj) {
+    localStorage.setItem(key, JSON.stringify(obj));
+}
+
+
+function stlpComputePayrollDues(period) {
+
+    const records =
+        loadPayrollRecords().filter(function(r) {
+            return r.period === period && r.paid;
+        });
+
+    let employeeInsurance = 0;
+    let employerInsurance = 0;
+    let tax = 0;
+
+    records.forEach(function(r) {
+        employeeInsurance += Number(r.insuranceAmount || 0);
+        employerInsurance += Number(r.employerInsuranceAmount || 0);
+        tax += Number(r.taxAmount || 0);
+    });
+
+    return {
+        period: period,
+        employeeCount: records.length,
+        employeeInsurance: employeeInsurance,
+        employerInsurance: employerInsurance,
+        totalInsurance: employeeInsurance + employerInsurance,
+        tax: tax
+    };
+
+}
+
+
+function renderInsuranceTaxSettlement() {
+
+    const periodInput = document.getElementById("payrollPeriod");
+    const period = periodInput ? periodInput.value.trim() : "";
+
+    const rateInput = document.getElementById("payrollEmployerInsuranceRate");
+    if (rateInput && !rateInput.value) rateInput.value = stlpGetEmployerInsuranceRate();
+
+    const tbody = document.getElementById("insuranceTaxSummaryTable");
+    const insStatusBox = document.getElementById("insuranceSettleStatus");
+    const taxStatusBox = document.getElementById("taxSettleStatus");
+    const insBtn = document.getElementById("btnSettleInsurance");
+    const taxBtn = document.getElementById("btnSettleTax");
+    if (!tbody) return;
+
+    if (!period) {
+        tbody.innerHTML = "<tr><td style='padding:8px;'>ابتدا یک دوره را بارگذاری کنید.</td></tr>";
+        if (insStatusBox) insStatusBox.textContent = "";
+        if (taxStatusBox) taxStatusBox.textContent = "";
+        if (insBtn) insBtn.disabled = true;
+        if (taxBtn) taxBtn.disabled = true;
+        return;
+    }
+
+    const d = stlpComputePayrollDues(period);
+
+    tbody.innerHTML =
+        "<tr><td style='padding:6px;'>تعداد فیش‌های پرداخت‌شده‌ی این دوره</td><td style='padding:6px; font-weight:bold;'>" + d.employeeCount + "</td></tr>" +
+        "<tr><td colspan='2' style='padding:8px 6px 2px; font-weight:bold; border-top:2px solid #ddd;'>🏥 بیمه (به تأمین اجتماعی)</td></tr>" +
+        "<tr><td style='padding:6px;'>سهم بیمه‌ی کارگران (کسرشده از حقوق)</td><td style='padding:6px;'>" + stlpTreasuryMoney(d.employeeInsurance) + "</td></tr>" +
+        "<tr><td style='padding:6px;'>سهم بیمه‌ی کارفرما (" + stlpGetEmployerInsuranceRate() + "٪ — هزینه‌ی جدا از حقوق کارگر)</td><td style='padding:6px;'>" + stlpTreasuryMoney(d.employerInsurance) + "</td></tr>" +
+        "<tr style='background:#f4f4f4;'><td style='padding:6px; font-weight:bold;'>جمع بدهی بیمه</td><td style='padding:6px; font-weight:bold; color:#b30000;'>" + stlpTreasuryMoney(d.totalInsurance) + "</td></tr>" +
+        "<tr><td colspan='2' style='padding:8px 6px 2px; font-weight:bold; border-top:2px solid #ddd;'>🏛 مالیات (به اداره‌ی امور مالیاتی)</td></tr>" +
+        "<tr style='background:#f4f4f4;'><td style='padding:6px; font-weight:bold;'>جمع بدهی مالیات (کسرشده از حقوق)</td><td style='padding:6px; font-weight:bold; color:#b30000;'>" + stlpTreasuryMoney(d.tax) + "</td></tr>";
+
+    // --- وضعیت بیمه ---
+    const insSettlements = stlpLoadSettlements(stlpInsuranceSettlementsKey());
+    const insDone = insSettlements[period];
+
+    if (insDone) {
+        if (insStatusBox) {
+            insStatusBox.innerHTML =
+                "✅ بیمه‌ی این دوره در " + new Date(insDone.settledAt).toLocaleDateString("fa-IR") +
+                " با مبلغ " + stlpTreasuryMoney(insDone.amount) + " پرداخت شده است.";
+            insStatusBox.style.color = "#0fa37f";
+        }
+        if (insBtn) insBtn.disabled = true;
+    } else {
+        if (insStatusBox) {
+            insStatusBox.textContent = d.totalInsurance > 0
+                ? "بیمه‌ی این دوره هنوز پرداخت نشده است."
+                : "برای این دوره هنوز فیش پرداخت‌شده‌ای ثبت نشده است.";
+            insStatusBox.style.color = "#aaa";
+        }
+        if (insBtn) insBtn.disabled = d.totalInsurance <= 0;
+    }
+
+    // --- وضعیت مالیات ---
+    const taxSettlements = stlpLoadSettlements(stlpTaxSettlementsKey());
+    const taxDone = taxSettlements[period];
+
+    if (taxDone) {
+        if (taxStatusBox) {
+            taxStatusBox.innerHTML =
+                "✅ مالیات این دوره در " + new Date(taxDone.settledAt).toLocaleDateString("fa-IR") +
+                " با مبلغ " + stlpTreasuryMoney(taxDone.amount) + " پرداخت شده است.";
+            taxStatusBox.style.color = "#0fa37f";
+        }
+        if (taxBtn) taxBtn.disabled = true;
+    } else {
+        if (taxStatusBox) {
+            taxStatusBox.textContent = d.tax > 0
+                ? "مالیات این دوره هنوز پرداخت نشده است."
+                : "برای این دوره هنوز فیش پرداخت‌شده‌ای ثبت نشده است.";
+            taxStatusBox.style.color = "#aaa";
+        }
+        if (taxBtn) taxBtn.disabled = d.tax <= 0;
+    }
+
+}
+
+
+function stlpPostPayrollDuesTransaction(period, amount, party, description, source, accountOverride) {
+
+    if (typeof stlpTreasury === "undefined") {
+        alert("❌ ماژول خزانه (app.js) بارگذاری نشده است.");
+        return null;
+    }
+
+    const account =
+        accountOverride ||
+        (document.getElementById("insuranceTaxAccount")
+            ? document.getElementById("insuranceTaxAccount").value
+            : "cash");
+
+    const transaction = {
+        id: Date.now() + "_" + Math.random().toString(36).substring(2, 8),
+        type: "out",
+        account: account,
+        transferFrom: "",
+        transferTo: "",
+        amount: amount,
+        date: new Date().toLocaleDateString("fa-IR"),
+        party: party,
+        method: "cash",
+        tracking: "",
+        invoiceNo: "",
+        description: description,
+        checkNo: "",
+        checkBank: "",
+        checkDueDate: "",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        source: source
+    };
+
+    stlpTreasury.push(transaction);
+
+    if (typeof saveTreasury === "function") saveTreasury();
+    if (typeof saveTreasuryAccountingEntry === "function") saveTreasuryAccountingEntry(transaction);
+    if (typeof renderTreasury === "function") renderTreasury();
+
+    return transaction;
+
+}
+
+
+function stlpSettleInsurance() {
+
+    const periodInput = document.getElementById("payrollPeriod");
+    const period = periodInput ? periodInput.value.trim() : "";
+
+    if (!period) {
+        alert("ابتدا دوره را انتخاب و بارگذاری کنید.");
+        return;
+    }
+
+    const settlements = stlpLoadSettlements(stlpInsuranceSettlementsKey());
+    if (settlements[period]) {
+        alert("⚠️ بیمه‌ی این دوره قبلاً پرداخت شده است.");
+        return;
+    }
+
+    const d = stlpComputePayrollDues(period);
+
+    if (d.totalInsurance <= 0) {
+        alert("مبلغی برای پرداخت بیمه در این دوره وجود ندارد.");
+        return;
+    }
+
+    const confirmMsg =
+        "تأیید مالی — پرداخت بیمه‌ی دوره‌ی " + period + " به تأمین اجتماعی\n\n" +
+        "سهم بیمه‌ی کارگران: " + stlpTreasuryMoney(d.employeeInsurance) + "\n" +
+        "سهم بیمه‌ی کارفرما: " + stlpTreasuryMoney(d.employerInsurance) + "\n" +
+        "جمع قابل پرداخت: " + stlpTreasuryMoney(d.totalInsurance) + "\n\n" +
+        "با ثبت این پرداخت، یک تراکنش خروجی مستقل در خزانه ثبت می‌شود. آیا مسئول مالی این پرداخت را تأیید می‌کند؟";
+
+    if (!confirm(confirmMsg)) return;
+
+    const transaction = stlpPostPayrollDuesTransaction(
+        period,
+        d.totalInsurance,
+        "سازمان تأمین اجتماعی",
+        "پرداخت حق بیمه (سهم کارگر + سهم کارفرما) دوره‌ی " + period + " — با تأیید مالی",
+        "payroll-insurance"
+    );
+
+    if (!transaction) return;
+
+    settlements[period] = {
+        amount: d.totalInsurance,
+        employeeInsurance: d.employeeInsurance,
+        employerInsurance: d.employerInsurance,
+        treasuryTxId: transaction.id,
+        settledAt: new Date().toISOString()
+    };
+    stlpSaveSettlements(stlpInsuranceSettlementsKey(), settlements);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "پرداخت بیمه‌ی دوره", period + " — " + stlpTreasuryMoney(d.totalInsurance));
+    }
+
+    alert("✅ پرداخت بیمه‌ی دوره‌ی " + period + " با موفقیت در خزانه ثبت شد.");
+
+    renderInsuranceTaxSettlement();
+
+}
+
+
+function stlpSettleTax() {
+
+    const periodInput = document.getElementById("payrollPeriod");
+    const period = periodInput ? periodInput.value.trim() : "";
+
+    if (!period) {
+        alert("ابتدا دوره را انتخاب و بارگذاری کنید.");
+        return;
+    }
+
+    const settlements = stlpLoadSettlements(stlpTaxSettlementsKey());
+    if (settlements[period]) {
+        alert("⚠️ مالیات این دوره قبلاً پرداخت شده است.");
+        return;
+    }
+
+    const d = stlpComputePayrollDues(period);
+
+    if (d.tax <= 0) {
+        alert("مبلغی برای پرداخت مالیات در این دوره وجود ندارد.");
+        return;
+    }
+
+    const confirmMsg =
+        "تأیید مالی — پرداخت مالیات حقوق دوره‌ی " + period + " به اداره‌ی امور مالیاتی\n\n" +
+        "مبلغ مالیات کسرشده از حقوق کارگران: " + stlpTreasuryMoney(d.tax) + "\n\n" +
+        "با ثبت این پرداخت، یک تراکنش خروجی مستقل در خزانه ثبت می‌شود. آیا مسئول مالی این پرداخت را تأیید می‌کند؟";
+
+    if (!confirm(confirmMsg)) return;
+
+    const transaction = stlpPostPayrollDuesTransaction(
+        period,
+        d.tax,
+        "اداره امور مالیاتی",
+        "پرداخت مالیات حقوق کسرشده دوره‌ی " + period + " — با تأیید مالی",
+        "payroll-tax"
+    );
+
+    if (!transaction) return;
+
+    settlements[period] = {
+        amount: d.tax,
+        treasuryTxId: transaction.id,
+        settledAt: new Date().toISOString()
+    };
+    stlpSaveSettlements(stlpTaxSettlementsKey(), settlements);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "پرداخت مالیات دوره", period + " — " + stlpTreasuryMoney(d.tax));
+    }
+
+    alert("✅ پرداخت مالیات دوره‌ی " + period + " با موفقیت در خزانه ثبت شد.");
+
+    renderInsuranceTaxSettlement();
+
+}
+
+
+// =====================================================
+// محاسبه‌ی یک ردیف حقوق
+// =====================================================
+
+// =====================================================
+// سقف معافیت مالیاتی ماهانه — هرسال توسط دولت تغییر می‌کند
+// (مقدار پیش‌فرض بر اساس سال ۱۴۰۴؛ حتماً هرسال به‌روز شود)
+// =====================================================
+
+function stlpGetTaxExemptionCeiling() {
+
+    const raw = localStorage.getItem("stlp_payroll_tax_exemption_ceiling");
+    const value = Number(raw);
+
+    return (raw && !isNaN(value) && value >= 0) ? value : 400000000;
+
+}
+
+
+function stlpSaveTaxExemptionCeiling() {
+
+    const input = document.getElementById("payrollTaxExemptionCeiling");
+    if (!input) return;
+
+    const value = Number(input.value || 0);
+
+    localStorage.setItem("stlp_payroll_tax_exemption_ceiling", String(value));
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "تغییر سقف معافیت مالیاتی", stlpTreasuryMoney(value) + " در ماه");
+    }
+
+    renderPayrollRun();
+
+}
+
+
+// =====================================================
+// بازه‌های پلکانی مالیات — کاملاً دستی، روی مازاد سقف معافیت
+// اعمال می‌شود. هر بازه: { width: طول بازه به ریال یا null برای
+// نامحدود (فقط آخرین بازه), rate: درصد مالیات همان بازه }
+//
+// پیش‌فرض بر اساس جدول: تا ۴۰ میلیون تومان معاف (سقف معافیت)،
+// ۴۰ تا ۸۰ میلیون تومان ۱۰٪، ۸۰ تا ۱۰۰ میلیون تومان ۱۵٪،
+// ۱۰۰ تا ۱۲۰ میلیون تومان ۲۰٪، ۱۲۰ تا ۱۴۰ میلیون تومان ۲۵٪،
+// بالاتر از ۱۴۰ میلیون تومان ۳۰٪ (تبدیل به ریال: هر تومان = ۱۰ ریال)
+// =====================================================
+
+function stlpDefaultTaxBrackets() {
+    return [
+        { width: 400000000, rate: 10 },
+        { width: 200000000, rate: 15 },
+        { width: 200000000, rate: 20 },
+        { width: 200000000, rate: 25 },
+        { width: null, rate: 30 }
+    ];
+}
+
+
+function stlpGetTaxBrackets() {
+
+    try {
+
+        const raw = localStorage.getItem("stlp_payroll_tax_brackets");
+        const parsed = raw ? JSON.parse(raw) : null;
+
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+
+    } catch (e) {}
+
+    return stlpDefaultTaxBrackets();
+
+}
+
+
+function stlpCalcProgressiveTax(taxableExcess) {
+
+    if (!taxableExcess || taxableExcess <= 0) return 0;
+
+    const brackets = stlpGetTaxBrackets();
+    let remaining = taxableExcess;
+    let tax = 0;
+
+    for (let i = 0; i < brackets.length; i++) {
+
+        const b = brackets[i];
+        const rate = Number(b.rate || 0);
+
+        const width =
+            (b.width === null || b.width === undefined || b.width === "")
+                ? remaining
+                : Number(b.width);
+
+        const amountInThisBracket = Math.min(remaining, width);
+        if (amountInThisBracket <= 0) continue;
+
+        tax += amountInThisBracket * rate / 100;
+        remaining -= amountInThisBracket;
+
+        if (remaining <= 0) break;
+
+    }
+
+    return Math.round(tax);
+
+}
+
+
+function renderTaxBracketsTable() {
+
+    const tbody = document.getElementById("taxBracketsTable");
+    if (!tbody) return;
+
+    const brackets = stlpGetTaxBrackets();
+
+    tbody.innerHTML =
+        brackets.map(function(b, i) {
+
+            const isLast = (i === brackets.length - 1);
+
+            return (
+                "<tr>" +
+                    "<td style='padding:4px;'>" +
+                    (isLast
+                        ? "<span style='color:#888;'>نامحدود (باقی‌مانده)</span>"
+                        : '<input type="number" data-bracket-width value="' + (b.width == null ? "" : b.width) + '" style="width:150px;">'
+                    ) +
+                    "</td>" +
+                    "<td style='padding:4px;'>" +
+                        '<input type="number" data-bracket-rate value="' + (b.rate || 0) + '" style="width:80px;">' +
+                    "</td>" +
+                    "<td style='padding:4px;'>" +
+                        (isLast
+                            ? ""
+                            : '<button type="button" onclick="stlpRemoveTaxBracketRow(' + i + ')" style="background:#dc3545; padding:2px 8px;">✕</button>'
+                        ) +
+                    "</td>" +
+                "</tr>"
+            );
+
+        }).join("");
+
+}
+
+
+function stlpAddTaxBracketRow() {
+
+    const brackets = stlpGetTaxBrackets();
+
+    // بازه‌ی جدید را قبل از آخرین بازه‌ی نامحدود اضافه می‌کنیم
+    brackets.splice(brackets.length - 1, 0, { width: 100000000, rate: 10 });
+
+    localStorage.setItem("stlp_payroll_tax_brackets", JSON.stringify(brackets));
+
+    renderTaxBracketsTable();
+
+}
+
+
+function stlpRemoveTaxBracketRow(index) {
+
+    const brackets = stlpGetTaxBrackets();
+
+    if (brackets.length <= 1) {
+        alert("باید حداقل یک بازه باقی بماند.");
+        return;
+    }
+
+    brackets.splice(index, 1);
+
+    localStorage.setItem("stlp_payroll_tax_brackets", JSON.stringify(brackets));
+
+    renderTaxBracketsTable();
+
+}
+
+
+function stlpSaveTaxBrackets() {
+
+    const tbody = document.getElementById("taxBracketsTable");
+    if (!tbody) return;
+
+    const rows = tbody.querySelectorAll("tr");
+    const brackets = [];
+
+    rows.forEach(function(row, i) {
+
+        const isLast = (i === rows.length - 1);
+
+        const widthInput = row.querySelector("[data-bracket-width]");
+        const rateInput = row.querySelector("[data-bracket-rate]");
+
+        brackets.push({
+            width: isLast ? null : Number(widthInput ? widthInput.value || 0 : 0),
+            rate: Number(rateInput ? rateInput.value || 0 : 0)
+        });
+
+    });
+
+    localStorage.setItem("stlp_payroll_tax_brackets", JSON.stringify(brackets));
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "به‌روزرسانی بازه‌های پلکانی مالیات", brackets.length + " بازه");
+    }
+
+    renderTaxBracketsTable();
+    renderPayrollRun();
+
+    alert("✅ بازه‌های پلکانی مالیات ذخیره شد.");
+
+}
+
+
+function stlpResetTaxBrackets() {
+
+    if (!confirm("بازه‌های پلکانی مالیات به پیش‌فرض بازگردانده شود؟")) return;
+
+    localStorage.setItem("stlp_payroll_tax_brackets", JSON.stringify(stlpDefaultTaxBrackets()));
+
+    renderTaxBracketsTable();
+    renderPayrollRun();
+
+}
+
+
+// =====================================================
+// عیدی و سنوات سالانه — کاملاً جدا از حقوق ماهانه؛ فقط با
+// اقدام صریح (نه خودکار) محاسبه و پرداخت می‌شود
+//
+// عیدی: دو برابر حقوق ماهانه‌ی پایه، با سقف سه برابر حداقل
+// دستمزد قانونی ماهانه (هرسال متفاوت است، دستی تنظیم می‌شود)،
+// نسبت به مدت کارکرد در همان سال شمسی تناسب می‌گیرد؛
+// معاف از بیمه، مشمول مالیات پلکانی
+//
+// سنوات: به‌ازای هر سال کامل خدمت از تاریخ استخدام (یا آخرین
+// تسویه‌ی سنوات)، یک ماه «حقوق پایه‌ی فعلی» کارمند؛
+// معاف از بیمه، مشمول مالیات پلکانی
+// =====================================================
+
+function stlpDefaultMinimumWage() {
+    return 0; // باید هرسال طبق مصوبه‌ی شورای عالی کار توسط شما تنظیم شود
+}
+
+function stlpGetMinimumWage() {
+
+    const raw = localStorage.getItem("stlp_payroll_minimum_wage");
+    const value = Number(raw);
+
+    return (raw && !isNaN(value) && value >= 0) ? value : stlpDefaultMinimumWage();
+
+}
+
+
+function stlpSaveMinimumWage() {
+
+    const input = document.getElementById("payrollMinimumWage");
+    if (!input) return;
+
+    const value = Number(input.value || 0);
+
+    localStorage.setItem("stlp_payroll_minimum_wage", String(value));
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "تغییر حداقل دستمزد قانونی ماهانه", stlpTreasuryMoney(value));
+    }
+
+    renderEidiSanavatTable();
+
+}
+
+
+// تبدیل تاریخ شمسی آزاد به عدد قابل‌مقایسه سال*10000+ماه*100+روز
+// (از همان الگوی stlpParseLooseJalaliDate در app.js استفاده می‌کند)
+function stlpJalaliPacked(str) {
+
+    if (typeof stlpParseLooseJalaliDate === "function") {
+        return stlpParseLooseJalaliDate(str);
+    }
+
+    // نسخه‌ی پشتیبان در صورت نبود app.js
+    if (!str) return null;
+    const parts = String(str).trim().split(/[\/\-]/).map(Number);
+    if (parts.length < 2 || parts.some(isNaN)) return null;
+    return (parts[0] * 10000) + ((parts[1] || 1) * 100) + (parts[2] || 1);
+
+}
+
+
+function stlpCurrentJalaliYear() {
+
+    try {
+
+        const formatter = new Intl.DateTimeFormat(
+            "fa-IR-u-ca-persian", { year: "numeric" }
+        );
+        const parts = formatter.formatToParts(new Date());
+        const yearPart = parts.find(function(p) { return p.type === "year"; });
+
+        const toEnglishDigits = function(str) {
+            return String(str).replace(/[۰-۹]/g, function(d) {
+                return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);
+            });
+        };
+
+        return Number(toEnglishDigits(yearPart.value));
+
+    } catch (error) {
+        return 1404;
+    }
+
+}
+
+
+// تعداد روزهای کارکرد کارمند در سال شمسی مشخص، بر اساس تاریخ
+// استخدام؛ اگر تاریخ استخدام ثبت نشده یا از سال‌های قبل است،
+// کل سال (365 روز) در نظر گرفته می‌شود
+function stlpDaysWorkedInYear(employee, jalaliYear) {
+
+    const hirePacked = stlpJalaliPacked(employee.hireDate);
+
+    if (!hirePacked) return 365;
+
+    const hireYear = Math.floor(hirePacked / 10000);
+
+    if (hireYear < jalaliYear) return 365;
+    if (hireYear > jalaliYear) return 0;
+
+    // کارمند در همین سال استخدام شده — تناسب بر مبنای ماه استخدام
+    const hireMonth = Math.floor((hirePacked % 10000) / 100) || 1;
+    const monthsRemaining = 12 - hireMonth + 1;
+
+    return Math.max(0, Math.round(monthsRemaining * 30));
+
+}
+
+
+// عیدی = دو برابر حقوق ماهانه‌ی پایه، اما هرگز بیشتر از سه برابر
+// حداقل دستمزد قانونی ماهانه نمی‌شود؛ برای کارکرد کمتر از یک سال
+// نسبت به مدت کارکرد در همان سال شمسی تناسب می‌گیرد
+function stlpComputeEidi(employee, jalaliYear) {
+
+    const twiceSalary = (employee.baseSalary || 0) * 2;
+    const cap = stlpGetMinimumWage() * 3;
+
+    const fullEidi = cap > 0 ? Math.min(twiceSalary, cap) : twiceSalary;
+
+    const daysWorked = stlpDaysWorkedInYear(employee, jalaliYear);
+    const proratedEidi = fullEidi * Math.min(1, daysWorked / 365);
+
+    return Math.round(proratedEidi);
+
+}
+
+
+// سال‌های کامل خدمت از تاریخ استخدام (یا آخرین تسویه‌ی سنوات)
+// تا پایان سال شمسی انتخاب‌شده؛ کسری سال هم به‌صورت اعشاری لحاظ می‌شود
+function stlpYearsOfServiceForSanavat(employee, jalaliYear) {
+
+    const fromDateStr = employee.lastSanavatSettlementDate || employee.hireDate;
+    const fromPacked = stlpJalaliPacked(fromDateStr);
+
+    if (!fromPacked) return 0;
+
+    const fromYear = Math.floor(fromPacked / 10000);
+    const fromMonth = Math.floor((fromPacked % 10000) / 100) || 1;
+
+    const toYear = jalaliYear;
+    const toMonth = 12; // پایان سال شمسی (اسفند)
+
+    const totalMonths =
+        ((toYear * 12) + toMonth) - ((fromYear * 12) + fromMonth);
+
+    if (totalMonths <= 0) return 0;
+
+    return totalMonths / 12;
+
+}
+
+
+function stlpComputeSanavat(employee, jalaliYear) {
+
+    const years = stlpYearsOfServiceForSanavat(employee, jalaliYear);
+    const amount = (employee.baseSalary || 0) * years;
+
+    return Math.round(amount);
+
+}
+
+
+// =====================================================
+// نسخه‌ی «تا یک تاریخ دلخواه» توابع بالا — برای تسویه‌حساب
+// پایان همکاری (نه لزوماً پایان اسفند)
+// =====================================================
+
+function stlpDaysWorkedInYearToDate(employee, toDateStr) {
+
+    const toPacked = stlpJalaliPacked(toDateStr);
+    if (!toPacked) return 0;
+
+    const toYear = Math.floor(toPacked / 10000);
+    const toMonth = Math.floor((toPacked % 10000) / 100) || 1;
+    const toDay = (toPacked % 100) || 1;
+
+    let startMonth = 1;
+    let startDay = 1;
+
+    const hirePacked = stlpJalaliPacked(employee.hireDate);
+
+    if (hirePacked) {
+
+        const hireYear = Math.floor(hirePacked / 10000);
+
+        if (hireYear > toYear) return 0;
+
+        if (hireYear === toYear) {
+            startMonth = Math.floor((hirePacked % 10000) / 100) || 1;
+            startDay = (hirePacked % 100) || 1;
+        }
+        // اگر hireYear < toYear باشد، شروع از فروردینِ همان سال است (پیش‌فرض بالا)
+
+    }
+
+    const days =
+        ((toMonth - startMonth) * 30) + (toDay - startDay);
+
+    return Math.max(0, days);
+
+}
+
+
+function stlpComputeEidiToDate(employee, toDateStr) {
+
+    const twiceSalary = (employee.baseSalary || 0) * 2;
+    const cap = stlpGetMinimumWage() * 3;
+    const fullEidi = cap > 0 ? Math.min(twiceSalary, cap) : twiceSalary;
+
+    const daysWorked = stlpDaysWorkedInYearToDate(employee, toDateStr);
+    return Math.round(fullEidi * Math.min(1, daysWorked / 365));
+
+}
+
+
+function stlpYearsOfServiceToDate(employee, toDateStr) {
+
+    const fromDateStr = employee.lastSanavatSettlementDate || employee.hireDate;
+    const fromPacked = stlpJalaliPacked(fromDateStr);
+    const toPacked = stlpJalaliPacked(toDateStr);
+
+    if (!fromPacked || !toPacked) return 0;
+
+    const fromYear = Math.floor(fromPacked / 10000);
+    const fromMonth = Math.floor((fromPacked % 10000) / 100) || 1;
+    const toYear = Math.floor(toPacked / 10000);
+    const toMonth = Math.floor((toPacked % 10000) / 100) || 1;
+
+    const totalMonths = ((toYear * 12) + toMonth) - ((fromYear * 12) + fromMonth);
+
+    if (totalMonths <= 0) return 0;
+
+    return totalMonths / 12;
+
+}
+
+
+function stlpComputeSanavatToDate(employee, toDateStr) {
+
+    const years = stlpYearsOfServiceToDate(employee, toDateStr);
+    return Math.round((employee.baseSalary || 0) * years);
+
+}
+
+
+function stlpEidiSanavatSettlementsKey(jalaliYear) {
+    return "stlp_payroll_eidi_sanavat_" + jalaliYear;
+}
+
+
+function stlpLoadEidiSanavatSettlements(jalaliYear) {
+    try {
+        return JSON.parse(localStorage.getItem(stlpEidiSanavatSettlementsKey(jalaliYear))) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+
+function stlpSaveEidiSanavatSettlements(jalaliYear, obj) {
+    localStorage.setItem(stlpEidiSanavatSettlementsKey(jalaliYear), JSON.stringify(obj));
+}
+
+
+function renderEidiSanavatTable() {
+
+    const yearInput = document.getElementById("payrollEidiSanavatYear");
+    if (yearInput && !yearInput.value) yearInput.value = stlpCurrentJalaliYear();
+
+    const minWageInput = document.getElementById("payrollMinimumWage");
+    if (minWageInput && !minWageInput.value) minWageInput.value = stlpGetMinimumWage();
+
+    const jalaliYear = Number((yearInput && yearInput.value) || stlpCurrentJalaliYear());
+
+    const tbody = document.getElementById("eidiSanavatTable");
+    if (!tbody) return;
+
+    const employees =
+        loadEmployees().filter(function(e) { return e.active !== false; });
+
+    const settlements = stlpLoadEidiSanavatSettlements(jalaliYear);
+
+    tbody.innerHTML =
+        employees.map(function(employee) {
+
+            const eidi = stlpComputeEidi(employee, jalaliYear);
+            const sanavatYears = stlpYearsOfServiceForSanavat(employee, jalaliYear);
+            const sanavat = stlpComputeSanavat(employee, jalaliYear);
+
+            const grossTotal = eidi + sanavat;
+            const tax = stlpCalcProgressiveTax(grossTotal);
+            const netTotal = grossTotal - tax;
+
+            const alreadyPaid = settlements[employee.id];
+
+            return (
+                "<tr>" +
+                    "<td style='padding:6px;'>" + escapeHtml(employee.name) + "</td>" +
+                    "<td style='padding:6px;'>" + stlpTreasuryMoney(eidi) + "</td>" +
+                    "<td style='padding:6px;'>" + sanavatYears.toFixed(2) + " سال</td>" +
+                    "<td style='padding:6px;'>" + stlpTreasuryMoney(sanavat) + "</td>" +
+                    "<td style='padding:6px;'>" + stlpTreasuryMoney(tax) + "</td>" +
+                    "<td style='padding:6px; font-weight:bold;'>" + stlpTreasuryMoney(netTotal) + "</td>" +
+                    "<td style='padding:6px;'>" +
+                        (alreadyPaid
+                            ? "<span style='color:#0fa37f;'>✅ پرداخت‌شده</span>"
+                            : '<button type="button" onclick="stlpPayEidiSanavat(\'' + employee.id + '\')" style="background:#dc3545; padding:4px 10px;">💳 پرداخت</button>'
+                        ) +
+                    "</td>" +
+                "</tr>"
+            );
+
+        }).join("");
+
+    if (employees.length === 0) {
+        tbody.innerHTML = "<tr><td style='padding:8px;'>کارمندی ثبت نشده است.</td></tr>";
+    }
+
+}
+
+
+function stlpPayEidiSanavat(employeeId) {
+
+    const yearInput = document.getElementById("payrollEidiSanavatYear");
+    const jalaliYear = Number((yearInput && yearInput.value) || stlpCurrentJalaliYear());
+
+    const employees = loadEmployees();
+    const employee = employees.find(function(e) { return e.id === employeeId; });
+    if (!employee) return;
+
+    const settlements = stlpLoadEidiSanavatSettlements(jalaliYear);
+    if (settlements[employeeId]) {
+        alert("⚠️ عیدی و سنوات این کارمند برای سال " + jalaliYear + " قبلاً پرداخت شده است.");
+        return;
+    }
+
+    const eidi = stlpComputeEidi(employee, jalaliYear);
+    const sanavatYears = stlpYearsOfServiceForSanavat(employee, jalaliYear);
+    const sanavat = stlpComputeSanavat(employee, jalaliYear);
+    const grossTotal = eidi + sanavat;
+
+    if (grossTotal <= 0) {
+        alert("مبلغی برای پرداخت محاسبه نشد (تاریخ استخدام کارمند را بررسی کنید).");
+        return;
+    }
+
+    const tax = stlpCalcProgressiveTax(grossTotal);
+    const netTotal = grossTotal - tax;
+
+    const confirmMsg =
+        "پرداخت عیدی و سنوات سال " + jalaliYear + " — " + employee.name + "\n\n" +
+        "عیدی (۲ برابر حقوق، سقف ۳×حداقل دستمزد): " + stlpTreasuryMoney(eidi) + "\n" +
+        "سنوات (" + sanavatYears.toFixed(2) + " سال × یک ماه حقوق پایه): " + stlpTreasuryMoney(sanavat) + "\n" +
+        "مالیات پلکانی: " + stlpTreasuryMoney(tax) + "\n" +
+        "خالص قابل پرداخت: " + stlpTreasuryMoney(netTotal) + "\n\n" +
+        "معاف از بیمه است. آیا این پرداخت تأیید می‌شود؟";
+
+    if (!confirm(confirmMsg)) return;
+
+    const account =
+        document.getElementById("payrollEidiSanavatAccount")
+            ? document.getElementById("payrollEidiSanavatAccount").value
+            : "cash";
+
+    const transaction = stlpPostPayrollDuesTransaction(
+        jalaliYear,
+        netTotal,
+        employee.name,
+        "پرداخت عیدی و سنوات سال " + jalaliYear + " — " + employee.name,
+        "payroll-eidi-sanavat",
+        account
+    );
+
+    if (!transaction) return;
+
+    settlements[employeeId] = {
+        eidi: eidi,
+        sanavat: sanavat,
+        sanavatYears: sanavatYears,
+        tax: tax,
+        netTotal: netTotal,
+        treasuryTxId: transaction.id,
+        settledAt: new Date().toISOString()
+    };
+    stlpSaveEidiSanavatSettlements(jalaliYear, settlements);
+
+    // تاریخ آخرین تسویه‌ی سنوات به پایان همین سال شمسی به‌روزرسانی می‌شود
+    // تا سال بعد، سنوات فقط از این نقطه به بعد دوباره محاسبه شود
+    const empIndex = employees.findIndex(function(e) { return e.id === employeeId; });
+    if (empIndex >= 0) {
+        employees[empIndex].lastSanavatSettlementDate = jalaliYear + "/12/29";
+        saveEmployees(employees);
+    }
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "پرداخت عیدی و سنوات", employee.name + " — سال " + jalaliYear + " — " + stlpTreasuryMoney(netTotal));
+    }
+
+    alert("✅ عیدی و سنوات " + employee.name + " با موفقیت ثبت شد.");
+
+    renderEidiSanavatTable();
+
+}
+
+
+function stlpPayAllEidiSanavat() {
+
+    const yearInput = document.getElementById("payrollEidiSanavatYear");
+    const jalaliYear = Number((yearInput && yearInput.value) || stlpCurrentJalaliYear());
+
+    const employees =
+        loadEmployees().filter(function(e) { return e.active !== false; });
+
+    const settlements = stlpLoadEidiSanavatSettlements(jalaliYear);
+
+    const unpaidIds =
+        employees
+            .filter(function(e) { return !settlements[e.id]; })
+            .map(function(e) { return e.id; });
+
+    if (unpaidIds.length === 0) {
+        alert("همه‌ی کارمندان فعال برای این سال پرداخت شده‌اند.");
+        return;
+    }
+
+    if (!confirm("عیدی و سنوات " + unpaidIds.length + " کارمند برای سال " + jalaliYear + " پرداخت شود؟ (برای هر نفر یک تأییدیه‌ی جداگانه نمایش داده می‌شود)")) return;
+
+    unpaidIds.forEach(function(id) {
+        stlpPayEidiSanavat(id);
+    });
+
+}
+
+
+// =====================================================
+// مرخصی، استعلاجی و زایمان
+//
+// مرخصی: هر ماه که فیش یک کارمند پرداخت می‌شود، به‌صورت خودکار
+// (سهمیه‌ی سالانه ÷ ۱۲) به مانده‌اش اضافه و «روزهای مرخصی
+// استفاده‌شده» (از پنجره‌ی جزئیات بیشتر همان فیش) از آن کم می‌شود
+//
+// استعلاجی و زایمان: صرفاً ثبت و پیگیری‌اند؛ چون طبق قانون تأمین
+// اجتماعی غرامت دستمزدشان از سازمان تأمین اجتماعی پرداخت می‌شود،
+// نه از حقوق ماهانه‌ی این سیستم
+// =====================================================
+
+function stlpGetLeaveCarryoverCap() {
+    const raw = localStorage.getItem("stlp_payroll_leave_carryover_cap");
+    const value = Number(raw);
+    return (raw && !isNaN(value) && value >= 0) ? value : 9;
+}
+
+
+function stlpSaveLeaveCarryoverCap() {
+
+    const input = document.getElementById("payrollLeaveCarryoverCap");
+    if (!input) return;
+
+    localStorage.setItem("stlp_payroll_leave_carryover_cap", String(Number(input.value || 0)));
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "تغییر سقف ذخیره‌ی مرخصی", input.value + " روز");
+    }
+
+}
+
+
+function stlpGetSickUnpaidDays() {
+    const raw = localStorage.getItem("stlp_payroll_sick_unpaid_days");
+    const value = Number(raw);
+    return (raw && !isNaN(value) && value >= 0) ? value : 2;
+}
+
+
+function stlpSaveSickUnpaidDays() {
+
+    const input = document.getElementById("payrollSickUnpaidDays");
+    if (!input) return;
+
+    localStorage.setItem("stlp_payroll_sick_unpaid_days", String(Number(input.value || 0)));
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "تغییر روزهای اول استعلاجی بدون پرداخت", input.value + " روز");
+    }
+
+}
+
+
+function stlpGetMaternityLeaveDays() {
+    const raw = localStorage.getItem("stlp_payroll_maternity_leave_days");
+    const value = Number(raw);
+    return (raw && !isNaN(value) && value >= 0) ? value : 0;
+}
+
+
+function stlpSaveMaternityLeaveDays() {
+
+    const input = document.getElementById("payrollMaternityLeaveDays");
+    if (!input) return;
+
+    localStorage.setItem("stlp_payroll_maternity_leave_days", String(Number(input.value || 0)));
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "تغییر مدت مرخصی زایمان", input.value + " روز");
+    }
+
+    renderLeaveTable();
+
+}
+
+
+function stlpGetLeaveSellMaxDays() {
+    const raw = localStorage.getItem("stlp_payroll_leave_sell_max_days");
+    const value = Number(raw);
+    return (raw && !isNaN(value) && value >= 0) ? value : 9;
+}
+
+
+function stlpSaveLeaveSellMaxDays() {
+
+    const input = document.getElementById("payrollLeaveSellMaxDays");
+    if (!input) return;
+
+    localStorage.setItem("stlp_payroll_leave_sell_max_days", String(Number(input.value || 0)));
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "تغییر سقف سالانه‌ی بازخرید مرخصی", input.value + " روز");
+    }
+
+    renderLeaveTable();
+
+}
+
+
+// بازخرید (فروش) مرخصی — محدود به مانده‌ی مرخصی کارمند و سقف
+// سالانه‌ی قابل‌بازخرید؛ مبلغش (حقوق پایه ÷ ۳۰ × تعداد روز) از
+// همان جدول پلکانی مالیات عبور می‌کند و به‌عنوان یک تراکنش خزانه
+// جدا (نه بخشی از فیش ماهانه) ثبت می‌شود
+function stlpSellLeave(employeeId) {
+
+    const employees = loadEmployees();
+    const employee = employees.find(function(e) { return e.id === employeeId; });
+    if (!employee) return;
+
+    const jalaliYear = stlpCurrentJalaliYear();
+    const soldByYear = employee.leaveSoldByYear || {};
+    const soldThisYear = soldByYear[jalaliYear] || 0;
+    const sellMax = stlpGetLeaveSellMaxDays();
+    const sellRemaining = Math.max(0, sellMax - soldThisYear);
+    const leaveBalance = employee.leaveBalance || 0;
+
+    const maxAllowed = Math.min(sellRemaining, leaveBalance);
+
+    if (maxAllowed <= 0) {
+        alert(
+            "❌ امکان بازخرید مرخصی برای این کارمند وجود ندارد.\n" +
+            "مانده‌ی مرخصی: " + leaveBalance.toFixed(1) + " روز\n" +
+            "باقی‌مانده‌ی سهمیه‌ی بازخرید امسال: " + sellRemaining + " روز"
+        );
+        return;
+    }
+
+    const input = prompt(
+        "چند روز از مرخصی " + employee.name + " بازخرید شود؟\n" +
+        "(حداکثر مجاز الان: " + maxAllowed.toFixed(1) + " روز — مانده‌ی مرخصی: " +
+        leaveBalance.toFixed(1) + "، باقی‌مانده‌ی سهمیه‌ی امسال: " + sellRemaining + ")",
+        ""
+    );
+
+    if (!input) return;
+
+    const days = Number(input);
+
+    if (!days || days <= 0 || isNaN(days)) {
+        alert("عدد وارد شده معتبر نیست.");
+        return;
+    }
+
+    if (days > maxAllowed) {
+        alert("❌ حداکثر " + maxAllowed.toFixed(1) + " روز قابل بازخرید است.");
+        return;
+    }
+
+    const dailyWage = (employee.baseSalary || 0) / 30;
+    const grossAmount = Math.round(dailyWage * days);
+    const tax = stlpCalcProgressiveTax(grossAmount);
+    const netAmount = grossAmount - tax;
+
+    if (!confirm(
+        "بازخرید " + days + " روز مرخصی " + employee.name + "\n\n" +
+        "مبلغ ناخالص: " + stlpTreasuryMoney(grossAmount) + "\n" +
+        "مالیات پلکانی: " + stlpTreasuryMoney(tax) + "\n" +
+        "خالص قابل پرداخت: " + stlpTreasuryMoney(netAmount) + "\n\n" +
+        "آیا این پرداخت تأیید می‌شود؟"
+    )) return;
+
+    const account =
+        document.getElementById("payrollEidiSanavatAccount")
+            ? document.getElementById("payrollEidiSanavatAccount").value
+            : (document.getElementById("payrollAccount") ? document.getElementById("payrollAccount").value : "cash");
+
+    const transaction = stlpPostPayrollDuesTransaction(
+        jalaliYear,
+        netAmount,
+        employee.name,
+        "بازخرید " + days + " روز مرخصی — " + employee.name,
+        "payroll-leave-sellback",
+        account
+    );
+
+    if (!transaction) return;
+
+    const index = employees.findIndex(function(e) { return e.id === employeeId; });
+    employees[index].leaveBalance = Math.round((leaveBalance - days) * 100) / 100;
+
+    const updatedSoldByYear = employees[index].leaveSoldByYear || {};
+    updatedSoldByYear[jalaliYear] = (updatedSoldByYear[jalaliYear] || 0) + days;
+    employees[index].leaveSoldByYear = updatedSoldByYear;
+
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "بازخرید مرخصی", employee.name + " — " + days + " روز — " + stlpTreasuryMoney(netAmount));
+    }
+
+    alert("✅ بازخرید مرخصی " + employee.name + " ثبت شد.");
+
+    renderLeaveTable();
+
+}
+
+
+// وقتی فیش یک کارمند پرداخت می‌شود، از اینجا صدا زده می‌شود تا
+// مانده‌ی مرخصی و استعلاجی‌اش به‌روزرسانی شود (سالانه÷۱۲ اضافه،
+// مصرف این ماه کم؛ استعلاجی با حقوق و بدون حقوق این ماه جدا
+// به جمع سالانه‌ی خودشان اضافه می‌شوند)
+function stlpAccrueLeaveFromPayslip(employee, extras) {
+
+    if (!employee) return;
+
+    const employees = loadEmployees();
+    const index = employees.findIndex(function(e) { return e.id === employee.id; });
+    if (index < 0) return;
+
+    const monthlyAccrual = (employees[index].annualLeaveDays || 26) / 12;
+    const usedThisMonth = Number((extras && extras.leaveUsedDays) || 0);
+    const hourlyLeaveThisMonth = Number((extras && extras.hourlyLeaveHours) || 0) / 8;
+    const sickPaidThisMonth = Number((extras && extras.sickLeaveDaysPaid) || 0);
+    const sickUnpaidThisMonth = Number((extras && extras.sickLeaveDaysUnpaid) || 0);
+
+    employees[index].leaveBalance =
+        Math.max(0, Math.round(((employees[index].leaveBalance || 0) + monthlyAccrual - usedThisMonth - hourlyLeaveThisMonth) * 100) / 100);
+
+    employees[index].sickLeavePaidUsedThisYear =
+        (employees[index].sickLeavePaidUsedThisYear || 0) + sickPaidThisMonth;
+
+    employees[index].sickLeaveUnpaidUsedThisYear =
+        (employees[index].sickLeaveUnpaidUsedThisYear || 0) + sickUnpaidThisMonth;
+
+    saveEmployees(employees);
+
+}
+
+
+function renderLeaveTable() {
+
+    const capInput = document.getElementById("payrollLeaveCarryoverCap");
+    if (capInput && !capInput.value) capInput.value = stlpGetLeaveCarryoverCap();
+
+    const sickInput = document.getElementById("payrollSickUnpaidDays");
+    if (sickInput && !sickInput.value) sickInput.value = stlpGetSickUnpaidDays();
+
+    const maternityInput = document.getElementById("payrollMaternityLeaveDays");
+    if (maternityInput && !maternityInput.value) maternityInput.value = stlpGetMaternityLeaveDays();
+
+    const sellMaxInput = document.getElementById("payrollLeaveSellMaxDays");
+    if (sellMaxInput && !sellMaxInput.value) sellMaxInput.value = stlpGetLeaveSellMaxDays();
+
+    const tbody = document.getElementById("leaveTable");
+    if (!tbody) return;
+
+    const currentUser = typeof stlpCurrentUser === "function" ? stlpCurrentUser() : null;
+    const canFinanceEdit = currentUser && (currentUser.isAdmin || currentUser.canApproveLeaveFinance);
+
+    const employees =
+        loadEmployees().filter(function(e) { return e.active !== false; });
+
+    const jalaliYear = stlpCurrentJalaliYear();
+
+    tbody.innerHTML =
+        employees.map(function(employee) {
+
+            const maternityStatus =
+                employee.maternityLeaveActive
+                    ? "🤰 در مرخصی زایمان (از " + escapeHtml(employee.maternityLeaveStartDate || "-") + ")"
+                    : "—";
+
+            const soldByYear = employee.leaveSoldByYear || {};
+            const soldThisYear = soldByYear[jalaliYear] || 0;
+            const sellMax = stlpGetLeaveSellMaxDays();
+            const sellRemaining = Math.max(0, sellMax - soldThisYear);
+
+            return (
+                "<tr>" +
+                    "<td style='padding:6px;'>" + escapeHtml(employee.name) + "</td>" +
+                    "<td style='padding:6px;'>" + (employee.annualLeaveDays || 26) + " روز</td>" +
+                    "<td style='padding:6px; font-weight:bold;'>" + (employee.leaveBalance || 0).toFixed(1) + " روز</td>" +
+                    "<td style='padding:6px;'>" + (employee.sickLeavePaidUsedThisYear || 0) + " روز</td>" +
+                    "<td style='padding:6px;'>" + (employee.sickLeaveUnpaidUsedThisYear || 0) + " روز</td>" +
+                    "<td style='padding:6px;'>" + maternityStatus + "</td>" +
+                    "<td style='padding:6px; white-space:nowrap;'>" +
+                        (canFinanceEdit
+                            ? "<button type='button' onclick=\"stlpAdjustLeaveBalance('" + employee.id + "')\" style='background:#0dcaf0; padding:4px 8px; margin-left:4px; color:#000;'>✏️ تنظیم مانده</button>"
+                            : ""
+                        ) +
+                        "<button type='button' onclick=\"stlpSellLeave('" + employee.id + "')\" style='background:#198754; padding:4px 8px; margin-left:4px;' title='باقی‌مانده‌ی سهمیه‌ی بازخرید امسال: " + sellRemaining + " روز'>💰 بازخرید مرخصی</button>" +
+                        "<button type='button' onclick=\"stlpResetSickLeave('" + employee.id + "')\" style='background:#6c757d; padding:4px 8px; margin-left:4px;'>♻️ صفر کردن استعلاجی</button>" +
+                        (employee.maternityLeaveActive
+                            ? "<button type='button' onclick=\"stlpEndMaternityLeave('" + employee.id + "')\" style='background:#dc3545; padding:4px 8px;'>پایان مرخصی زایمان</button>"
+                            : "<button type='button' onclick=\"stlpStartMaternityLeave('" + employee.id + "')\" style='background:#0d6efd; padding:4px 8px;'>🤰 شروع مرخصی زایمان</button>"
+                        ) +
+                    "</td>" +
+                "</tr>"
+            );
+
+        }).join("");
+
+    if (employees.length === 0) {
+        tbody.innerHTML = "<tr><td style='padding:8px;'>کارمندی ثبت نشده است.</td></tr>";
+    }
+
+}
+
+
+// تنظیم دستی مانده‌ی مرخصی — برای کارمندهایی که قبل از وجود این
+// قابلیت ساخته شده‌اند و مانده‌شان صفر مانده، یا هر اصلاح دیگر
+function stlpAdjustLeaveBalance(employeeId) {
+
+    const currentUser = typeof stlpCurrentUser === "function" ? stlpCurrentUser() : null;
+    const allowed = currentUser && (currentUser.isAdmin || currentUser.canApproveLeaveFinance);
+
+    if (!allowed) {
+        alert("❌ ویرایش دستی مانده‌ی مرخصی فقط برای نقش «مالی/اداری» مجاز است.");
+        return;
+    }
+
+    const employees = loadEmployees();
+    const index = employees.findIndex(function(e) { return e.id === employeeId; });
+    if (index < 0) return;
+
+    const current = employees[index].leaveBalance || 0;
+
+    const input = prompt(
+        "مانده‌ی مرخصی " + employees[index].name + " چند روز تنظیم شود؟\n" +
+        "(مانده‌ی فعلی: " + current.toFixed(1) + " روز — سهمیه‌ی سالانه‌اش: " + (employees[index].annualLeaveDays || 26) + " روز)",
+        current
+    );
+
+    if (input === null) return;
+
+    const value = Number(input);
+    if (isNaN(value) || value < 0) {
+        alert("عدد وارد شده معتبر نیست.");
+        return;
+    }
+
+    employees[index].leaveBalance = value;
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "تنظیم دستی مانده‌ی مرخصی", employees[index].name + " — از " + current.toFixed(1) + " به " + value + " روز");
+    }
+
+    renderLeaveTable();
+
+}
+
+
+function stlpResetSickLeave(employeeId) {
+
+    if (!confirm("جمع روزهای استعلاجی امسال این کارمند (با حقوق و بدون حقوق) صفر شود؟")) return;
+
+    const employees = loadEmployees();
+    const index = employees.findIndex(function(e) { return e.id === employeeId; });
+    if (index < 0) return;
+
+    employees[index].sickLeavePaidUsedThisYear = 0;
+    employees[index].sickLeaveUnpaidUsedThisYear = 0;
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "صفر کردن استعلاجی", employees[index].name);
+
+    }
+
+    renderLeaveTable();
+
+}
+
+
+function stlpStartMaternityLeave(employeeId) {
+
+    const employees = loadEmployees();
+    const index = employees.findIndex(function(e) { return e.id === employeeId; });
+    if (index < 0) return;
+
+    const days = stlpGetMaternityLeaveDays();
+    if (!days) {
+        alert("⚠️ اول «مدت مرخصی زایمان طبق آخرین مصوبه» را بالای همین تب پر کنید.");
+        return;
+    }
+
+    const startDate = prompt("تاریخ شروع مرخصی زایمان (شمسی، مثلاً 1404/07/01):", "");
+    if (!startDate) return;
+
+    employees[index].maternityLeaveActive = true;
+    employees[index].maternityLeaveStartDate = startDate;
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "شروع مرخصی زایمان", employees[index].name + " — از " + startDate + " — " + days + " روز طبق مصوبه");
+    }
+
+    renderLeaveTable();
+
+}
+
+
+function stlpEndMaternityLeave(employeeId) {
+
+    if (!confirm("مرخصی زایمان این کارمند پایان‌یافته ثبت شود؟")) return;
+
+    const employees = loadEmployees();
+    const index = employees.findIndex(function(e) { return e.id === employeeId; });
+    if (index < 0) return;
+
+    employees[index].maternityLeaveActive = false;
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "پایان مرخصی زایمان", employees[index].name);
+    }
+
+    renderLeaveTable();
+
+}
+
+
+// =====================================================
+// تسویه‌حساب پایان همکاری
+// =====================================================
+
+function stlpFillTerminationEmployeeSelect() {
+
+    const sel = document.getElementById("terminationEmployeeId");
+    if (!sel) return;
+
+    const employees =
+        loadEmployees().filter(function(e) { return e.active !== false; });
+
+    const currentValue = sel.value;
+
+    sel.innerHTML =
+        '<option value="">— انتخاب کارمند —</option>' +
+        employees.map(function(e) {
+            return '<option value="' + e.id + '">' + escapeHtml(e.name) + '</option>';
+        }).join("");
+
+    if (currentValue) sel.value = currentValue;
+
+}
+
+
+function stlpCalcTerminationValues(employee, terminationDate) {
+
+    const terminationYear = Number(String(terminationDate).split("/")[0]) || stlpCurrentJalaliYear();
+
+    // اگر عیدیِ همین سال قبلاً از تب «عیدی و سنوات» برای این کارمند
+    // پرداخت شده باشد، در تسویه‌ی پایان کار دوباره اضافه نمی‌شود —
+    // وگرنه عیدیِ همان سال دوبار پرداخت می‌شد (یک‌بار کامل/سالانه از
+    // آن تب، یک‌بار دیگر نسبی این‌جا)، چون stlpComputeEidiToDate از
+    // اول همان سال حساب می‌کند و هیچ اطلاعی از تسویه‌ی قبلی ندارد
+    // (برخلاف سنوات که lastSanavatSettlementDate را دارد)
+    const eidiSettlements = stlpLoadEidiSanavatSettlements(terminationYear);
+    const eidiAlreadyPaid = !!eidiSettlements[employee.id];
+
+    const eidi = eidiAlreadyPaid ? 0 : stlpComputeEidiToDate(employee, terminationDate);
+    const sanavat = stlpComputeSanavatToDate(employee, terminationDate);
+    const leaveDays = employee.leaveBalance || 0;
+    const leavePayout = Math.round(((employee.baseSalary || 0) / 30) * leaveDays);
+
+    const grossTotal = eidi + sanavat + leavePayout;
+    const tax = stlpCalcProgressiveTax(grossTotal);
+    const netTotal = grossTotal - tax;
+
+    return { eidi, sanavat, leaveDays, leavePayout, grossTotal, tax, netTotal, eidiAlreadyPaid };
+
+}
+
+
+function stlpCalcTermination() {
+
+    const employeeId = document.getElementById("terminationEmployeeId").value;
+    const terminationDate = document.getElementById("terminationDate").value.trim();
+
+    const tbody = document.querySelector("#terminationResultTable tbody");
+    if (!tbody) return;
+
+    if (!employeeId || !terminationDate) {
+        tbody.innerHTML = "<tr><td style='padding:10px;'>کارمند و تاریخ پایان همکاری را انتخاب کنید.</td></tr>";
+        return;
+    }
+
+    const employees = loadEmployees();
+    const employee = employees.find(function(e) { return e.id === employeeId; });
+    if (!employee) return;
+
+    const v = stlpCalcTerminationValues(employee, terminationDate);
+
+    tbody.innerHTML =
+        "<tr><td style='padding:8px; font-weight:bold;'>سنوات (" + stlpYearsOfServiceToDate(employee, terminationDate).toFixed(2) + " سال)</td><td style='padding:8px;'>" + stlpTreasuryMoney(v.sanavat) + "</td></tr>" +
+        "<tr><td style='padding:8px; font-weight:bold;'>عیدی نسبی همین سال" + (v.eidiAlreadyPaid ? " <span style='font-weight:normal; color:#e67700;'>(قبلاً از تب «عیدی و سنوات» پرداخت شده — صفر)</span>" : "") + "</td><td style='padding:8px;'>" + stlpTreasuryMoney(v.eidi) + "</td></tr>" +
+        "<tr><td style='padding:8px; font-weight:bold;'>بازخرید مرخصی (" + v.leaveDays.toFixed(1) + " روز)</td><td style='padding:8px;'>" + stlpTreasuryMoney(v.leavePayout) + "</td></tr>" +
+        "<tr style='background:#e9ecef;'><td style='padding:8px; font-weight:bold;'>جمع ناخالص</td><td style='padding:8px; font-weight:bold;'>" + stlpTreasuryMoney(v.grossTotal) + "</td></tr>" +
+        "<tr><td style='padding:8px;'>مالیات پلکانی</td><td style='padding:8px;'>" + stlpTreasuryMoney(v.tax) + "</td></tr>" +
+        "<tr style='background:#0fa37f22;'><td style='padding:8px; font-weight:bold;'>خالص نهایی قابل پرداخت</td><td style='padding:8px; font-weight:bold;'>" + stlpTreasuryMoney(v.netTotal) + "</td></tr>";
+
+}
+
+
+function stlpFinalizeTermination() {
+
+    const employeeId = document.getElementById("terminationEmployeeId").value;
+    const terminationDate = document.getElementById("terminationDate").value.trim();
+    const account = document.getElementById("terminationAccount").value;
+
+    if (!employeeId || !terminationDate) {
+        alert("لطفاً کارمند و تاریخ پایان همکاری را انتخاب کنید.");
+        return;
+    }
+
+    if (!account) {
+        alert("لطفاً حساب پرداخت را انتخاب کنید.");
+        return;
+    }
+
+    const employees = loadEmployees();
+    const employee = employees.find(function(e) { return e.id === employeeId; });
+    if (!employee) return;
+
+    const v = stlpCalcTerminationValues(employee, terminationDate);
+
+    if (v.grossTotal <= 0) {
+        alert("مبلغی برای تسویه محاسبه نشد.");
+        return;
+    }
+
+    // این تسویه فقط سنوات/عیدی/بازخریدِ مرخصی را حساب می‌کند، نه حقوقِ
+    // ماهِ جاری (طبقِ توضیحِ همین تب، آن باید جدا از تبِ «فیش حقوقی این
+    // ماه» تسویه شود) — ولی بلافاصله بعدِ تأییدِ همین عملیات، کارمند
+    // غیرفعال می‌شود و از آن به بعد در هیچ صفحه‌ی پرداختِ حقوقی دیگر
+    // اصلاً دیده نمی‌شود. اگر حقوقِ دوره‌ی انتخاب‌شده در تبِ اصلی هنوز
+    // پرداخت نشده، همین‌جا هشدار داده می‌شود تا فراموش نشود.
+    const periodInputForWarning = document.getElementById("payrollPeriod");
+    const currentPeriodForWarning = periodInputForWarning ? periodInputForWarning.value.trim() : "";
+
+    if (currentPeriodForWarning) {
+
+        const paidThisPeriod =
+            loadPayrollRecords().some(function(r) {
+                return r.employeeId === employeeId && r.period === currentPeriodForWarning && r.paid;
+            });
+
+        if (!paidThisPeriod && !confirm(
+            "⚠️ حقوقِ " + employee.name + " برای دوره‌ی " + currentPeriodForWarning + " هنوز از تبِ «فیش حقوقی این ماه» پرداخت نشده.\n" +
+            "بعد از این تسویه، کارمند غیرفعال می‌شود و دیگر در آن تب قابل‌پرداخت نخواهد بود.\n\n" +
+            "اگر مطمئنید (مثلاً حقوقش را جدا حساب کرده‌اید)، ادامه دهید؛ وگرنه لغو کنید و اول همان حقوق را پرداخت کنید."
+        )) return;
+
+    }
+
+    if (!confirm(
+        "تسویه‌حساب نهایی " + employee.name + " در تاریخ " + terminationDate + "\n\n" +
+        "سنوات: " + stlpTreasuryMoney(v.sanavat) + "\n" +
+        "عیدی نسبی: " + stlpTreasuryMoney(v.eidi) + (v.eidiAlreadyPaid ? " (قبلاً پرداخت شده)" : "") + "\n" +
+        "بازخرید مرخصی (" + v.leaveDays.toFixed(1) + " روز): " + stlpTreasuryMoney(v.leavePayout) + "\n" +
+        "مالیات پلکانی: " + stlpTreasuryMoney(v.tax) + "\n" +
+        "خالص نهایی: " + stlpTreasuryMoney(v.netTotal) + "\n\n" +
+        "⚠️ با تأیید این عملیات، کارمند غیرفعال می‌شود. آیا ادامه می‌دهید؟"
+    )) return;
+
+    // مثلِ payEmployee: چکِ محلیِ زیر به‌تنهایی تضمین نیست — بینِ خواندنِ
+    // employees و رسیدن به همین نقطه، یک تلاشِ هم‌زمانِ دیگر (مثلاً
+    // دوبار کلیکِ سریع) می‌توانست از همین چک هم رد شود و دو تراکنشِ
+    // خزانه برای یک تسویه ثبت کند. قفلِ اتمیکِ سمتِ سرور فقط به اولین
+    // درخواست اجازه‌ی ادامه می‌دهد.
+    if (typeof stlpAppendToStoreArraySync === "function") {
+
+        const terminationLockId = "termination|" + employeeId;
+
+        const lockClaimed = stlpAppendToStoreArraySync(
+            "stlp_payroll_payment_locks",
+            {
+                id: terminationLockId,
+                employeeId: employeeId,
+                claimedAt: new Date().toISOString()
+            },
+            "id",
+            terminationLockId
+        );
+
+        if (!lockClaimed) {
+            alert("⚠️ تسویه‌ی این کارمند همین الان (یا قبلاً) در حالِ ثبت است.");
+            return;
+        }
+
+    }
+
+    // بازخوانیِ تازه، درست قبل از نوشتن — تا اگر بینِ باز شدنِ این فرم
+    // و کلیکِ نهایی، این کارمند از جای دیگری تسویه/غیرفعال شده، دوباره
+    // تسویه نشود
+    const freshEmployees = loadEmployees();
+    const freshIndex = freshEmployees.findIndex(function(e) { return e.id === employeeId; });
+
+    if (freshIndex < 0 || freshEmployees[freshIndex].active === false) {
+        alert("⚠️ این کارمند قبلاً تسویه/غیرفعال شده است.");
+        return;
+    }
+
+    const transaction = stlpPostPayrollDuesTransaction(
+        Number(String(terminationDate).split("/")[0]),
+        v.netTotal,
+        employee.name,
+        "تسویه‌حساب پایان همکاری — " + employee.name + " — " + terminationDate,
+        "payroll-termination-settlement",
+        account
+    );
+
+    if (!transaction) return;
+
+    freshEmployees[freshIndex].active = false;
+    freshEmployees[freshIndex].terminationDate = terminationDate;
+    freshEmployees[freshIndex].leaveBalance = 0;
+    saveEmployees(freshEmployees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "تسویه پایان همکاری", employee.name + " — " + terminationDate + " — " + stlpTreasuryMoney(v.netTotal));
+    }
+
+    alert("✅ تسویه‌حساب پایان همکاری " + employee.name + " ثبت و کارمند غیرفعال شد.");
+
+    document.getElementById("terminationDate").value = "";
+    document.querySelector("#terminationResultTable tbody").innerHTML = "";
+    stlpFillTerminationEmployeeSelect();
+    renderEmployees();
+
+}
+
+
+// (+۳٪ بیمه بیکاری = مجموعاً ۲۳٪) روی همان مبنای بیمه‌ی کارگر
+// =====================================================
+
+function stlpGetEmployerInsuranceRate() {
+
+    const raw = localStorage.getItem("stlp_payroll_employer_insurance_rate");
+    const value = Number(raw);
+
+    return (raw && !isNaN(value) && value >= 0) ? value : 23;
+
+}
+
+
+function stlpSaveEmployerInsuranceRate() {
+
+    const input = document.getElementById("payrollEmployerInsuranceRate");
+    if (!input) return;
+
+    const value = Number(input.value || 0);
+
+    localStorage.setItem("stlp_payroll_employer_insurance_rate", String(value));
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "تغییر درصد سهم بیمه‌ی کارفرما", value + "٪");
+    }
+
+    renderPayrollRun();
+    renderInsuranceTaxSettlement();
+
+}
+
+
+function stlpCalcPayroll(employee, presentDays, overtimeHours, bonus, advance, otherDeduction, period, unpaidSickDays) {
+
+    let hourlyEquivalent = 0;
+    let baseAmount = 0;
+
+    if (employee.salaryType === "monthly") {
+
+        const standardDays = employee.workDays || 30;
+        const dailyEquivalent = employee.baseSalary / standardDays;
+        hourlyEquivalent = dailyEquivalent / 8;
+        baseAmount = dailyEquivalent * presentDays;
+
+    } else if (employee.salaryType === "daily") {
+
+        hourlyEquivalent = employee.baseSalary / 8;
+        baseAmount = employee.baseSalary * presentDays;
+
+    } else {
+
+        // ساعتی: روزهای کارکرد را معادل ۸ ساعت در روز حساب می‌کنیم
+        hourlyEquivalent = employee.baseSalary;
+        baseAmount = employee.baseSalary * (presentDays * 8);
+
+    }
+
+    // استعلاجی «بدون حقوق» — معادل همان تعداد روز، از حقوق پایه
+    // کسر می‌شود (نرخ روزانه = hourlyEquivalent × ۸، که در هر سه
+    // حالت حقوق ماهانه/روزانه/ساعتی معادل یک روز کاری است)
+    const unpaidSickDeduction =
+        Math.round((hourlyEquivalent * 8) * (unpaidSickDays || 0));
+
+    baseAmount = Math.max(0, baseAmount - unpaidSickDeduction);
+
+    const overtimeAmount =
+        overtimeHours * hourlyEquivalent * (employee.overtimeMultiplier || 1.4);
+
+    // ===============================================
+    // مزایای مزدی — طبق استاندارد ایران، این‌ها هم
+    // بخشی از حقوق و مزایای کارمند هستند و باید در
+    // ناخالص و مبنای بیمه لحاظ شوند (قبلاً نادیده گرفته می‌شدند)
+    // ===============================================
+
+    const seniorityBase = Number(employee.seniorityBase || 0);
+    const attractionAllowance = Number(employee.attractionAllowance || 0);
+    const responsibilityAllowance = Number(employee.responsibilityAllowance || 0);
+    const housingAllowance = Number(employee.housingAllowance || 0);
+    const foodAllowance = Number(employee.foodAllowance || 0);
+    const childAllowance = Number(employee.childAllowance || 0);
+    const maritalAllowance = Number(employee.maritalAllowance || 0);
+
+    const totalAllowances =
+        seniorityBase + attractionAllowance + responsibilityAllowance +
+        housingAllowance + foodAllowance + childAllowance + maritalAllowance;
+
+    // ===============================================
+    // عیدی و سنوات سالانه — فقط در فیش «اسفند» (آخرین ماه سال
+    // شمسی) خودکار به همین فیش اضافه می‌شوند، مشمول مالیات پلکانی
+    // و معاف از بیمه‌اند؛ اگر از تب «عیدی و سنوات» به‌طور جداگانه
+    // برای همین سال قبلاً پرداخت شده باشند، اینجا دوباره اضافه
+    // نمی‌شوند (جلوگیری از پرداخت دوبل)
+    // ===============================================
+
+    let eidiAmount = 0;
+    let sanavatAmount = 0;
+
+    if (period && typeof stlpComputeEidi === "function") {
+
+        const periodParts = String(period).split("/");
+        const periodYear = Number(periodParts[0]);
+        const periodMonth = Number(periodParts[1]);
+
+        if (periodMonth === 12 && periodYear) {
+
+            const eidiSanavatSettlements =
+                typeof stlpLoadEidiSanavatSettlements === "function"
+                    ? stlpLoadEidiSanavatSettlements(periodYear)
+                    : {};
+
+            if (!eidiSanavatSettlements[employee.id]) {
+                eidiAmount = stlpComputeEidi(employee, periodYear);
+                sanavatAmount = stlpComputeSanavat(employee, periodYear);
+            }
+
+        }
+
+    }
+
+    const eidiSanavatAmount = eidiAmount + sanavatAmount;
+
+    // ===============================================
+    // حق مأموریت و وام — از «جزئیات بیشتر» همین دوره خوانده
+    // می‌شوند. قبلاً این دو فقط در فیش چاپی/رسمی نمایش داده
+    // می‌شدند ولی روی مبلغ واقعاً پرداختی و کسرشده هیچ اثری
+    // نداشتند (فیش با واریزی واقعی می‌خواند). حق مأموریت مثل
+    // بازگشت هزینه، معاف از بیمه و مالیات است؛ وام هم یک کسورات
+    // ساده (بدون اثر بر بیمه/مالیات) است.
+    // ===============================================
+
+    const payrollExtras =
+        (period && typeof getPayrollExtras === "function")
+            ? getPayrollExtras(employee.id, period)
+            : {};
+
+    const missionAllowance = Number(payrollExtras.missionAllowance || 0);
+    const loanDeduction = Number(payrollExtras.loan || 0);
+
+    // ناخالص = حقوق پایه + اضافه‌کاری + پاداش + همه‌ی مزایا + عیدی/سنوات (اگر اسفند باشد) + حق مأموریت
+    const grossAmount =
+        baseAmount + overtimeAmount + (bonus || 0) + totalAllowances + eidiSanavatAmount + missionAllowance;
+
+    // ===============================================
+    // بیمه تأمین اجتماعی — مبنای آن تقریباً همه‌ی اقلام
+    // مزدی نقدی است (پایه + سنوات + جذب + مسئولیت + مسکن +
+    // بن + اولاد + اضافه‌کاری)؛ پاداش‌های غیرمستمر معمولاً
+    // مشمول بیمه نیستند
+    // ===============================================
+
+    const insuranceBase =
+        baseAmount + overtimeAmount + totalAllowances;
+
+    // سقف مزد مشمول کسر حق بیمه — طبق بخشنامه‌ی هرسال تأمین اجتماعی،
+    // معادل ۷ برابر حداقل دستمزد روزانه (= ۷ برابر حداقل دستمزد
+    // ماهانه، چون مزد روزانه = ماهانه/۳۰ و سقف ماهانه = سقف روزانه×۳۰)
+    const insuranceCeiling = stlpGetMinimumWage() * 7;
+
+    const cappedInsuranceBase =
+        insuranceCeiling > 0
+            ? Math.min(insuranceBase, insuranceCeiling)
+            : insuranceBase;
+
+    const insuranceAmount =
+        employee.insuranceExempt
+            ? 0
+            : Math.round(cappedInsuranceBase * (employee.insuranceRate || 0) / 100);
+
+    // سهم بیمه‌ی کارفرما — جدا از سهم کارگر است، از حقوق کارگر کسر
+    // نمی‌شود و پرداخت نمی‌شود؛ هزینه‌ی مستقیم کارفرماست که باید
+    // جداگانه (همراه سهم کارگر) به تأمین اجتماعی واریز شود؛ همان
+    // مبنای سقف‌خورده و همان نرخ‌های ۷٪/۲۳٪ قانونی اعمال می‌شود
+    const employerInsuranceAmount =
+        employee.insuranceExempt
+            ? 0
+            : Math.round(cappedInsuranceBase * stlpGetEmployerInsuranceRate() / 100);
+
+    // ===============================================
+    // مالیات حقوق — طبق ماده ۳۶ قانون کار، حق مسکن، بن
+    // خواروبار، حق اولاد و حق تأهل از مالیات معافند و اصلاً وارد
+    // مبنای مالیات نمی‌شوند. بقیه‌ی اقلام تا سقف معافیت
+    // ماهانه (که هرسال عوض می‌شود) معافند و فقط مازاد آن
+    // با نرخ مالیات کارمند محاسبه می‌شود
+    // ===============================================
+
+    const taxableBase =
+        baseAmount + overtimeAmount + (bonus || 0) +
+        seniorityBase + attractionAllowance + responsibilityAllowance;
+
+    const taxExemptionCeiling = stlpGetTaxExemptionCeiling();
+
+    // مالیات مستقیم روی مبنای مشمول (منهای سقف معافیت) حساب می‌شود؛
+    // بیمه در این محاسبه دخالتی ندارد — بیمه و مالیات، هر دو
+    // مستقل، از حقوق ناخالص کم می‌شوند (طبق جدول رسمی مالیات حقوق)
+    // عیدی/سنوات معاف از سقف معافیت نیستند و کامل وارد مبنای
+    // مالیات پلکانی می‌شوند (چون خودشان مازاد بر حقوق عادی‌اند)
+    const taxableExcess =
+        Math.max(0, taxableBase - taxExemptionCeiling) + eidiSanavatAmount;
+
+    const taxAmount =
+        employee.taxExempt
+            ? 0
+            : stlpCalcProgressiveTax(taxableExcess);
+
+    const totalDeduction =
+        insuranceAmount + taxAmount + (advance || 0) + (otherDeduction || 0) + loanDeduction;
+
+    const netAmount =
+        grossAmount - totalDeduction;
+
+    return {
+
+        baseAmount: Math.round(baseAmount),
+        unpaidSickDeduction: Math.round(unpaidSickDeduction),
+        overtimeAmount: Math.round(overtimeAmount),
+        totalAllowances: Math.round(totalAllowances),
+        eidiAmount: Math.round(eidiAmount),
+        sanavatAmount: Math.round(sanavatAmount),
+        missionAllowance: Math.round(missionAllowance),
+        loanDeduction: Math.round(loanDeduction),
+        grossAmount: Math.round(grossAmount),
+        insuranceAmount: insuranceAmount,
+        employerInsuranceAmount: employerInsuranceAmount,
+        taxAmount: taxAmount,
+        totalDeduction: Math.round(totalDeduction),
+        netAmount: Math.round(netAmount)
+
+    };
+
+}
+
+
+// =====================================================
+// رندر جدول فیش حقوقی این دوره
+// =====================================================
+
+function renderPayrollRun() {
+
+    stlpFillPayrollAccountSelect();
+
+    const tbody =
+        document.getElementById("payrollRunTable");
+
+    if (!tbody) return;
+
+    const period =
+        document.getElementById("payrollPeriod").value.trim();
+
+    if (!period) {
+
+        tbody.innerHTML =
+            '<tr><td colspan="16">لطفاً ابتدا دوره (سال/ماه) را مشخص کنید.</td></tr>';
+
+        return;
+
+    }
+
+    const employees =
+        loadEmployees().filter(function(e) { return e.active !== false; });
+
+    if (employees.length === 0) {
+
+        tbody.innerHTML =
+            '<tr><td colspan="16">هیچ کارمند فعالی ثبت نشده است. ابتدا از تب «کارمندان» اضافه کنید.</td></tr>';
+
+        return;
+
+    }
+
+    const payrollRecords = loadPayrollRecords();
+
+    tbody.innerHTML =
+        employees.map(function(employee) {
+
+            const existing =
+                payrollRecords.find(function(r) {
+                    return r.employeeId === employee.id && r.period === period;
+                });
+
+            const extrasForDefault =
+                (!existing && typeof getPayrollExtras === "function")
+                    ? getPayrollExtras(employee.id, period)
+                    : null;
+
+            const approvedLeaveForDefault =
+                (!existing && typeof stlpGetApprovedLeaveForPeriod === "function")
+                    ? stlpGetApprovedLeaveForPeriod(employee.id, period)
+                    : null;
+
+            const defaultPresentDays =
+                extrasForDefault
+                    ? Math.round(Math.max(0,
+                        (employee.workDays || 30) -
+                        (extrasForDefault.absentDays || 0) -
+                        (extrasForDefault.leaveUsedDays || 0) -
+                        (extrasForDefault.sickLeaveDaysUnpaid || 0) -
+                        ((extrasForDefault.hourlyLeaveHours || 0) / 8) -
+                        (approvedLeaveForDefault.days || 0) -
+                        ((approvedLeaveForDefault.hours || 0) / 8)
+                      ) * 100) / 100
+                    : (employee.workDays || 30);
+
+            const presentDays = existing ? existing.presentDays : defaultPresentDays;
+            const overtimeHours = existing ? existing.overtimeHours : 0;
+            const bonus = existing ? existing.bonus : 0;
+            const advance = existing ? existing.advance : 0;
+            const otherDeduction = existing ? existing.otherDeduction : 0;
+
+                const unpaidSickDays =
+                    (typeof getPayrollExtras === "function" ? (getPayrollExtras(employee.id, period).sickLeaveDaysUnpaid || 0) : 0);
+
+            const calc =
+                stlpCalcPayroll(employee, presentDays, overtimeHours, bonus, advance, otherDeduction, period, unpaidSickDays);
+
+            const paid = existing && existing.paid === true;
+
+            return (
+                '<tr data-emp="' + employee.id + '">' +
+
+                '<td><input type="checkbox" class="pr-select" value="' + employee.id + '"></td>' +
+
+                "<td>" + escapeHtml(employee.name) + "</td>" +
+                "<td>" + stlpSalaryTypeName(employee.salaryType) + "</td>" +
+
+                '<td><input type="number" class="pr-days" min="0" value="' + presentDays +
+                    '" oninput="stlpRecalcRunRow(\'' + employee.id + '\')" ' +
+                    (paid ? "disabled" : "") + '></td>' +
+
+                '<td><input type="number" class="pr-ot" min="0" value="' + overtimeHours +
+                    '" oninput="stlpRecalcRunRow(\'' + employee.id + '\')" ' +
+                    (paid ? "disabled" : "") + '></td>' +
+
+                '<td><input type="number" class="pr-bonus" min="0" value="' + bonus +
+                    '" oninput="stlpRecalcRunRow(\'' + employee.id + '\')" ' +
+                    (paid ? "disabled" : "") + '></td>' +
+
+                '<td><input type="number" class="pr-advance" min="0" value="' + advance +
+                    '" oninput="stlpRecalcRunRow(\'' + employee.id + '\')" ' +
+                    (paid ? "disabled" : "") + '></td>' +
+
+                '<td><input type="number" class="pr-otherded" min="0" value="' + otherDeduction +
+                    '" oninput="stlpRecalcRunRow(\'' + employee.id + '\')" ' +
+                    (paid ? "disabled" : "") + '></td>' +
+
+                '<td class="pr-base"' +
+                    ((calc.unpaidSickDeduction || 0) > 0
+                        ? ' title="پس از کسر ' + stlpTreasuryMoney(calc.unpaidSickDeduction) + ' بابت استعلاجی بدون حقوق"'
+                        : ''
+                    ) + '>' + stlpTreasuryMoney(calc.baseAmount) +
+                    ((calc.unpaidSickDeduction || 0) > 0 ? ' 🤒' : '') +
+                "</td>" +
+                '<td class="pr-otamount">' + stlpTreasuryMoney(calc.overtimeAmount) + "</td>" +
+                '<td class="pr-allowances">' + stlpTreasuryMoney(calc.totalAllowances) + "</td>" +
+                '<td class="pr-gross" style="font-weight:700;"' +
+                    ((calc.eidiAmount || 0) + (calc.sanavatAmount || 0) > 0
+                        ? ' title="شامل عیدی: ' + stlpTreasuryMoney(calc.eidiAmount) + ' + سنوات: ' + stlpTreasuryMoney(calc.sanavatAmount) + '"'
+                        : ''
+                    ) + '>' + stlpTreasuryMoney(calc.grossAmount) +
+                    ((calc.eidiAmount || 0) + (calc.sanavatAmount || 0) > 0 ? ' 🎁' : '') +
+                "</td>" +
+                '<td class="pr-insurance">' + stlpTreasuryMoney(calc.insuranceAmount) + "</td>" +
+                '<td class="pr-tax">' + stlpTreasuryMoney(calc.taxAmount) + "</td>" +
+                '<td class="pr-net" style="font-weight:900;">' + stlpTreasuryMoney(calc.netAmount) + "</td>" +
+
+                '<td><div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">' +
+                    (
+                        paid
+                            ? '<span class="payroll-badge-paid">✓ پرداخت شد</span>'
+                            : '<button type="button" class="pay-btn" onclick="payEmployee(\'' + employee.id + '\')">💳 ثبت و پرداخت</button>'
+                    ) +
+                    '<button type="button" class="pay-btn" style="background:#6c757d;" ' +
+                    'onclick="downloadPayslipExcel(\'' + employee.id + '\')">📄 اکسل ساده</button>' +
+                    '<button type="button" class="pay-btn" style="background:#8b5cf6;" ' +
+                    'onclick="downloadOfficialPayslipSingle(\'' + employee.id + '\')">🖨 فیش رسمی</button>' +
+                    '<button type="button" class="pay-btn" style="background:#0d6efd;" ' +
+                    'onclick="openPayrollExtrasModal(\'' + employee.id + '\')">📝 جزئیات</button>' +
+                "</div></td>" +
+
+                "</tr>"
+            );
+
+        }).join("");
+
+    renderInsuranceTaxSettlement();
+
+}
+
+
+// =====================================================
+// بازمحاسبه‌ی زنده‌ی یک ردیف در جدول اجرا
+// =====================================================
+
+function stlpRecalcRunRow(employeeId) {
+
+    const row =
+        document.querySelector('tr[data-emp="' + employeeId + '"]');
+
+    if (!row) return;
+
+    const periodInput = document.getElementById("payrollPeriod");
+    const period = periodInput ? periodInput.value.trim() : "";
+
+    const employees = loadEmployees();
+
+    const employee =
+        employees.find(function(e) { return e.id === employeeId; });
+
+    if (!employee) return;
+
+    const presentDays = Math.max(0, Number(row.querySelector(".pr-days").value || 0));
+    const overtimeHours = Math.max(0, Number(row.querySelector(".pr-ot").value || 0));
+    const bonus = Math.max(0, Number(row.querySelector(".pr-bonus").value || 0));
+    const advance = Math.max(0, Number(row.querySelector(".pr-advance").value || 0));
+    const otherDeduction = Math.max(0, Number(row.querySelector(".pr-otherded").value || 0));
+
+        const unpaidSickDays =
+            (typeof getPayrollExtras === "function" ? (getPayrollExtras(employee.id, period).sickLeaveDaysUnpaid || 0) : 0);
+
+    const calc =
+        stlpCalcPayroll(employee, presentDays, overtimeHours, bonus, advance, otherDeduction, period, unpaidSickDays);
+
+    row.querySelector(".pr-base").textContent = stlpTreasuryMoney(calc.baseAmount);
+    row.querySelector(".pr-otamount").textContent = stlpTreasuryMoney(calc.overtimeAmount);
+    row.querySelector(".pr-allowances").textContent = stlpTreasuryMoney(calc.totalAllowances);
+    row.querySelector(".pr-gross").textContent = stlpTreasuryMoney(calc.grossAmount);
+    row.querySelector(".pr-insurance").textContent = stlpTreasuryMoney(calc.insuranceAmount);
+    row.querySelector(".pr-tax").textContent = stlpTreasuryMoney(calc.taxAmount);
+    row.querySelector(".pr-net").textContent = stlpTreasuryMoney(calc.netAmount);
+
+}
+
+
+// =====================================================
+// ثبت و پرداخت حقوق یک کارمند (ثبت خودکار در خزانه)
+// =====================================================
+
+// وقتی فیش اسفند یک کارمند که شامل عیدی/سنوات خودکار بوده پرداخت
+// می‌شود، این مبلغ در همان جدول تسویه‌ی تب «عیدی و سنوات» هم
+// به‌عنوان «پرداخت‌شده» ثبت می‌شود تا از پرداخت دوباره جلوگیری شود
+// و تاریخ آخرین تسویه‌ی سنوات کارمند به‌روزرسانی گردد
+function stlpMarkEidiSanavatSettledFromPayslip(employee, period, calc) {
+
+    if (!calc || (calc.eidiAmount || 0) + (calc.sanavatAmount || 0) <= 0) return;
+    if (!period) return;
+
+    const periodParts = String(period).split("/");
+    const jalaliYear = Number(periodParts[0]);
+    if (!jalaliYear) return;
+
+    if (typeof stlpLoadEidiSanavatSettlements !== "function") return;
+
+    const settlements = stlpLoadEidiSanavatSettlements(jalaliYear);
+    if (settlements[employee.id]) return; // قبلاً از تب جداگانه ثبت شده
+
+    settlements[employee.id] = {
+        eidi: calc.eidiAmount,
+        sanavat: calc.sanavatAmount,
+        viaPayslip: true,
+        settledAt: new Date().toISOString()
+    };
+    stlpSaveEidiSanavatSettlements(jalaliYear, settlements);
+
+    const employees = loadEmployees();
+    const empIndex = employees.findIndex(function(e) { return e.id === employee.id; });
+    if (empIndex >= 0) {
+        employees[empIndex].lastSanavatSettlementDate = jalaliYear + "/12/29";
+        saveEmployees(employees);
+    }
+
+}
+
+
+function payEmployee(employeeId) {
+
+    const period =
+        document.getElementById("payrollPeriod").value.trim();
+
+    if (!period) {
+        alert("لطفاً دوره را مشخص کنید.");
+        return;
+    }
+
+    const account =
+        document.getElementById("payrollAccount").value;
+
+    if (!account) {
+        alert("لطفاً حساب پرداخت را انتخاب کنید.");
+        return;
+    }
+
+    const employees = loadEmployees();
+
+    const employee =
+        employees.find(function(e) { return e.id === employeeId; });
+
+    if (!employee) {
+        alert("❌ کارمند پیدا نشد.");
+        return;
+    }
+
+    const row =
+        document.querySelector('tr[data-emp="' + employeeId + '"]');
+
+    if (!row) return;
+
+    const presentDays = Math.max(0, Number(row.querySelector(".pr-days").value || 0));
+    const overtimeHours = Math.max(0, Number(row.querySelector(".pr-ot").value || 0));
+    const bonus = Math.max(0, Number(row.querySelector(".pr-bonus").value || 0));
+    const advance = Math.max(0, Number(row.querySelector(".pr-advance").value || 0));
+    const otherDeduction = Math.max(0, Number(row.querySelector(".pr-otherded").value || 0));
+
+        const unpaidSickDays =
+            (typeof getPayrollExtras === "function" ? (getPayrollExtras(employee.id, period).sickLeaveDaysUnpaid || 0) : 0);
+
+    const calc =
+        stlpCalcPayroll(employee, presentDays, overtimeHours, bonus, advance, otherDeduction, period, unpaidSickDays);
+
+    if (typeof getPayrollExtras === "function") {
+
+        const leaveExtras = getPayrollExtras(employee.id, period);
+        const leaveUsedThisMonth = Number(leaveExtras.leaveUsedDays || 0);
+        const hourlyLeaveThisMonth = Number(leaveExtras.hourlyLeaveHours || 0) / 8;
+        const leaveMonthlyAccrual = (employee.annualLeaveDays || 26) / 12;
+        const leaveAvailable = (employee.leaveBalance || 0) + leaveMonthlyAccrual;
+        const leaveResultingBalance = leaveAvailable - leaveUsedThisMonth - hourlyLeaveThisMonth;
+
+        if (leaveResultingBalance < 0) {
+
+            if (!confirm(
+                "⚠️ مرخصیِ واردشده برای این ماه (" + (leaveUsedThisMonth + hourlyLeaveThisMonth).toFixed(1) + " روز) بیشتر از مانده‌ی مرخصیِ " + employee.name + " است " +
+                "(مانده‌ی موجود با احتساب سهمیه‌ی این ماه: " + leaveAvailable.toFixed(1) + " روز) و مانده‌اش صفر می‌شود.\n" +
+                "آیا مطمئنید می‌خواهید ادامه دهید؟"
+            )) return;
+
+        }
+
+    }
+
+    if (calc.netAmount <= 0) {
+
+        if (!confirm(
+            "⚠️ مبلغ خالص پرداختی صفر یا منفی است (" +
+            stlpTreasuryMoney(calc.netAmount) +
+            "). آیا مطمئنید می‌خواهید ثبت کنید؟"
+        )) return;
+
+    } else {
+
+        if (!confirm(
+            "پرداخت حقوق " + employee.name + " برای دوره‌ی " + period + "\n" +
+            "مبلغ خالص: " + stlpTreasuryMoney(calc.netAmount) + "\n\n" +
+            "آیا تأیید می‌کنید؟"
+        )) return;
+
+    }
+
+    let payrollRecords = loadPayrollRecords();
+
+    const existingIndex =
+        payrollRecords.findIndex(function(r) {
+            return r.employeeId === employeeId && r.period === period;
+        });
+
+    if (existingIndex >= 0 && payrollRecords[existingIndex].paid) {
+
+        alert("⚠️ این فیش قبلاً پرداخت شده است.");
+        return;
+
+    }
+
+    // این چکِ بالا فقط یک بررسیِ محلیِ سریع است، نه یک تضمین: بین
+    // خواندنِ payrollRecords و ذخیره‌ی نهایی، یک درخواستِ دیگر
+    // (مثلاً دوبار کلیک، یا «پرداخت همه» که هم‌زمان روی همین کارمند
+    // هم اجرا شده) می‌توانست همین چک را رد کند و دو تراکنشِ خزانه
+    // برای یک حقوق ثبت شود. این‌جا یک قفلِ اتمیکِ سمتِ سرور (با
+    // dedupe روی همون کلیدِ کارمند+دوره) واقعاً تضمین می‌کند فقط
+    // اولین درخواست اجازه‌ی ادامه پیدا می‌کند.
+    if (typeof stlpAppendToStoreArraySync === "function") {
+
+        const paymentLockId = employeeId + "|" + period;
+
+        const lockClaimed = stlpAppendToStoreArraySync(
+            "stlp_payroll_payment_locks",
+            {
+                id: paymentLockId,
+                employeeId: employeeId,
+                period: period,
+                claimedAt: new Date().toISOString()
+            },
+            "id",
+            paymentLockId
+        );
+
+        if (!lockClaimed) {
+
+            alert("⚠️ این فیش هم‌زمان با یک درخواستِ دیگر پرداخت شد.");
+            renderPayrollRun();
+            return;
+
+        }
+
+    }
+
+    // -------------------------------------------
+    // ثبت تراکنش خزانه (خروجی)
+    // -------------------------------------------
+
+    const transaction = {
+
+        id:
+            Date.now() + "_" +
+            Math.random().toString(36).substring(2, 8),
+
+        type: "out",
+
+        account: account,
+
+        transferFrom: "",
+        transferTo: "",
+
+        amount: calc.netAmount > 0 ? calc.netAmount : 0,
+
+        date:
+            new Date().toLocaleDateString("fa-IR"),
+
+        party: employee.name,
+
+        method: "cash",
+
+        tracking: "",
+
+        invoiceNo: "",
+
+        description:
+            "پرداخت حقوق دوره‌ی " + period + " - " + employee.name,
+
+        checkNo: "",
+        checkBank: "",
+        checkDueDate: "",
+
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+
+        source: "payroll"
+
+    };
+
+    if (typeof stlpTreasury === "undefined") {
+
+        alert("❌ ماژول خزانه (app.js) بارگذاری نشده است.");
+        return;
+
+    }
+
+    stlpTreasury.push(transaction);
+
+    if (typeof saveTreasury === "function") saveTreasury();
+
+    if (typeof saveTreasuryAccountingEntry === "function") {
+        saveTreasuryAccountingEntry(transaction);
+    }
+
+    if (typeof renderTreasury === "function") renderTreasury();
+
+
+    // -------------------------------------------
+    // ذخیره‌ی فیش حقوقی
+    // -------------------------------------------
+
+    const record = {
+
+        id:
+            existingIndex >= 0
+                ? payrollRecords[existingIndex].id
+                : "pr_" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
+
+        employeeId: employee.id,
+        employeeName: employee.name,
+        period: period,
+
+        presentDays: presentDays,
+        overtimeHours: overtimeHours,
+        bonus: bonus,
+        advance: advance,
+        otherDeduction: otherDeduction,
+
+        baseAmount: calc.baseAmount,
+        eidiAmount: calc.eidiAmount || 0,
+        sanavatAmount: calc.sanavatAmount || 0,
+        overtimeAmount: calc.overtimeAmount,
+        grossAmount: calc.grossAmount,
+        insuranceAmount: calc.insuranceAmount,
+        employerInsuranceAmount: calc.employerInsuranceAmount,
+        taxAmount: calc.taxAmount,
+        totalDeduction: calc.totalDeduction,
+        netAmount: Math.max(0, calc.netAmount),
+
+        account: account,
+        paid: true,
+        paidAt: new Date().toISOString(),
+        treasuryTxId: transaction.id,
+
+        createdAt:
+            existingIndex >= 0
+                ? payrollRecords[existingIndex].createdAt
+                : new Date().toISOString()
+
+    };
+
+    if (existingIndex >= 0) {
+        payrollRecords[existingIndex] = record;
+    } else {
+        payrollRecords.push(record);
+    }
+
+    savePayrollRecords(payrollRecords);
+    stlpMarkEidiSanavatSettledFromPayslip(employee, period, calc);
+    stlpAccrueLeaveFromPayslip(employee, getPayrollExtras(employee.id, period));
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("حقوق و دستمزد", "پرداخت حقوق", employee.name + " — دوره‌ی " + period + " — " + stlpTreasuryMoney(calc.netAmount));
+    }
+
+    renderPayrollRun();
+
+    alert("✅ حقوق " + employee.name + " با موفقیت ثبت و در خزانه ثبت شد.");
+
+}
+
+
+// =====================================================
+// پرداخت همه‌ی کارمندانی که هنوز پرداخت نشده‌اند
+// =====================================================
+
+function payAllUnpaidEmployees() {
+
+    const period =
+        document.getElementById("payrollPeriod").value.trim();
+
+    if (!period) {
+        alert("لطفاً دوره را مشخص کنید.");
+        return;
+    }
+
+    const rows =
+        document.querySelectorAll("#payrollRunTable tr[data-emp]");
+
+    if (rows.length === 0) {
+        alert("ردیفی برای پرداخت وجود ندارد.");
+        return;
+    }
+
+    const payrollRecords = loadPayrollRecords();
+
+    const unpaidIds = [];
+
+    rows.forEach(function(row) {
+
+        const employeeId = row.dataset.emp;
+
+        const existing =
+            payrollRecords.find(function(r) {
+                return r.employeeId === employeeId && r.period === period;
+            });
+
+        if (!existing || !existing.paid) {
+            unpaidIds.push(employeeId);
+        }
+
+    });
+
+    if (unpaidIds.length === 0) {
+
+        alert("همه‌ی کارمندان برای این دوره پرداخت شده‌اند.");
+        return;
+
+    }
+
+    if (!confirm(
+        "پرداخت حقوق " + unpaidIds.length + " کارمند برای دوره‌ی " + period + "\n" +
+        "آیا مطمئن هستید؟"
+    )) return;
+
+    unpaidIds.forEach(function(employeeId) {
+        payEmployeeSilently(employeeId, period);
+    });
+
+    renderPayrollRun();
+
+    alert("✅ پرداخت گروهی انجام شد.");
+
+}
+
+
+// نسخه‌ی بدون تأییدیه‌ی جداگانه (برای فراخوانی داخل پرداخت گروهی)
+
+function payEmployeeSilently(employeeId, period) {
+
+    const account =
+        document.getElementById("payrollAccount").value;
+
+    const employees = loadEmployees();
+
+    const employee =
+        employees.find(function(e) { return e.id === employeeId; });
+
+    if (!employee) return;
+
+    const row =
+        document.querySelector('tr[data-emp="' + employeeId + '"]');
+
+    if (!row) return;
+
+    const presentDays = Math.max(0, Number(row.querySelector(".pr-days").value || 0));
+    const overtimeHours = Math.max(0, Number(row.querySelector(".pr-ot").value || 0));
+    const bonus = Math.max(0, Number(row.querySelector(".pr-bonus").value || 0));
+    const advance = Math.max(0, Number(row.querySelector(".pr-advance").value || 0));
+    const otherDeduction = Math.max(0, Number(row.querySelector(".pr-otherded").value || 0));
+
+        const unpaidSickDays =
+            (typeof getPayrollExtras === "function" ? (getPayrollExtras(employee.id, period).sickLeaveDaysUnpaid || 0) : 0);
+
+    const calc =
+        stlpCalcPayroll(employee, presentDays, overtimeHours, bonus, advance, otherDeduction, period, unpaidSickDays);
+
+    // همون قفلِ اتمیکِ payEmployee — بدونش، «پرداخت همه» هم‌زمان با
+    // یک پرداختِ دستیِ همون کارمند (یا دو تبِ «پرداخت همه» هم‌زمان)
+    // می‌توانست دو تراکنشِ خزانه برای یک حقوق بسازد
+    if (typeof stlpAppendToStoreArraySync === "function") {
+
+        const paymentLockId = employeeId + "|" + period;
+
+        const lockClaimed = stlpAppendToStoreArraySync(
+            "stlp_payroll_payment_locks",
+            {
+                id: paymentLockId,
+                employeeId: employeeId,
+                period: period,
+                claimedAt: new Date().toISOString()
+            },
+            "id",
+            paymentLockId
+        );
+
+        if (!lockClaimed) return;
+
+    }
+
+    const transaction = {
+
+        id:
+            Date.now() + "_" +
+            Math.random().toString(36).substring(2, 8),
+
+        type: "out",
+        account: account,
+        transferFrom: "",
+        transferTo: "",
+
+        amount: calc.netAmount > 0 ? calc.netAmount : 0,
+
+        date: new Date().toLocaleDateString("fa-IR"),
+        party: employee.name,
+        method: "cash",
+        tracking: "",
+        invoiceNo: "",
+
+        description:
+            "پرداخت حقوق دوره‌ی " + period + " - " + employee.name,
+
+        checkNo: "",
+        checkBank: "",
+        checkDueDate: "",
+
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+
+        source: "payroll"
+
+    };
+
+    if (typeof stlpTreasury === "undefined") return;
+
+    stlpTreasury.push(transaction);
+
+    if (typeof saveTreasury === "function") saveTreasury();
+
+    if (typeof saveTreasuryAccountingEntry === "function") {
+        saveTreasuryAccountingEntry(transaction);
+    }
+
+    let payrollRecords = loadPayrollRecords();
+
+    const existingIndex =
+        payrollRecords.findIndex(function(r) {
+            return r.employeeId === employeeId && r.period === period;
+        });
+
+    const record = {
+
+        id:
+            existingIndex >= 0
+                ? payrollRecords[existingIndex].id
+                : "pr_" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
+
+        employeeId: employee.id,
+        employeeName: employee.name,
+        period: period,
+
+        presentDays: presentDays,
+        overtimeHours: overtimeHours,
+        bonus: bonus,
+        advance: advance,
+        otherDeduction: otherDeduction,
+
+        baseAmount: calc.baseAmount,
+        eidiAmount: calc.eidiAmount || 0,
+        sanavatAmount: calc.sanavatAmount || 0,
+        overtimeAmount: calc.overtimeAmount,
+        grossAmount: calc.grossAmount,
+        insuranceAmount: calc.insuranceAmount,
+        employerInsuranceAmount: calc.employerInsuranceAmount,
+        taxAmount: calc.taxAmount,
+        totalDeduction: calc.totalDeduction,
+        netAmount: Math.max(0, calc.netAmount),
+
+        account: account,
+        paid: true,
+        paidAt: new Date().toISOString(),
+        treasuryTxId: transaction.id,
+
+        createdAt:
+            existingIndex >= 0
+                ? payrollRecords[existingIndex].createdAt
+                : new Date().toISOString()
+
+    };
+
+    if (existingIndex >= 0) {
+        payrollRecords[existingIndex] = record;
+    } else {
+        payrollRecords.push(record);
+    }
+
+    savePayrollRecords(payrollRecords);
+    stlpMarkEidiSanavatSettledFromPayslip(employee, period, calc);
+    stlpAccrueLeaveFromPayslip(employee, getPayrollExtras(employee.id, period));
+
+    if (typeof renderTreasury === "function") renderTreasury();
+
+}
+
+
+// =====================================================
+// رندر سوابق پرداخت
+// =====================================================
+
+function renderPayrollHistory() {
+
+    const tbody =
+        document.getElementById("payrollHistoryTable");
+
+    if (!tbody) return;
+
+    const searchText =
+        (document.getElementById("historySearch")?.value || "")
+            .trim().toLowerCase();
+
+    let records =
+        loadPayrollRecords()
+            .slice()
+            .sort(function(a, b) {
+                return String(b.period).localeCompare(String(a.period));
+            });
+
+    if (searchText) {
+
+        records = records.filter(function(r) {
+
+            return (
+                String(r.employeeName || "").toLowerCase().includes(searchText) ||
+                String(r.period || "").toLowerCase().includes(searchText)
+            );
+
+        });
+
+    }
+
+    if (records.length === 0) {
+
+        tbody.innerHTML =
+            '<tr><td colspan="9">سابقه‌ای یافت نشد.</td></tr>';
+
+        return;
+
+    }
+
+    tbody.innerHTML =
+        records.map(function(r) {
+
+            const accountName =
+                (
+                    typeof stlpTreasuryAccountName === "function"
+                        ? stlpTreasuryAccountName(r.account)
+                        : r.account
+                );
+
+            return (
+                "<tr>" +
+                "<td>" + escapeHtml(r.employeeName) + "</td>" +
+                "<td>" + escapeHtml(r.period) + "</td>" +
+                "<td>" + r.presentDays + "</td>" +
+                "<td>" + r.overtimeHours + "</td>" +
+                "<td>" + stlpTreasuryMoney(r.grossAmount) + "</td>" +
+                "<td>" + stlpTreasuryMoney(r.totalDeduction) + "</td>" +
+                "<td style='font-weight:900;'>" + stlpTreasuryMoney(r.netAmount) + "</td>" +
+                "<td>" +
+                    (r.paid
+                        ? '<span class="payroll-badge-paid">✓ پرداخت شد</span>'
+                        : '<span class="payroll-badge-unpaid">پرداخت‌نشده</span>') +
+                "</td>" +
+                "<td>" + escapeHtml(accountName) + "</td>" +
+                "<td>" +
+                    '<button type="button" class="pay-btn" style="background:#6c757d;" ' +
+                    'onclick="downloadPayrollHistoryExcel(\'' + r.id + '\')">📄 اکسل</button>' +
+                "</td>" +
+                "</tr>"
+            );
+
+        }).join("");
+
+}
+
+
+// =====================================================
+// خروجی اکسل یک فیش حقوقی (از جدول در حال ویرایش)
+// =====================================================
+
+// =====================================================
+// انتخاب همه‌ی کارمندان (چک‌باکس بالای جدول)
+// =====================================================
+
+function stlpToggleAllPayrollChecks(sourceCheckbox) {
+
+    document.querySelectorAll(".pr-select").forEach(function(chk) {
+        chk.checked = sourceCheckbox.checked;
+    });
+
+}
+
+
+// =====================================================
+// تبدیل دوره «سال/ماه» به عدد سال و ماه
+// =====================================================
+
+function stlpParsePeriodToYearMonth(period) {
+
+    const parts = String(period || "").split("/");
+
+    return {
+        year: Number(parts[0]) || 0,
+        month: Number(parts[1]) || 0
+    };
+
+}
+
+
+// =====================================================
+// ساخت اطلاعات فیش رسمی یک کارمند از روی ردیف جدول
+// (فیلدهایی که فرم کارمند فعلاً ثبت نمی‌کند - سنوات، جذب،
+// مسئولیت، مسکن، اولاد، بن، شب‌کاری، نوبت‌کاری، ماموریت،
+// مرخصی، وام، مالیات - صفر در نظر گرفته می‌شوند)
+// =====================================================
+
+// =====================================================
+// ذخیره/بارگذاری فیلدهای متغیر این دوره (جزئیات بیشتر)
+// کلید: employeeId_period
+// =====================================================
+
+function loadPayrollExtrasStore() {
+
+    try {
+        return JSON.parse(localStorage.getItem("stlp_payroll_extras") || "{}");
+    } catch (error) {
+        return {};
+    }
+
+}
+
+function savePayrollExtrasStore(store) {
+
+    localStorage.setItem("stlp_payroll_extras", JSON.stringify(store));
+
+}
+
+function getPayrollExtras(employeeId, period) {
+
+    const store = loadPayrollExtrasStore();
+
+    return store[employeeId + "_" + period] || {
+
+        missionDaysWithStay: 0,
+        missionDaysNoStay: 0,
+        missionAllowance: 0,
+        leaveUsedDays: 0,
+        sickLeaveDaysPaid: 0,
+        sickLeaveDaysUnpaid: 0,
+        absentDays: 0,
+        hourlyLeaveHours: 0,
+        loan: 0,
+        nightShiftHours: 0,
+        shiftWorkHours: 0,
+        shiftWorkPay: 0
+
+    };
+
+}
+
+
+// =====================================================
+// پنجره جزئیات بیشتر
+// =====================================================
+
+function openPayrollExtrasModal(employeeId) {
+
+    const period =
+        document.getElementById("payrollPeriod").value.trim();
+
+    if (!period) {
+        alert("لطفاً ابتدا دوره را مشخص کنید.");
+        return;
+    }
+
+    const employees = loadEmployees();
+
+    const employee =
+        employees.find(function(e) { return e.id === employeeId; });
+
+    if (!employee) {
+        alert("❌ کارمند پیدا نشد.");
+        return;
+    }
+
+    const extras =
+        getPayrollExtras(employeeId, period);
+
+    document.getElementById("extrasEmployeeId").value = employeeId;
+    document.getElementById("payrollExtrasTitle").textContent =
+        "جزئیات بیشتر - " + employee.name + " (" + period + ")";
+
+    document.getElementById("extraMissionDaysWithStay").value = extras.missionDaysWithStay || 0;
+    document.getElementById("extraMissionDaysNoStay").value = extras.missionDaysNoStay || 0;
+    document.getElementById("extraMissionAllowance").value = extras.missionAllowance || 0;
+    document.getElementById("extraLeaveUsedDays").value = extras.leaveUsedDays || 0;
+    document.getElementById("extraSickLeaveDaysPaid").value = extras.sickLeaveDaysPaid || 0;
+    document.getElementById("extraSickLeaveDaysUnpaid").value = extras.sickLeaveDaysUnpaid || 0;
+    document.getElementById("extraAbsentDays").value = extras.absentDays || 0;
+    document.getElementById("extraHourlyLeaveHours").value = extras.hourlyLeaveHours || 0;
+    document.getElementById("extraLoan").value = extras.loan || 0;
+    document.getElementById("extraNightShiftHours").value = extras.nightShiftHours || 0;
+    document.getElementById("extraShiftWorkHours").value = extras.shiftWorkHours || 0;
+    document.getElementById("extraShiftWorkPay").value = extras.shiftWorkPay || 0;
+
+    document.getElementById("payrollExtrasModal").style.display = "flex";
+
+}
+
+function closePayrollExtrasModal() {
+
+    document.getElementById("payrollExtrasModal").style.display = "none";
+
+}
+
+function savePayrollExtrasModal() {
+
+    const employeeId =
+        document.getElementById("extrasEmployeeId").value;
+
+    const period =
+        document.getElementById("payrollPeriod").value.trim();
+
+    if (!employeeId || !period) {
+        closePayrollExtrasModal();
+        return;
+    }
+
+    const store = loadPayrollExtrasStore();
+
+    store[employeeId + "_" + period] = {
+
+        missionDaysWithStay: Number(document.getElementById("extraMissionDaysWithStay").value || 0),
+        missionDaysNoStay: Number(document.getElementById("extraMissionDaysNoStay").value || 0),
+        missionAllowance: Number(document.getElementById("extraMissionAllowance").value || 0),
+        leaveUsedDays: Number(document.getElementById("extraLeaveUsedDays").value || 0),
+        sickLeaveDaysPaid: Number(document.getElementById("extraSickLeaveDaysPaid").value || 0),
+        sickLeaveDaysUnpaid: Number(document.getElementById("extraSickLeaveDaysUnpaid").value || 0),
+        absentDays: Number(document.getElementById("extraAbsentDays").value || 0),
+        hourlyLeaveHours: Number(document.getElementById("extraHourlyLeaveHours").value || 0),
+        loan: Number(document.getElementById("extraLoan").value || 0),
+        nightShiftHours: Number(document.getElementById("extraNightShiftHours").value || 0),
+        shiftWorkHours: Number(document.getElementById("extraShiftWorkHours").value || 0),
+        shiftWorkPay: Number(document.getElementById("extraShiftWorkPay").value || 0)
+
+    };
+
+    savePayrollExtrasStore(store);
+
+    stlpAutoCalcPresentDays(employeeId, period);
+
+    closePayrollExtrasModal();
+
+    alert("✅ جزئیات ذخیره شد.");
+
+}
+
+
+// روزهای کارکرد را از روی روزهای استاندارد ماه، منهای غیبت،
+// مرخصی استفاده‌شده، استعلاجی بدون حقوق، و مرخصی ساعتی (÷۸)
+// خودکار محاسبه و در ورودی «روزهای کارکرد» همان ردیف جدول
+// جایگزین می‌کند
+function stlpAutoCalcPresentDays(employeeId, period) {
+
+    const employees = loadEmployees();
+    const employee = employees.find(function(e) { return e.id === employeeId; });
+    if (!employee) return;
+
+    const extras = getPayrollExtras(employeeId, period);
+    const standardDays = employee.workDays || 30;
+
+    const approvedLeave =
+        typeof stlpGetApprovedLeaveForPeriod === "function"
+            ? stlpGetApprovedLeaveForPeriod(employeeId, period)
+            : { days: 0, hours: 0 };
+
+    const presentDays =
+        standardDays -
+        (extras.absentDays || 0) -
+        (extras.leaveUsedDays || 0) -
+        (extras.sickLeaveDaysUnpaid || 0) -
+        ((extras.hourlyLeaveHours || 0) / 8) -
+        (approvedLeave.days || 0) -
+        ((approvedLeave.hours || 0) / 8);
+
+    const row = document.querySelector('tr[data-emp="' + employeeId + '"]');
+    if (!row) return;
+
+    const daysInput = row.querySelector(".pr-days");
+    if (!daysInput) return;
+
+    daysInput.value = Math.round(Math.max(0, presentDays) * 100) / 100;
+
+    stlpRecalcRunRow(employeeId);
+
+}
+
+
+// نسخه‌ی زنده برای وقتی کاربر هنوز داخل پنجره‌ی «جزئیات بیشتر»ست
+// (قبل از زدن دکمه‌ی ذخیره) — همان محاسبه را با مقادیر لحظه‌ای
+// فرم انجام می‌دهد، بدون نیاز به بستن پنجره
+function stlpAutoCalcPresentDaysFromModal() {
+
+    const employeeId = document.getElementById("extrasEmployeeId").value;
+    const period = document.getElementById("payrollPeriod").value.trim();
+    if (!employeeId || !period) return;
+
+    const employees = loadEmployees();
+    const employee = employees.find(function(e) { return e.id === employeeId; });
+    if (!employee) return;
+
+    const standardDays = employee.workDays || 30;
+
+    const absentDays = Number(document.getElementById("extraAbsentDays").value || 0);
+    const leaveUsedDays = Number(document.getElementById("extraLeaveUsedDays").value || 0);
+    const sickLeaveDaysUnpaid = Number(document.getElementById("extraSickLeaveDaysUnpaid").value || 0);
+    const hourlyLeaveHours = Number(document.getElementById("extraHourlyLeaveHours").value || 0);
+
+    const approvedLeave =
+        typeof stlpGetApprovedLeaveForPeriod === "function"
+            ? stlpGetApprovedLeaveForPeriod(employeeId, period)
+            : { days: 0, hours: 0 };
+
+    const presentDays =
+        standardDays - absentDays - leaveUsedDays - sickLeaveDaysUnpaid - (hourlyLeaveHours / 8) -
+        (approvedLeave.days || 0) - ((approvedLeave.hours || 0) / 8);
+
+    const row = document.querySelector('tr[data-emp="' + employeeId + '"]');
+    if (!row) return;
+
+    const daysInput = row.querySelector(".pr-days");
+    if (!daysInput) return;
+
+    daysInput.value = Math.round(Math.max(0, presentDays) * 100) / 100;
+
+}
+
+
+function stlpBuildOfficialPayslipData(employee, period, row) {
+
+    const presentDays = Math.max(0, Number(row.querySelector(".pr-days").value || 0));
+    const overtimeHours = Math.max(0, Number(row.querySelector(".pr-ot").value || 0));
+    const bonus = Math.max(0, Number(row.querySelector(".pr-bonus").value || 0));
+    const advance = Math.max(0, Number(row.querySelector(".pr-advance").value || 0));
+    const otherDeduction = Math.max(0, Number(row.querySelector(".pr-otherded").value || 0));
+
+        const unpaidSickDays =
+            (typeof getPayrollExtras === "function" ? (getPayrollExtras(employee.id, period).sickLeaveDaysUnpaid || 0) : 0);
+
+    const calc =
+        stlpCalcPayroll(employee, presentDays, overtimeHours, bonus, advance, otherDeduction, period, unpaidSickDays);
+
+    const ym = stlpParsePeriodToYearMonth(period);
+
+    const extras =
+        getPayrollExtras(employee.id, period);
+
+    const totalMissionDays =
+        Number(extras.missionDaysWithStay || 0) + Number(extras.missionDaysNoStay || 0);
+
+    return {
+
+        sheetName: employee.name,
+        employeeName: employee.name,
+        position: employee.position || "",
+        personnelNo: employee.personnelNo || "",
+        date: new Date().toLocaleDateString("fa-IR"),
+        monthName: stlpPersianMonthName(ym.month),
+        year: ym.year,
+
+        workDays: presentDays,
+        overtimeHours: overtimeHours,
+        missionDays: totalMissionDays,
+
+        // این سه فیلد سلول‌های واقعی «مرخصی استفاده‌شده»، «مانده مرخصی»
+        // و «کسرکار» قالبِ رسمی هستند (I7/I8/I10) — قبلاً هیچ‌کدام از
+        // این‌جا به موتورِ اکسل فرستاده نمی‌شدند، یعنی همیشه صفر چاپ
+        // می‌شدند با اینکه داده‌ی واقعی‌شان (جزئیاتِ بیشترِ همین فیش، و
+        // مانده‌ی مرخصیِ خودِ کارمند) از قبل در سیستم موجود بود
+        leaveUsed: extras.leaveUsedDays || 0,
+        leaveRemaining: Number(employee.leaveBalance || 0),
+        workDeduction: extras.absentDays || 0,
+
+        // سلول‌های «شب‌کاری»/«نوبت‌کاری» قالبِ رسمی — قبلاً هیچ فیلدِ
+        // ورودی‌ای برایشان در سیستم وجود نداشت (همیشه صفر چاپ می‌شد)؛
+        // حالا از «جزئیات بیشتر» همین فیش خوانده می‌شوند
+        nightShiftHours: extras.nightShiftHours || 0,
+        shiftWorkHours: extras.shiftWorkHours || 0,
+        shiftWorkPay: extras.shiftWorkPay || 0,
+
+        baseSalary: calc.baseAmount,
+        seniorityBase: employee.seniorityBase || 0,
+        attractionAllowance: employee.attractionAllowance || 0,
+        responsibilityAllowance: employee.responsibilityAllowance || 0,
+        overtimeAmount: calc.overtimeAmount,
+        housingAllowance: employee.housingAllowance || 0,
+        childAllowance: employee.childAllowance || 0,
+        foodAllowance: employee.foodAllowance || 0,
+        missionAllowance: extras.missionAllowance || 0,
+        // ردیفِ «حق تأهل» (B21/D21) قالبِ رسمی — جدا از ردیفِ «شب‌کاری»
+        // (که خودش هم در B9/D9 در همین قالب موجود است، بالاتر پر می‌شود)
+        maritalAllowance: Number(employee.maritalAllowance || 0),
+        // در فیش اسفند، عیدی و سنوات هم داخل همین ردیف «سایر مزایا» دیده می‌شوند
+        // (قالب رسمی سلول جداگانه‌ای برای آن‌ها ندارد)
+        otherBenefits: bonus + (calc.eidiAmount || 0) + (calc.sanavatAmount || 0),
+
+        advance: advance,
+        loan: extras.loan || 0,
+        tax: calc.taxAmount,
+        insurance: calc.insuranceAmount,
+        otherDeductions: otherDeduction
+
+    };
+
+}
+
+
+// =====================================================
+// دانلود فیش رسمی یک کارمند (همان قالب اصلی شرکت)
+// =====================================================
+
+async function downloadOfficialPayslipSingle(employeeId) {
+
+    const period =
+        document.getElementById("payrollPeriod").value.trim();
+
+    if (!period) {
+        alert("لطفاً ابتدا دوره را مشخص کنید.");
+        return;
+    }
+
+    const employees = loadEmployees();
+
+    const employee =
+        employees.find(function(e) { return e.id === employeeId; });
+
+    if (!employee) {
+        alert("❌ کارمند پیدا نشد.");
+        return;
+    }
+
+    const row =
+        document.querySelector('tr[data-emp="' + employeeId + '"]');
+
+    if (!row) return;
+
+    try {
+
+        const data =
+            stlpBuildOfficialPayslipData(employee, period, row);
+
+        await stlpDownloadPayslipXlsx(
+            [data],
+            "فیش-رسمی-" + employee.name + "-" + period.replace(/\//g, "-") + ".xlsx"
+        );
+
+        if (typeof stlpLogActivity === "function") {
+            stlpLogActivity("حقوق و دستمزد", "خروجی فیش رسمی", employee.name + " — دوره‌ی " + period);
+        }
+
+    } catch (error) {
+
+        console.error("خطا در ساخت فیش رسمی:", error);
+
+        alert(
+            "❌ خطا در ساخت فیش رسمی:\n" +
+            (error.message || error)
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// دانلود فیش رسمی گروهی (چند کارمند انتخاب‌شده = چند شیت)
+// =====================================================
+
+async function downloadOfficialPayslipsBulk() {
+
+    const period =
+        document.getElementById("payrollPeriod").value.trim();
+
+    if (!period) {
+        alert("لطفاً ابتدا دوره را مشخص کنید.");
+        return;
+    }
+
+    const checked =
+        document.querySelectorAll(".pr-select:checked");
+
+    if (checked.length === 0) {
+        alert("لطفاً حداقل یک کارمند را از لیست انتخاب کنید (چک‌باکس کنار نامش یا «انتخاب همه» بالای جدول).");
+        return;
+    }
+
+    const employees = loadEmployees();
+
+    const dataList = [];
+
+    checked.forEach(function(chk) {
+
+        const employeeId = chk.value;
+
+        const employee =
+            employees.find(function(e) { return e.id === employeeId; });
+
+        if (!employee) return;
+
+        const row =
+            document.querySelector('tr[data-emp="' + employeeId + '"]');
+
+        if (!row) return;
+
+        dataList.push(
+            stlpBuildOfficialPayslipData(employee, period, row)
+        );
+
+    });
+
+    if (dataList.length === 0) {
+        alert("❌ هیچ‌کدام از کارمندهای انتخاب‌شده پیدا نشدند.");
+        return;
+    }
+
+    try {
+
+        await stlpDownloadPayslipXlsx(
+            dataList,
+            "فیش-های-رسمی-" + period.replace(/\//g, "-") + ".xlsx"
+        );
+
+        if (typeof stlpLogActivity === "function") {
+            stlpLogActivity("حقوق و دستمزد", "خروجی گروهی فیش رسمی", dataList.length + " فیش — دوره‌ی " + period);
+        }
+
+        alert(
+            "✅ فایل با " + dataList.length + " شیت (یک شیت برای هر کارمند) دانلود شد."
+        );
+
+    } catch (error) {
+
+        console.error("خطا در ساخت فیش‌های رسمی:", error);
+
+        alert(
+            "❌ خطا در ساخت فایل:\n" +
+            (error.message || error)
+        );
+
+    }
+
+}
+
+
+function downloadPayslipExcel(employeeId) {
+
+    const period =
+        document.getElementById("payrollPeriod").value.trim();
+
+    if (!period) {
+        alert("لطفاً ابتدا دوره را مشخص کنید.");
+        return;
+    }
+
+    const employees = loadEmployees();
+
+    const employee =
+        employees.find(function(e) { return e.id === employeeId; });
+
+    if (!employee) {
+        alert("❌ کارمند پیدا نشد.");
+        return;
+    }
+
+    const row =
+        document.querySelector('tr[data-emp="' + employeeId + '"]');
+
+    if (!row) return;
+
+    const presentDays = Math.max(0, Number(row.querySelector(".pr-days").value || 0));
+    const overtimeHours = Math.max(0, Number(row.querySelector(".pr-ot").value || 0));
+    const bonus = Math.max(0, Number(row.querySelector(".pr-bonus").value || 0));
+    const advance = Math.max(0, Number(row.querySelector(".pr-advance").value || 0));
+    const otherDeduction = Math.max(0, Number(row.querySelector(".pr-otherded").value || 0));
+
+        const unpaidSickDays =
+            (typeof getPayrollExtras === "function" ? (getPayrollExtras(employee.id, period).sickLeaveDaysUnpaid || 0) : 0);
+
+    const calc =
+        stlpCalcPayroll(employee, presentDays, overtimeHours, bonus, advance, otherDeduction, period, unpaidSickDays);
+
+    const sheetRows = [
+
+        ["فیش حقوق - صبا تجهیز لاله پارسه", ""],
+        ["نام کارمند", employee.name],
+        ["سمت", employee.position || "-"],
+        ["دوره", period],
+        ["نوع حقوق", stlpSalaryTypeName(employee.salaryType)],
+        ["", ""],
+        ["روزهای کارکرد", presentDays],
+        ["ساعات اضافه‌کاری", overtimeHours],
+        ["", ""],
+        ["مبلغ پایه (ریال)", calc.baseAmount],
+        ["مبلغ اضافه‌کاری (ریال)", calc.overtimeAmount],
+        ["پایه سنوات (ریال)", employee.seniorityBase || 0],
+        ["حق جذب (ریال)", employee.attractionAllowance || 0],
+        ["حق مسئولیت (ریال)", employee.responsibilityAllowance || 0],
+        ["حق مسکن (ریال)", employee.housingAllowance || 0],
+        ["بن و خواربار (ریال)", employee.foodAllowance || 0],
+        ["حق اولاد (ریال)", employee.childAllowance || 0],
+        ["حق تأهل (ریال)", employee.maritalAllowance || 0],
+        ["پاداش (ریال)", bonus],
+        ["عیدی (ریال)", calc.eidiAmount || 0],
+        ["سنوات (ریال)", calc.sanavatAmount || 0],
+        ["ناخالص (ریال)", calc.grossAmount],
+        ["", ""],
+        ["بیمه - کسر (ریال)", calc.insuranceAmount],
+        ["مالیات - کسر (ریال)", calc.taxAmount],
+        ["مساعده - کسر (ریال)", advance],
+        ["سایر کسورات (ریال)", otherDeduction],
+        ["جمع کسورات (ریال)", calc.totalDeduction],
+        ["", ""],
+        ["خالص پرداختی (ریال)", calc.netAmount]
+
+    ];
+
+    const blob =
+        stlpBuildSimpleXlsx("فیش حقوق", sheetRows);
+
+    stlpDownloadBlob(
+        blob,
+        "فیش-حقوق-" + employee.name + "-" + period.replace(/\//g, "-") + ".xlsx"
+    );
+
+}
+
+
+// =====================================================
+// خروجی اکسل یک فیش از سوابق (ثبت‌شده و نهایی)
+// =====================================================
+
+function downloadPayrollHistoryExcel(recordId) {
+
+    const records = loadPayrollRecords();
+
+    const r =
+        records.find(function(rec) { return rec.id === recordId; });
+
+    if (!r) {
+        alert("❌ سابقه پیدا نشد.");
+        return;
+    }
+
+    const accountName =
+        (
+            typeof stlpTreasuryAccountName === "function"
+                ? stlpTreasuryAccountName(r.account)
+                : r.account
+        );
+
+    const sheetRows = [
+
+        ["فیش حقوق - صبا تجهیز لاله پارسه", ""],
+        ["نام کارمند", r.employeeName],
+        ["دوره", r.period],
+        ["", ""],
+        ["روزهای کارکرد", r.presentDays],
+        ["ساعات اضافه‌کاری", r.overtimeHours],
+        ["", ""],
+        ["مبلغ پایه (ریال)", r.baseAmount],
+        ["مبلغ اضافه‌کاری (ریال)", r.overtimeAmount],
+        ["پاداش (ریال)", r.bonus],
+        ["عیدی (ریال)", r.eidiAmount || 0],
+        ["سنوات (ریال)", r.sanavatAmount || 0],
+        ["ناخالص (ریال)", r.grossAmount],
+        ["", ""],
+        ["بیمه - کسر (ریال)", r.insuranceAmount],
+        ["مالیات - کسر (ریال)", r.taxAmount || 0],
+        ["مساعده - کسر (ریال)", r.advance],
+        ["سایر کسورات (ریال)", r.otherDeduction],
+        ["جمع کسورات (ریال)", r.totalDeduction],
+        ["", ""],
+        ["خالص پرداختی (ریال)", r.netAmount],
+        ["وضعیت", r.paid ? "پرداخت شد" : "پرداخت‌نشده"],
+        ["حساب پرداخت", accountName]
+
+    ];
+
+    const blob =
+        stlpBuildSimpleXlsx("فیش حقوق", sheetRows);
+
+    stlpDownloadBlob(
+        blob,
+        "فیش-حقوق-" + r.employeeName + "-" + String(r.period).replace(/\//g, "-") + ".xlsx"
+    );
+
+}
+
+
+// =====================================================
+// خروجی اکسل کل جدول فیش حقوقی این دوره (همه کارمندان)
+// =====================================================
+
+function downloadPayrollPeriodExcel() {
+
+    const period =
+        document.getElementById("payrollPeriod").value.trim();
+
+    if (!period) {
+        alert("لطفاً ابتدا دوره را مشخص کنید.");
+        return;
+    }
+
+    const rows =
+        document.querySelectorAll("#payrollRunTable tr[data-emp]");
+
+    if (rows.length === 0) {
+        alert("داده‌ای برای خروجی وجود ندارد.");
+        return;
+    }
+
+    const employees = loadEmployees();
+
+    const sheetRows = [
+        [
+            "کارمند", "نوع حقوق", "روز کارکرد", "اضافه‌کاری (ساعت)",
+            "مبلغ پایه", "مبلغ اضافه‌کاری", "پاداش", "مساعده",
+            "سایر کسورات", "بیمه", "مالیات", "ناخالص", "کسورات", "خالص پرداختی", "وضعیت"
+        ]
+    ];
+
+    rows.forEach(function(row) {
+
+        const employeeId = row.dataset.emp;
+
+        const employee =
+            employees.find(function(e) { return e.id === employeeId; });
+
+        if (!employee) return;
+
+        const presentDays = Math.max(0, Number(row.querySelector(".pr-days").value || 0));
+        const overtimeHours = Math.max(0, Number(row.querySelector(".pr-ot").value || 0));
+        const bonus = Math.max(0, Number(row.querySelector(".pr-bonus").value || 0));
+        const advance = Math.max(0, Number(row.querySelector(".pr-advance").value || 0));
+        const otherDeduction = Math.max(0, Number(row.querySelector(".pr-otherded").value || 0));
+
+            const unpaidSickDays =
+                (typeof getPayrollExtras === "function" ? (getPayrollExtras(employee.id, period).sickLeaveDaysUnpaid || 0) : 0);
+
+        const calc =
+            stlpCalcPayroll(employee, presentDays, overtimeHours, bonus, advance, otherDeduction, period, unpaidSickDays);
+
+        const isPaid =
+            row.querySelector(".payroll-badge-paid") !== null;
+
+        sheetRows.push([
+            employee.name,
+            stlpSalaryTypeName(employee.salaryType),
+            presentDays,
+            overtimeHours,
+            calc.baseAmount,
+            calc.overtimeAmount,
+            bonus,
+            advance,
+            otherDeduction,
+            calc.insuranceAmount,
+            calc.taxAmount,
+            calc.grossAmount,
+            calc.totalDeduction,
+            calc.netAmount,
+            isPaid ? "پرداخت شد" : "پرداخت‌نشده"
+        ]);
+
+    });
+
+    const blob =
+        stlpBuildSimpleXlsx("حقوق و دستمزد", sheetRows);
+
+    stlpDownloadBlob(
+        blob,
+        "لیست-حقوق-" + period.replace(/\//g, "-") + ".xlsx"
+    );
+
+}
+
+
+// =====================================================
+// راه‌اندازی اولیه صفحه
+// =====================================================
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    if (typeof stlpMigrateLegacyOrgRoles === "function") stlpMigrateLegacyOrgRoles();
+
+    stlpUpdateSalaryTypeHint();
+    stlpSetCurrentPeriod();
+    renderEmployees();
+    renderPayrollHistory();
+
+    const ceilingInput = document.getElementById("payrollTaxExemptionCeiling");
+    if (ceilingInput) ceilingInput.value = stlpGetTaxExemptionCeiling();
+
+    const employerRateInput = document.getElementById("payrollEmployerInsuranceRate");
+    if (employerRateInput) employerRateInput.value = stlpGetEmployerInsuranceRate();
+
+    renderTaxBracketsTable();
+    renderInsuranceTaxSettlement();
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,795 @@
+﻿<!doctype html>
+
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+>
+
+<title>CRM - STLP</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+
+/* =====================================================
+   کارت‌های خلاصه (داشبورد) — هماهنگ با بقیه‌ی سیستم
+===================================================== */
+
+.treasury-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.treasury-stat {
+    background: rgba(255,255,255,.08);
+    border: 1px solid #0fa37f66;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.treasury-stat-title {
+    color: #00ffca;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.treasury-stat-value {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.money-in { color: #198754 !important; font-weight: 800; }
+.money-out { color: #dc3545 !important; font-weight: 800; }
+.money-balance { color: #00ffca !important; font-weight: 900; }
+
+
+/* =====================================================
+   تب‌ها
+===================================================== */
+
+.treasury-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.treasury-tab-btn {
+    background: rgba(255,255,255,.08);
+    border: 1px solid #0fa37f66;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.treasury-tab-btn:hover { background: rgba(255,255,255,.15); }
+
+.treasury-tab-btn.active {
+    background: #0fa37f;
+    border-color: #0fa37f;
+}
+
+
+/* =====================================================
+   فرم‌ها
+===================================================== */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: #00ffca;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #0fa37f88;
+    border-radius: 8px;
+    background: #fff;
+    color: #111;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.treasury-add-account-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 25px;
+}
+
+
+/* =====================================================
+   جدول
+===================================================== */
+
+.table-container { overflow-x: auto; overflow-y: visible; }
+
+.table-container table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
+    background: white;
+    color: #111;
+    font-size: 12.5px;
+}
+
+.table-container th {
+    background: #0fa37f;
+    color: white;
+    padding: 6px 5px;
+    border: 1px solid #0b8065;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.table-container td {
+    padding: 4px 5px;
+    border: 1px solid #ddd;
+    text-align: center;
+    white-space: nowrap;
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-container tbody tr:hover td { background: #eefcf8; }
+
+.table-container td button {
+    padding: 2px 6px;
+    font-size: 11px;
+}
+
+.table-container td .crm-badge {
+    padding: 2px 7px;
+    font-size: 10.5px;
+}
+
+
+/* =====================================================
+   نشان وضعیت (badge)
+===================================================== */
+
+.crm-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.crm-badge-neutral { background: #e9ecef; color: #495057; }
+.crm-badge-warn { background: #fff3cd; color: #856404; }
+.crm-badge-good { background: #d1e7dd; color: #0f5132; }
+.crm-badge-bad { background: #f8d7da; color: #842029; }
+
+
+/* =====================================================
+   دیالوگ جزئیات
+===================================================== */
+
+dialog#dlg {
+    border: none;
+    border-radius: 14px;
+    padding: 24px;
+    max-width: 720px;
+    width: 92%;
+    background: #1c2b28;
+    color: #fff;
+}
+
+dialog#dlg::backdrop {
+    background: rgba(0,0,0,.55);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.crm-dialog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+}
+
+.span2 { grid-column: 1 / -1; }
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+.crm-section-title {
+    color: #00ffca;
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0 0 6px;
+}
+
+.crm-section-sub {
+    color: #aaa;
+    font-size: 12.5px;
+    margin: -4px 0 18px;
+}
+
+.crm-inner-card {
+    background: rgba(255,255,255,.05);
+    border: 1px solid #0fa37f44;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+.crm-msg {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #00ffca;
+    min-height: 18px;
+}
+
+.crm-team-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid #0fa37f44;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+}
+
+.crm-team-row .crm-team-name {
+    font-weight: 700;
+    color: #fff;
+}
+
+.crm-team-row .crm-team-actions {
+    display: flex;
+    gap: 6px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="overlay">
+
+
+<!-- =========================================
+     منوی بالا (استاندارد سراسری سیستم)
+========================================== -->
+
+<button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html" class="active">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+
+<h2>
+    🎯 CRM — پیگیری مشتریان بالقوه
+</h2>
+
+
+<div class="treasury-tabs">
+
+    <button type="button" id="crmTabBtn-dashboard" class="treasury-tab-btn active" onclick="crmShowTab('dashboard')">📊 داشبورد</button>
+    <button type="button" id="crmTabBtn-labs" class="treasury-tab-btn" onclick="crmShowTab('labs')">📋 لیست</button>
+    <button type="button" id="crmTabBtn-dataset" class="treasury-tab-btn" onclick="crmShowTab('dataset')">🗂 دیتاست</button>
+    <button type="button" id="crmTabBtn-dataAdmin" class="treasury-tab-btn" onclick="crmShowTab('dataAdmin')">🔒 مدیریت داده (ادمین)</button>
+    <button type="button" id="crmTabBtn-settings" class="treasury-tab-btn" onclick="crmShowTab('settings')">⚙️ تنظیمات</button>
+
+</div>
+
+
+  <main class="container">
+
+
+    <!-- ===================================
+         داشبورد
+    ==================================== -->
+
+    <section id="tabDashboard" class="crm-tab">
+
+        <div class="treasury-stats" id="crmStatsCards"></div>
+
+    </section>
+
+
+
+    <!-- ===================================
+         لیست
+    ==================================== -->
+
+    <section id="tabLabs" class="crm-tab" hidden>
+
+      <div class="treasury-add-account-form">
+
+        <div class="form-group">
+            <label>جستجو</label>
+            <input id="q" type="text" placeholder="نام، محله، آدرس، تلفن...">
+        </div>
+
+        <div class="form-group">
+            <label>منطقه</label>
+            <select id="filterRegion"><option value="">همه مناطق</option></select>
+        </div>
+
+        <div class="form-group">
+            <label>محله</label>
+            <select id="filterNeigh"><option value="">همه محله‌ها</option></select>
+        </div>
+
+        <div class="form-group">
+            <label>تیم (پیگیری از طرف)</label>
+            <select id="filterTeam"><option value="">همه تیم‌ها</option></select>
+        </div>
+
+        <div class="form-group">
+            <label>وضعیت ویزیت</label>
+            <select id="filterStatus">
+                <option value="">همه وضعیت ویزیت‌ها</option>
+                <option value="Not visited">Not visited</option>
+                <option value="Visited">Visited</option>
+                <option value="Follow-up needed">Follow-up needed</option>
+                <option value="Not reachable">Not reachable</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>وضعیت سفارش</label>
+            <select id="filterOrderStatus">
+                <option value="">همه وضعیت سفارش‌ها</option>
+                <option value="No order">No order</option>
+                <option value="Interested">Interested</option>
+                <option value="Quoted">Quoted</option>
+                <option value="Ordered">Ordered</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button" id="btnExportSelected">📊 خروجی اکسل انتخاب‌شده‌ها</button>
+        </div>
+
+      </div>
+
+
+      <div id="stats" class="crm-msg"></div>
+
+
+      <div class="table-container">
+
+        <table id="crmTable">
+
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAllRows" onchange="crmToggleSelectAll(this)"></th>
+                    <th>منطقه</th>
+                    <th>محله</th>
+                    <th>نام مرکز</th>
+                    <th>نوع</th>
+                    <th>آدرس</th>
+                    <th>تلفن</th>
+                    <th>تیم (پیگیری از طرف)</th>
+                    <th>وضعیت ویزیت</th>
+                    <th>وضعیت سفارش</th>
+                    <th>پیگیری بعدی</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+
+            <tbody id="list"></tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================
+         دیتاست
+    ==================================== -->
+
+    <section id="tabDataset" class="crm-tab" hidden>
+
+      <div class="crm-inner-card">
+
+        <p class="crm-section-title">افزودن دستی</p>
+
+        <div class="treasury-add-account-form">
+
+          <div class="form-group">
+            <label>منطقه</label>
+            <input id="mRegion" placeholder="مثلاً 7">
+          </div>
+
+          <div class="form-group">
+            <label>محله</label>
+            <input id="mNeigh" placeholder="مثلاً سهروردی">
+          </div>
+
+          <div class="form-group">
+            <label>نام آزمایشگاه / مرکز</label>
+            <input id="mName">
+          </div>
+
+          <div class="form-group">
+            <label>تلفن</label>
+            <input id="mPhone" placeholder="021...">
+          </div>
+
+          <div class="form-group">
+            <label>آدرس</label>
+            <input id="mAddr">
+          </div>
+
+          <div class="form-group">
+            <label>نوع</label>
+            <input id="mType" placeholder="تشخیص طبی / پاتوبیولوژی ...">
+          </div>
+
+          <div class="form-group">
+            <label>تیم (مسئول پیگیری)</label>
+            <select id="mTeam"></select>
+          </div>
+
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button" id="btnAddManual">➕ ثبت</button>
+          </div>
+
+        </div>
+
+        <div id="manualMsg" class="crm-msg"></div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================
+         مدیریت داده — فقط مدیر سیستم
+         (ایمپورت، اکسپورت، ریست کامل دیتابیس)
+    ==================================== -->
+
+    <section id="tabDataAdmin" class="crm-tab" hidden>
+
+      <div class="crm-inner-card">
+
+        <p class="crm-section-title">ایمپورت / اکسپورت</p>
+
+        <p class="crm-section-sub">
+            فایل خودت رو با هر فرمت و هر اسم ستونی که داری انتخاب کن — بعد از بارگذاری، خودت مشخص می‌کنی
+            کدوم ستون فایلت معادل کدوم فیلد سیستمه. لازم نیست اسم ستون‌ها با چیز خاصی مطابقت داشته باشه.
+        </p>
+
+        <div class="treasury-add-account-form">
+
+          <div class="form-group">
+            <label>فایل CSV یا Excel</label>
+            <input id="csvFile" type="file" accept=".csv,text/csv,.xlsx,.xls">
+          </div>
+
+          <div class="form-group">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                <input type="checkbox" id="csvNoHeader" style="width:auto;">
+                فایل من ردیف عنوان (هدر) ندارد
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button" id="btnAnalyzeImport">🔍 بارگذاری و بررسی فایل</button>
+          </div>
+
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button" id="btnDownloadTemplate">📄 دانلود نمونه فرمت (CSV)</button>
+          </div>
+
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button" id="btnExportCSV">⬇️ خروجی CSV همه‌ی رکوردها</button>
+          </div>
+
+        </div>
+
+        <div id="csvMsg" class="crm-msg"></div>
+
+
+        <!-- بعد از بررسی فایل، اینجا فرم نگاشت ستون‌ها ظاهر می‌شود -->
+        <div id="importMappingBox"></div>
+
+      </div>
+
+
+      <div class="crm-inner-card">
+
+        <p class="crm-section-title">ریست دیتابیس</p>
+
+        <button type="button" id="btnResetDB">🗑 پاک کردن همه‌ی داده‌های CRM</button>
+
+        <p class="crm-section-sub" style="margin-top:10px;">⚠️ این عملیات برگشت‌ناپذیر است.</p>
+
+      </div>
+
+
+      <div class="crm-inner-card">
+
+        <p class="crm-section-title">🕒 لاگ فعالیت کل سیستم</p>
+        <p class="crm-section-sub">فعالیت CRM بخشی از یک لاگ سراسری است که خزانه، حسابداری و مشتریان را هم پوشش می‌دهد.</p>
+
+        <a href="activity-log.html" style="display:inline-block;">🔎 مشاهده‌ی لاگ کامل سیستم</a>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================
+         تنظیمات
+    ==================================== -->
+
+    <section id="tabSettings" class="crm-tab" hidden>
+
+      <div class="crm-inner-card">
+
+        <p class="crm-section-title">تیم‌های پیگیری</p>
+        <p class="crm-section-sub">هرکدام از این تیم‌ها در فیلترها و فرم‌های ثبت لید قابل انتخاب‌اند. فقط مدیر سیستم می‌تواند این لیست را تغییر دهد.</p>
+
+        <div id="teamsAdminBox"></div>
+
+        <div id="teamsListBox" style="margin-top:14px;"></div>
+
+        <div id="settingsMsg" class="crm-msg"></div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =====================================
+       پنجره جزئیات رکورد
+  ====================================== -->
+
+  <dialog id="dlg">
+
+    <form method="dialog">
+
+      <div class="modal-header">
+
+        <h3 id="dlgTitle">جزئیات</h3>
+
+        <button value="cancel" type="submit">✕ بستن</button>
+
+      </div>
+
+
+      <div class="crm-dialog-grid">
+
+        <div class="form-group">
+          <label>منطقه</label>
+          <input id="eRegion">
+        </div>
+
+        <div class="form-group">
+          <label>محله</label>
+          <input id="eNeigh">
+        </div>
+
+        <div class="form-group">
+          <label>نام</label>
+          <input id="eName">
+        </div>
+
+        <div class="form-group">
+          <label>نوع</label>
+          <input id="eType">
+        </div>
+
+        <div class="form-group span2">
+          <label>آدرس</label>
+          <input id="eAddr">
+        </div>
+
+        <div class="form-group">
+          <label>تلفن</label>
+          <input id="ePhone">
+        </div>
+
+        <div class="form-group">
+          <label>تیم (پیگیری از طرف)</label>
+          <select id="eTeam"></select>
+        </div>
+
+        <div class="form-group">
+          <label>وضعیت ویزیت</label>
+          <select id="eVisit">
+            <option>Not visited</option>
+            <option>Visited</option>
+            <option>Follow-up needed</option>
+            <option>Not reachable</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>وضعیت سفارش</label>
+          <select id="eOrder">
+            <option>No order</option>
+            <option>Interested</option>
+            <option>Quoted</option>
+            <option>Ordered</option>
+            <option>Delivered</option>
+            <option>Cancelled</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>آخرین ویزیت</label>
+          <input id="eLastVisit" type="date">
+        </div>
+
+        <div class="form-group">
+          <label>پیگیری بعدی</label>
+          <input id="eNext" type="date">
+        </div>
+
+        <div class="form-group span2">
+          <label>یادداشت</label>
+          <textarea id="eNotes" rows="3"></textarea>
+        </div>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <a id="callLink" href="#">📞 تماس</a>
+
+        <button id="btnSave" value="save" type="submit">💾 ذخیره</button>
+
+        <button id="btnConvertCustomer" value="convert" type="submit">🤝 تبدیل به مشتری</button>
+
+        <button id="btnDelete" value="delete" type="submit">🗑 حذف</button>
+
+      </div>
+
+
+      <div id="dlgMsg" class="crm-msg"></div>
+
+    </form>
+
+  </dialog>
+
+
+</div><!-- /.overlay -->
+
+
+  <!-- =====================================
+       اسکریپت تب‌ها
+  ====================================== -->
+
+<script>
+
+    function crmShowTab(tab) {
+
+      if ((tab === "settings" || tab === "dataAdmin") && typeof crmIsAdmin === "function" && !crmIsAdmin()) {
+        alert("⛔ این بخش فقط برای مدیر سیستم قابل دسترسی است.");
+        return;
+      }
+
+      ["dashboard", "labs", "dataset", "dataAdmin", "settings"].forEach(function(t) {
+
+        const section = document.getElementById(
+            "tab" + t.charAt(0).toUpperCase() + t.slice(1)
+        );
+
+        if (section) section.hidden = (t !== tab);
+
+        const btn = document.getElementById("crmTabBtn-" + t);
+        if (btn) btn.classList.toggle("active", t === tab);
+
+      });
+
+      if (tab === "dashboard" && typeof crmRenderDashboard === "function") {
+        crmRenderDashboard();
+      }
+
+    }
+
+  </script>
+
+
+  <!-- =========================================
+       SheetJS (خروجی اکسل)
+  ========================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+  <!-- موتور مشترک سیستم (کاربران، دسترسی‌ها، مشتریان و ...) -->
+  <script src="app.js"></script>
+
+  <!-- موتور اختصاصی صفحه‌ی CRM -->
+  <script src="crm_engine.js"></script>
+
+
+</body>
+
+</html>

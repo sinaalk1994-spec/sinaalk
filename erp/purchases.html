@@ -1,0 +1,1298 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+<title>تأمین‌کنندگان و خرید - STLP</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+
+.purchases-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.purchases-tab-btn {
+    background: rgba(255,255,255,.08);
+    border: 1px solid #0fa37f66;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.purchases-tab-btn.active {
+    background: #0fa37f;
+    border-color: #0fa37f;
+}
+
+.pform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+/* ظاهرِ فیلدها دقیقاً مثلِ فرمِ صفحه‌ی انبار (.form-group): لیبلِ
+   فیروزه‌ای و پررنگ، ورودیِ گرد با حاشیه‌ی سبز و درخششِ فوکوس */
+.pform-grid label,
+.pi-extra-row label,
+.pi-ratio-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 0;
+    font-size: 13px;
+    font-weight: 800;
+    color: #00ffca;
+}
+
+.pform-grid input,
+.pform-grid select,
+.pi-extra-row input:not([type="file"]),
+.pi-extra-row select,
+table.purchase-items input,
+table.purchase-items select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 13px;
+    border: 1px solid rgba(15,163,127,.45);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    background: rgba(255,255,255,.96);
+    color: #111;
+    outline: none;
+    transition: .2s;
+}
+
+.pi-extra-row input[type="file"] {
+    padding: 8px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #ddd;
+}
+
+.pform-grid input:focus,
+.pform-grid select:focus,
+.pi-extra-row input:focus,
+.pi-extra-row select:focus,
+table.purchase-items input:focus,
+table.purchase-items select:focus {
+    border-color: #00ffca;
+    box-shadow: 0 0 0 3px rgba(0,255,202,.10);
+}
+
+.pform-grid {
+    gap: 16px;
+}
+
+table.purchase-items {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table.purchase-items td {
+    padding: 10px 8px;
+}
+
+table.purchase-items tr.pi-extra-row td,
+table.purchase-items tr.pi-extra-row:hover td {
+    background: #0e1f1b !important;
+    text-align: right;
+    padding: 16px;
+}
+
+.purchase-add-row-wrap {
+    display: flex;
+    justify-content: flex-start;
+    margin: 18px 0 22px;
+}
+
+.purchase-add-row-btn {
+    padding: 11px 22px;
+    border-radius: 10px;
+    border: 1px dashed #00ffca;
+    background: rgba(0,255,202,.08);
+    color: #00ffca;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.purchase-add-row-btn:hover {
+    background: rgba(0,255,202,.18);
+}
+
+.small-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    margin: 2px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.small-btn.del { background: #dc3545; }
+.small-btn.pay { background: #0d6efd; }
+.small-btn.edit { background: #0d6efd; }
+
+.badge-paid {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 10px;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.badge-unpaid {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 4px 10px;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 12px;
+    display: inline-block;
+}
+
+</style>
+</head>
+<body>
+
+<div class="overlay">
+
+    <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html" class="active">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+    <h2>تأمین‌کنندگان و خرید</h2>
+
+    <div class="purchases-tabs">
+
+        <button type="button" id="tabBtnNewPurchase" class="purchases-tab-btn active" onclick="stlpShowPurchasesTab('newPurchase')">
+            🧾 ثبت خرید جدید
+        </button>
+
+        <button type="button" id="tabBtnSuppliers" class="purchases-tab-btn" onclick="stlpShowPurchasesTab('suppliers')">
+            🚚 تأمین‌کنندگان
+        </button>
+
+        <button type="button" id="tabBtnHistory" class="purchases-tab-btn" onclick="stlpShowPurchasesTab('history')">
+            📜 سوابق خرید و بدهی‌ها
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         تب: ثبت خرید جدید
+    ===================================================== -->
+
+    <div id="panelNewPurchase" class="card">
+
+        <h3>ثبت خرید از تأمین‌کننده</h3>
+
+        <div class="pform-grid">
+
+            <div>
+                <label>تأمین‌کننده</label>
+                <select id="purchaseSupplier"></select>
+            </div>
+
+            <div>
+                <label>تاریخ</label>
+                <input id="purchaseDate" type="text" placeholder="مثلاً 1404/06/01">
+            </div>
+
+            <div>
+                <label>شماره فاکتور خرید (اختیاری)</label>
+                <input id="purchaseInvoiceNo" type="text">
+            </div>
+
+            <div style="grid-column: span 2;">
+                <label>نوع خرید</label>
+                <select id="purchaseType">
+                    <option value="cash">نقدی (بعد از تأیید حواله، خودکار از صندوق کسر می‌شود)</option>
+                    <option value="credit">نسیه (بدهی به تأمین‌کننده - بعداً تسویه می‌شود)</option>
+                </select>
+            </div>
+
+        </div>
+
+        <table class="purchase-items" style="width:100%; background:#fff; color:#000;">
+            <thead>
+                <tr style="background:#0fa37f; color:#fff;">
+                    <th>کد کالا</th>
+                    <th>شرح کالا</th>
+                    <th>واحد</th>
+                    <th>تعداد</th>
+                    <th>قیمت خرید واحد</th>
+                    <th>جمع</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="purchaseItemsBody"></tbody>
+        </table>
+
+        <div class="purchase-add-row-wrap">
+            <button type="button" class="purchase-add-row-btn" onclick="addPurchaseItemRow()">➕ افزودن ردیف</button>
+        </div>
+
+        <h3 style="margin-top:15px;">جمع کل خرید: <span id="purchaseTotalDisplay">0 ریال</span></h3>
+
+        <p style="color:#aaa; font-size:12px;">
+            اگر کد کالا از قبل در انبار باشد، فقط موجودی‌اش اضافه می‌شود؛ اگر کد جدید باشد، خودکار به‌عنوان کالای جدید ثبت می‌شود — برای کدهای جدید، جزئیاتِ کاملِ کالا (شامل عکس) هم همین‌جا زیرِ همون ردیف باز می‌شود.
+            <br>
+            ⚠️ این حواله فقط ثبت می‌شود؛ موجودی انبار و خزانه فقط بعد از تأیید آن در صفحه‌ی «حواله‌ها» به‌روز می‌شوند.
+        </p>
+
+        <button type="button" onclick="submitPurchase()" style="background:#0fa37f; font-size:15px; padding:12px 24px;">
+            ✔ ثبت حواله خرید (در انتظار تأیید)
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         تب: تأمین‌کنندگان
+    ===================================================== -->
+
+    <div id="panelSuppliers" class="card" style="display:none;">
+
+        <h3>افزودن / ویرایش تأمین‌کننده</h3>
+
+        <input type="hidden" id="supplierEditId" value="">
+
+        <div class="pform-grid">
+
+            <div>
+                <label>نام تأمین‌کننده / شرکت</label>
+                <input id="supplierName" type="text">
+            </div>
+
+            <div>
+                <label>تلفن</label>
+                <input id="supplierPhone" type="text">
+            </div>
+
+            <div>
+                <label>آدرس</label>
+                <input id="supplierAddress" type="text">
+            </div>
+
+            <div>
+                <label>شناسه ملی</label>
+                <input id="supplierNationalId" type="text">
+            </div>
+
+            <div>
+                <label>کد اقتصادی</label>
+                <input id="supplierEconCode" type="text">
+            </div>
+
+            <div>
+                <label>شماره ثبت</label>
+                <input id="supplierRegNo" type="text">
+            </div>
+
+        </div>
+
+        <button type="button" onclick="saveSupplierForm()">💾 ذخیره تأمین‌کننده</button>
+        <button type="button" onclick="resetSupplierForm()" style="background:#6c757d;">✖ لغو ویرایش</button>
+
+        <h3 style="margin-top:25px;">لیست تأمین‌کنندگان</h3>
+
+        <input id="supplierSearch" oninput="renderSuppliers()"
+               placeholder="جستجوی تأمین‌کننده..."
+               style="padding:10px; width:250px; margin-bottom:15px;">
+
+        <table style="width:100%; background:#fff; color:#000;">
+            <thead>
+                <tr style="background:#0fa37f; color:#fff;">
+                    <th>نام</th>
+                    <th>تلفن</th>
+                    <th>آدرس</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="suppliersTable"></tbody>
+        </table>
+
+    </div>
+
+
+    <!-- =====================================================
+         تب: سوابق خرید و بدهی‌ها
+    ===================================================== -->
+
+    <div id="panelHistory" class="card" style="display:none;">
+
+        <h3>سوابق خرید</h3>
+
+        <input id="purchaseHistorySearch" oninput="renderPurchaseHistory()"
+               placeholder="جستجوی تأمین‌کننده یا شماره فاکتور..."
+               style="padding:10px; width:280px; margin-bottom:15px;">
+
+        <table style="width:100%; background:#fff; color:#000;">
+            <thead>
+                <tr style="background:#0fa37f; color:#fff;">
+                    <th>تاریخ</th>
+                    <th>تأمین‌کننده</th>
+                    <th>شماره فاکتور</th>
+                    <th>مبلغ کل</th>
+                    <th>نوع</th>
+                    <th>وضعیت پرداخت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="purchaseHistoryTable"></tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+stlpRequirePermission("purchases");
+</script>
+
+<script>
+
+// =====================================================
+// جابجایی بین تب‌ها
+// =====================================================
+
+function stlpShowPurchasesTab(tab) {
+
+    document.getElementById("panelNewPurchase").style.display = tab === "newPurchase" ? "block" : "none";
+    document.getElementById("panelSuppliers").style.display = tab === "suppliers" ? "block" : "none";
+    document.getElementById("panelHistory").style.display = tab === "history" ? "block" : "none";
+
+    document.getElementById("tabBtnNewPurchase").classList.toggle("active", tab === "newPurchase");
+    document.getElementById("tabBtnSuppliers").classList.toggle("active", tab === "suppliers");
+    document.getElementById("tabBtnHistory").classList.toggle("active", tab === "history");
+
+    if (tab === "newPurchase") stlpFillSupplierSelect();
+    if (tab === "suppliers") renderSuppliers();
+    if (tab === "history") renderPurchaseHistory();
+
+}
+
+
+// =====================================================
+// تأمین‌کنندگان: ذخیره/بارگذاری
+// =====================================================
+
+function loadSuppliers() {
+
+    try {
+        return JSON.parse(localStorage.getItem("stlp_suppliers") || "[]");
+    } catch (error) {
+        return [];
+    }
+
+}
+
+function saveSuppliers(list) {
+
+    localStorage.setItem("stlp_suppliers", JSON.stringify(list));
+
+}
+
+function saveSupplierForm() {
+
+    const name =
+        document.getElementById("supplierName").value.trim();
+
+    if (!name) {
+        alert("لطفاً نام تأمین‌کننده را وارد کنید.");
+        return;
+    }
+
+    const suppliers = loadSuppliers();
+
+    const editId =
+        document.getElementById("supplierEditId").value;
+
+    const duplicate = suppliers.find(function(s) {
+        return s.id !== editId && s.name.trim().toLowerCase() === name.toLowerCase();
+    });
+
+    if (duplicate) {
+        alert("❌ تأمین‌کننده‌ای با نام «" + name + "» از قبل ثبت شده است.");
+        return;
+    }
+
+    const supplier = {
+
+        id:
+            editId ||
+            "sup_" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
+
+        name: name,
+        phone: document.getElementById("supplierPhone").value.trim(),
+        address: document.getElementById("supplierAddress").value.trim(),
+        nationalId: document.getElementById("supplierNationalId").value.trim(),
+        econCode: document.getElementById("supplierEconCode").value.trim(),
+        regNo: document.getElementById("supplierRegNo").value.trim(),
+        createdAt: new Date().toISOString()
+
+    };
+
+    if (editId) {
+
+        const index = suppliers.findIndex(function(s) { return s.id === editId; });
+        if (index >= 0) suppliers[index] = supplier;
+
+        saveSuppliers(suppliers);
+
+    } else {
+
+        // تأمین‌کننده‌ی جدید: اتمیک روی سرور اضافه می‌شود (نه
+        // خواندنِ کاملِ آرایه + نوشتنِ کاملِ آن) تا اگر دو نفر هم‌زمان
+        // تأمین‌کننده اضافه کنند، یکی گم نشود
+        if (typeof stlpAppendToStoreArraySync === "function") {
+            stlpAppendToStoreArraySync("stlp_suppliers", supplier, "id", supplier.id);
+        } else {
+            suppliers.push(supplier);
+            saveSuppliers(suppliers);
+        }
+
+    }
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("خرید", editId ? "ویرایش تأمین‌کننده" : "افزودن تأمین‌کننده", "«" + name + "»");
+    }
+
+    resetSupplierForm();
+
+    renderSuppliers();
+
+    stlpFillSupplierSelect();
+
+}
+
+function resetSupplierForm() {
+
+    document.getElementById("supplierEditId").value = "";
+    document.getElementById("supplierName").value = "";
+    document.getElementById("supplierPhone").value = "";
+    document.getElementById("supplierAddress").value = "";
+    document.getElementById("supplierNationalId").value = "";
+    document.getElementById("supplierEconCode").value = "";
+    document.getElementById("supplierRegNo").value = "";
+
+}
+
+function editSupplier(id) {
+
+    const suppliers = loadSuppliers();
+
+    const s = suppliers.find(function(x) { return x.id === id; });
+
+    if (!s) return;
+
+    document.getElementById("supplierEditId").value = s.id;
+    document.getElementById("supplierName").value = s.name || "";
+    document.getElementById("supplierPhone").value = s.phone || "";
+    document.getElementById("supplierAddress").value = s.address || "";
+    document.getElementById("supplierNationalId").value = s.nationalId || "";
+    document.getElementById("supplierEconCode").value = s.econCode || "";
+    document.getElementById("supplierRegNo").value = s.regNo || "";
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+}
+
+function deleteSupplier(id) {
+
+    let deliveries = [];
+
+    try {
+
+        deliveries = JSON.parse(
+            localStorage.getItem("salesDeliveries") || "[]"
+        );
+
+    } catch (error) {
+
+        deliveries = [];
+
+    }
+
+    const hasPurchases =
+        (Array.isArray(deliveries) ? deliveries : [])
+            .some(function(d) {
+                return d.direction === "purchase" && d.supplierId === id;
+            });
+
+    if (hasPurchases) {
+
+        if (!confirm(
+            "⚠️ برای این تأمین‌کننده سابقه‌ی خرید ثبت شده است. سوابق قبلی حذف نمی‌شوند ولی خودش از لیست حذف می‌شود. ادامه می‌دهید؟"
+        )) return;
+
+    } else {
+
+        if (!confirm("آیا از حذف این تأمین‌کننده مطمئن هستید؟")) return;
+
+    }
+
+    let suppliers = loadSuppliers();
+
+    const target = suppliers.find(function(s) { return s.id === id; });
+
+    suppliers = suppliers.filter(function(s) { return s.id !== id; });
+
+    saveSuppliers(suppliers);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("خرید", "حذف تأمین‌کننده", target ? "«" + target.name + "»" : "");
+    }
+
+    renderSuppliers();
+
+    stlpFillSupplierSelect();
+
+}
+
+function renderSuppliers() {
+
+    const tbody = document.getElementById("suppliersTable");
+
+    if (!tbody) return;
+
+    const searchText =
+        (document.getElementById("supplierSearch")?.value || "").trim().toLowerCase();
+
+    let suppliers = loadSuppliers();
+
+    if (searchText) {
+
+        suppliers = suppliers.filter(function(s) {
+            return JSON.stringify(s).toLowerCase().includes(searchText);
+        });
+
+    }
+
+    if (suppliers.length === 0) {
+
+        tbody.innerHTML = '<tr><td colspan="4">تأمین‌کننده‌ای ثبت نشده است.</td></tr>';
+        return;
+
+    }
+
+    tbody.innerHTML =
+        suppliers.map(function(s) {
+
+            return (
+                "<tr>" +
+                "<td>" + escapeHtml(s.name) + "</td>" +
+                "<td>" + escapeHtml(s.phone || "-") + "</td>" +
+                "<td>" + escapeHtml(s.address || "-") + "</td>" +
+                "<td>" +
+                    '<div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">' +
+                        '<button type="button" class="small-btn edit" onclick="editSupplier(\'' + s.id + '\')">✏️ ویرایش</button>' +
+                        '<button type="button" class="small-btn del" onclick="deleteSupplier(\'' + s.id + '\')">🗑 حذف</button>' +
+                    '</div>' +
+                "</td>" +
+                "</tr>"
+            );
+
+        }).join("");
+
+}
+
+function stlpFillSupplierSelect() {
+
+    const sel = document.getElementById("purchaseSupplier");
+
+    if (!sel) return;
+
+    const suppliers = loadSuppliers();
+
+    if (suppliers.length === 0) {
+
+        sel.innerHTML = '<option value="">— ابتدا یک تأمین‌کننده اضافه کنید —</option>';
+        return;
+
+    }
+
+    const current = sel.value;
+
+    sel.innerHTML =
+        suppliers.map(function(s) {
+            return '<option value="' + s.id + '">' + escapeHtml(s.name) + '</option>';
+        }).join("");
+
+    if (suppliers.some(function(s) { return s.id === current; })) {
+        sel.value = current;
+    }
+
+}
+
+
+// =====================================================
+// ردیف‌های کالای خرید
+// =====================================================
+
+let stlpPurchaseRowSeq = 0;
+
+function addPurchaseItemRow() {
+
+    stlpPurchaseRowSeq++;
+
+    const tbody = document.getElementById("purchaseItemsBody");
+
+    const tr = document.createElement("tr");
+    tr.dataset.row = stlpPurchaseRowSeq;
+
+    tr.innerHTML =
+        '<td><input type="text" class="pi-code" onblur="stlpCheckPurchaseItemCode(this)"></td>' +
+        '<td><input type="text" class="pi-desc"></td>' +
+        '<td><select class="pi-unit" onchange="stlpOnPurchaseUnitChange(this)">' +
+                '<option value="بسته">بسته</option>' +
+                '<option value="کارتن">کارتن</option>' +
+                '<option value="عدد">عدد</option>' +
+            '</select></td>' +
+        '<td><input type="number" class="pi-qty" value="1" oninput="stlpRecalcPurchaseTotal()"></td>' +
+        '<td><input type="number" class="pi-price" value="0" oninput="stlpRecalcPurchaseTotal()"></td>' +
+        '<td class="pi-linetotal">0</td>' +
+        '<td><button type="button" class="small-btn del" onclick="stlpRemovePurchaseItemRow(this)">✕</button></td>';
+
+    tbody.appendChild(tr);
+
+    // ردیفِ جزئیاتِ اضافه — دو تا کاربرد دارد:
+    // ۱) وقتی کدِ واردشده در انبار موجود نباشد (کالای کاملاً جدید)،
+    //    جزئیاتِ کاملش (شاملِ قیمتِ فروش و عکس) این‌جا گرفته می‌شود.
+    // ۲) وقتی واحدِ خرید «بسته» نباشد (یعنی این خرید بر مبنای کارتن یا
+    //    عدد است، نه بسته)، نسبت‌های تبدیل این‌جا گرفته/نمایش داده
+    //    می‌شود تا تعداد و قیمت خودکار به بسته (واحدِ اصلیِ انبار)
+    //    تبدیل شوند — بدونِ اینکه کسی خودش تقسیم/ضرب کند.
+    // این دو تا شرط مستقل از هم‌اند: یک کدِ از قبل موجود هم می‌تواند
+    // فقط بخشِ «نسبتِ تبدیل» را نشان بدهد، بدونِ فیلدهای کاملِ کالا.
+    const extraTr = document.createElement("tr");
+    extraTr.className = "pi-extra-row";
+    extraTr.dataset.row = stlpPurchaseRowSeq;
+    extraTr.style.display = "none";
+
+    extraTr.innerHTML =
+        '<td colspan="7" style="background:rgba(0,0,0,.2); padding:10px;">' +
+
+            '<div class="pi-new-item-fields" style="display:none;">' +
+                '<div style="color:#f0ad4e; font-size:12px; margin-bottom:8px;">🆕 این کد در انبار موجود نیست — چون این خرید یک کالای جدید می‌سازد، جزئیاتِ کاملش را وارد کنید:</div>' +
+                '<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px;">' +
+                    '<label>بارکد<input type="text" class="pi-barcode"></label>' +
+                    '<label>دسته‌بندی<select class="pi-category">' +
+                        '<option value="">انتخاب دسته‌بندی</option>' +
+                        '<option value="مصرفی">🧴 مصرفی</option>' +
+                        '<option value="پزشکی">🏥 پزشکی</option>' +
+                        '<option value="آزمایشگاهی">🧪 آزمایشگاهی</option>' +
+                        '<option value="تجهیزات">⚙️ تجهیزات</option>' +
+                        '<option value="سایر">📦 سایر</option>' +
+                    '</select></label>' +
+                    '<label>برند<input type="text" class="pi-brand"></label>' +
+                    '<label>تولیدکننده<input type="text" class="pi-manufacturer"></label>' +
+                    '<label>💰 قیمتِ فروش (نه خرید)<input type="number" class="pi-saleprice" min="0"></label>' +
+                    '<label>تاریخ تولید<input type="date" class="pi-mfg"></label>' +
+                    '<label>Batch/Lot<input type="text" class="pi-batch"></label>' +
+                    '<label>تاریخ انقضا<input type="date" class="pi-exp"></label>' +
+                    '<label>حداقل موجودی<input type="number" class="pi-minstock" value="5"></label>' +
+                    '<label>محل نگهداری<input type="text" class="pi-location"></label>' +
+                    '<label style="grid-column:1/-1;">عکس کالا — حداکثر ۲ مگابایت' +
+                        '<input type="file" class="pi-image" accept="image/png,image/jpeg,image/webp" onchange="stlpPurchaseImageChange(this)">' +
+                        '<img class="pi-image-preview" style="display:none;max-width:90px;max-height:90px;margin-top:6px;border-radius:6px;object-fit:contain;background:#1c1c1c;">' +
+                    '</label>' +
+                '</div>' +
+            '</div>' +
+
+            '<div class="pi-ratio-fields" style="margin-top:10px; display:none;">' +
+                '<div style="color:#7fd7ff; font-size:12px; margin-bottom:8px;">📦 نسبتِ تبدیل به «بسته» (واحدِ اصلیِ انبار) — تعداد و قیمتِ واردشده خودکار بر این اساس محاسبه می‌شود:</div>' +
+                '<div style="display:flex; gap:14px; flex-wrap:wrap;">' +
+                    '<label>هر کارتن چند بسته؟<input type="number" class="pi-carton-ratio" min="1" value="1" oninput="stlpRecalcPurchaseTotal()"></label>' +
+                    '<label>هر بسته چند عدد؟<input type="number" class="pi-piece-ratio" min="1" value="1" oninput="stlpRecalcPurchaseTotal()"></label>' +
+                '</div>' +
+            '</div>' +
+
+        '</td>';
+
+    tbody.appendChild(extraTr);
+
+}
+
+// وقتی واحدِ خریدِ یک ردیف عوض می‌شود: اگر «بسته» انتخاب شد و کدِ
+// این ردیف از قبل در انبار موجود بود، نیازی به ردیفِ اضافه نیست
+// (چون قیمت/تعداد مستقیماً بسته است، تبدیلی لازم نیست). در غیرِ
+// این صورت (کارتن/عدد، یا کدِ جدید)، ردیفِ اضافه لازم است.
+function stlpOnPurchaseUnitChange(select) {
+    stlpUpdatePurchaseExtraRowVisibility(select.closest("tr"));
+    stlpRecalcPurchaseTotal();
+}
+
+function stlpUpdatePurchaseExtraRowVisibility(row) {
+
+    const extraRow = document.querySelector('.pi-extra-row[data-row="' + row.dataset.row + '"]');
+    if (!extraRow) return;
+
+    const code = row.querySelector(".pi-code").value.trim();
+    const unit = row.querySelector(".pi-unit").value;
+
+    const isNewCode =
+        code &&
+        typeof inventoryItems !== "undefined" &&
+        Array.isArray(inventoryItems) &&
+        !inventoryItems.some(function(item) { return String(item.code || "").trim().toLowerCase() === code.toLowerCase(); });
+
+    const needsRatio = unit !== "بسته";
+
+    extraRow.querySelector(".pi-new-item-fields").style.display = isNewCode ? "" : "none";
+    extraRow.querySelector(".pi-ratio-fields").style.display = needsRatio ? "" : "none";
+
+    extraRow.style.display = (isNewCode || needsRatio) ? "" : "none";
+
+    // برای کدِ از قبل موجود، اگر قبلاً نسبتِ تبدیلی برایش ذخیره شده
+    // (از یک خریدِ قبلی)، همون‌ها را پیش‌فرض بگذار تا هر بار دوباره
+    // پرسیده نشود؛ کاربر همچنان می‌تواند عوضش کند
+    if (!isNewCode && needsRatio) {
+
+        const existing =
+            inventoryItems.find(function(item) { return String(item.code || "").trim().toLowerCase() === code.toLowerCase(); });
+
+        if (existing) {
+            extraRow.querySelector(".pi-carton-ratio").value = Number(existing.packagesPerCarton || 1);
+            extraRow.querySelector(".pi-piece-ratio").value = Number(existing.piecesPerPackage || 1);
+        }
+
+    }
+
+}
+
+function stlpRemovePurchaseItemRow(btn) {
+
+    const row = btn.closest("tr");
+    const rowSeq = row.dataset.row;
+    const extraRow = document.querySelector('.pi-extra-row[data-row="' + rowSeq + '"]');
+
+    row.remove();
+    if (extraRow) extraRow.remove();
+
+    stlpRecalcPurchaseTotal();
+
+}
+
+// کدِ واردشده را با انبارِ فعلی چک می‌کند؛ اگر این کد از قبل در
+// inventoryItems نبود، یعنی این خرید قراره یک کالای جدید بسازد و
+// بخشِ جزئیاتِ کامل (شاملِ عکس) باز می‌شود؛ اگر بود، نسبت‌های
+// تبدیلِ ذخیره‌شده‌اش (اگر واحدِ خرید غیرِ بسته باشد) پیش‌فرض می‌شود
+function stlpCheckPurchaseItemCode(input) {
+    stlpUpdatePurchaseExtraRowVisibility(input.closest("tr"));
+}
+
+function stlpPurchaseImageChange(input) {
+
+    const file = input.files[0];
+    const preview = input.parentElement.querySelector(".pi-image-preview");
+
+    if (!file) return;
+
+    if (file.size > 2000000 || !["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+        alert("عکس باید PNG، JPEG یا WebP و کمتر از ۲ مگابایت باشد.");
+        input.value = "";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function() {
+        preview.src = reader.result;
+        preview.style.display = "inline-block";
+    };
+
+    reader.readAsDataURL(file);
+
+}
+
+function stlpRecalcPurchaseTotal() {
+
+    let total = 0;
+
+    document.querySelectorAll("#purchaseItemsBody tr:not(.pi-extra-row)").forEach(function(row) {
+
+        const qty = Number(row.querySelector(".pi-qty").value || 0);
+        const price = Number(row.querySelector(".pi-price").value || 0);
+        const lineTotal = qty * price;
+
+        row.querySelector(".pi-linetotal").textContent = stlpTreasuryMoney(lineTotal);
+
+        total += lineTotal;
+
+    });
+
+    document.getElementById("purchaseTotalDisplay").textContent = stlpTreasuryMoney(total);
+
+    return total;
+
+}
+
+
+// =====================================================
+// ثبت خرید نهایی: انبار + خزانه به‌هم وصل می‌شوند
+// =====================================================
+
+function submitPurchase() {
+
+    const supplierId =
+        document.getElementById("purchaseSupplier").value;
+
+    if (!supplierId) {
+        alert("لطفاً یک تأمین‌کننده انتخاب کنید.");
+        return;
+    }
+
+    const suppliers = loadSuppliers();
+
+    const supplier =
+        suppliers.find(function(s) { return s.id === supplierId; });
+
+    if (!supplier) {
+        alert("❌ تأمین‌کننده پیدا نشد.");
+        return;
+    }
+
+    const items = [];
+
+    let unitConversionError = "";
+
+    document.querySelectorAll("#purchaseItemsBody tr:not(.pi-extra-row)").forEach(function(row) {
+
+        if (unitConversionError) return;
+
+        const code = row.querySelector(".pi-code").value.trim();
+        const desc = row.querySelector(".pi-desc").value.trim();
+        const purchaseUnit = row.querySelector(".pi-unit").value;
+        const enteredQty = Number(row.querySelector(".pi-qty").value || 0);
+        const enteredUnitPrice = Number(row.querySelector(".pi-price").value || 0);
+
+        if (!code || enteredQty <= 0) return;
+
+        if (enteredUnitPrice < 0) {
+            unitConversionError = "قیمتِ کالای «" + code + "» نمی‌تواند منفی باشد.";
+            return;
+        }
+
+        const extraRow = document.querySelector('.pi-extra-row[data-row="' + row.dataset.row + '"]');
+
+        // «جدید بودنِ کد» و «نیازِ به نسبتِ تبدیل» اینجا مستقیم و تازه
+        // محاسبه می‌شود، نه از روی display ردیفِ اضافه — اگر ردیف هیچ‌وقت
+        // blur/تغییرِ واحد نخورده بود، display هنوز مقدارِ پیش‌فرض داشت و
+        // مقادیرِ پیش‌فرضِ نسبت (۱ و ۱) روی نسبتِ ذخیره‌شده‌ی کالا
+        // بازنویسی می‌شد
+        const isNewCode =
+            typeof inventoryItems !== "undefined" &&
+            Array.isArray(inventoryItems) &&
+            !inventoryItems.some(function(it) { return String(it.code || "").trim().toLowerCase() === code.toLowerCase(); });
+
+        const ratioFieldsVisible = !!extraRow && purchaseUnit !== "بسته";
+
+        // واحدِ اصلیِ انبار همیشه «بسته» است — اگر این ردیف با کارتن یا
+        // عدد پر شده، تعداد و قیمتِ واردشده (که در همون واحدِ انتخابی
+        // هستند) این‌جا به معادلِ بسته تبدیل می‌شوند، بدونِ اینکه کسی
+        // خودش محاسبه کند. قیمتِ کل (تعداد×قیمتِ واحد) دست‌نخورده
+        // می‌ماند چون در همون واحدِ اصلی درست است؛ فقط سهمِ هر «بسته»
+        // از آن قیمت محاسبه می‌شود.
+        let packagesPerCarton = 1;
+        let piecesPerPackage = 1;
+
+        if (ratioFieldsVisible) {
+            packagesPerCarton = Number(extraRow.querySelector(".pi-carton-ratio").value || 0);
+            piecesPerPackage = Number(extraRow.querySelector(".pi-piece-ratio").value || 0);
+        }
+
+        let qtyInPackages = enteredQty;
+        let pricePerPackage = enteredUnitPrice;
+
+        if (purchaseUnit === "کارتن") {
+
+            if (packagesPerCarton <= 0) {
+                unitConversionError = "برای کالای «" + code + "»، تعداد بسته در هر کارتن باید بزرگ‌تر از صفر باشد.";
+                return;
+            }
+
+            qtyInPackages = enteredQty * packagesPerCarton;
+            pricePerPackage = enteredUnitPrice / packagesPerCarton;
+
+        } else if (purchaseUnit === "عدد") {
+
+            if (piecesPerPackage <= 0) {
+                unitConversionError = "برای کالای «" + code + "»، تعداد عدد در هر بسته باید بزرگ‌تر از صفر باشد.";
+                return;
+            }
+
+            qtyInPackages = enteredQty / piecesPerPackage;
+            pricePerPackage = enteredUnitPrice * piecesPerPackage;
+
+        }
+
+        // انبار و فروشگاه آنلاین فقط بسته‌ی کامل می‌شمارند — یک تعدادِ
+        // اعشاری (مثلاً ۳۷ عدد از بسته‌های ۱۰۰تایی = ۰٫۳۷ بسته) بعداً
+        // قابل‌انتقال به فروشگاه آنلاین یا فروش نیست و خطای گرد کردن
+        // می‌سازد؛ پس همین‌جا رد می‌شود
+        if (Math.abs(qtyInPackages - Math.round(qtyInPackages)) > 1e-9) {
+            unitConversionError =
+                "تعدادِ کالای «" + code + "» بعد از تبدیل به بسته عددِ صحیح نمی‌شود (" +
+                (Math.round(qtyInPackages * 1000) / 1000) + " بسته) — باید مضربِ کاملی از بسته باشد.";
+            return;
+        }
+
+        qtyInPackages = Math.round(qtyInPackages);
+
+        const item = {
+            code: code,
+            desc: desc,
+            unit: "بسته",
+            qty: qtyInPackages,
+            unitPrice: pricePerPackage,
+            purchaseUnit: purchaseUnit,
+            purchaseQty: enteredQty,
+            purchaseUnitPrice: enteredUnitPrice
+        };
+
+        if (ratioFieldsVisible) {
+            item.packagesPerCarton = packagesPerCarton;
+            item.piecesPerPackage = piecesPerPackage;
+        }
+
+        // اگر ردیفِ جزئیاتِ کاملِ این کالا باز بود (یعنی این کد در
+        // انبار موجود نبود)، همون جزئیات هم همراهِ آیتم فرستاده
+        // می‌شود تا وقتی این حواله تأیید شد، کالای تازه‌ساز از همون
+        // اول با مشخصاتِ کامل (و عکس) در انبار بنشیند
+        const newItemFieldsVisible = !!extraRow && isNewCode;
+
+        if (newItemFieldsVisible) {
+
+            // همون اعتبارسنجی‌های پایه‌ی فرمِ ثبتِ کالا در انبار
+            if (!desc) {
+                unitConversionError = "برای کالای جدیدِ «" + code + "» شرحِ کالا را وارد کنید.";
+                return;
+            }
+
+            const barcodeValue = extraRow.querySelector(".pi-barcode").value.trim();
+
+            if (barcodeValue) {
+
+                const barcodeTaken =
+                    inventoryItems.some(function(it) { return String(it.barcode || "").trim() === barcodeValue; }) ||
+                    items.some(function(other) { return other.barcode && other.barcode === barcodeValue && other.code.toLowerCase() !== code.toLowerCase(); });
+
+                if (barcodeTaken) {
+                    unitConversionError = "بارکدِ «" + barcodeValue + "» قبلاً برای کالای دیگری ثبت شده است.";
+                    return;
+                }
+
+            }
+
+            const salePriceCheck = extraRow.querySelector(".pi-saleprice").value;
+
+            if (salePriceCheck !== "" && Number(salePriceCheck) < 0) {
+                unitConversionError = "قیمتِ فروشِ کالای «" + code + "» نمی‌تواند منفی باشد.";
+                return;
+            }
+
+            item.barcode = barcodeValue;
+            item.category = extraRow.querySelector(".pi-category").value;
+            item.brand = extraRow.querySelector(".pi-brand").value.trim();
+            item.manufacturer = extraRow.querySelector(".pi-manufacturer").value.trim();
+            item.mfg = extraRow.querySelector(".pi-mfg").value;
+            item.batch = extraRow.querySelector(".pi-batch").value.trim();
+            item.exp = extraRow.querySelector(".pi-exp").value;
+            item.minStock = Number(extraRow.querySelector(".pi-minstock").value || 5);
+            item.location = extraRow.querySelector(".pi-location").value.trim();
+
+            const salePriceInput = extraRow.querySelector(".pi-saleprice").value;
+            if (salePriceInput !== "") item.salePrice = Number(salePriceInput);
+
+            const imageFile = extraRow.querySelector(".pi-image").files[0];
+            const imagePreview = extraRow.querySelector(".pi-image-preview");
+
+            item.image = imageFile && imagePreview.src ? imagePreview.src : "";
+
+        }
+
+        items.push(item);
+
+    });
+
+    if (unitConversionError) {
+        alert("❌ " + unitConversionError);
+        return;
+    }
+
+    if (items.length === 0) {
+        alert("لطفاً حداقل یک ردیف کالا با کد و تعداد معتبر وارد کنید.");
+        return;
+    }
+
+    // مبلغِ ریالی همیشه صحیح ثبت می‌شود — رشته‌ی اعشاریِ فارسی («۱٬۲۳۴٫۵»)
+    // بعداً توسط stlpParseMoney ده برابر بزرگ‌تر خوانده می‌شد و همان
+    // مبلغِ غلط در خزانه می‌نشست
+    const total = Math.round(stlpRecalcPurchaseTotal());
+
+    const purchaseType = document.getElementById("purchaseType").value;
+
+    if (!confirm(
+        "ثبت حواله خرید از " + supplier.name + "\n" +
+        "مبلغ کل: " + stlpTreasuryMoney(total) + "\n" +
+        "نوع: " + (purchaseType === "cash" ? "نقدی" : "نسیه") + "\n\n" +
+        "این حواله ثبت می‌شود و در صفحه‌ی «حواله‌ها» در انتظار تأیید قرار می‌گیرد.\n" +
+        "موجودی انبار و خزانه فقط بعد از تأیید حواله به‌روزرسانی می‌شوند.\n\n" +
+        "آیا مطمئن هستید؟"
+    )) return;
+
+
+    // -------------------------------------------
+    // ساخت حواله خرید در همان لیست «حواله‌ها»
+    // (وضعیت: در انتظار تأیید - مثل حواله‌های فروش)
+    // -------------------------------------------
+
+    const deliveryNo =
+        typeof getNextSalesDeliveryNumber === "function"
+            ? getNextSalesDeliveryNumber()
+            : 1;
+
+    // شماره فاکتورِ خالی ممکن نیست: لغوِ حواله‌ی خریدِ تأییدشده (و
+    // پیدا کردنِ تراکنشِ خزانه‌اش) فقط با invoiceNo کار می‌کند — بدونِ
+    // آن، لغو موجودی را برمی‌گرداند ولی پرداختِ خزانه سرِ جایش می‌ماند
+    const typedInvoiceNo =
+        document.getElementById("purchaseInvoiceNo").value.trim();
+
+    const invoiceNo = typedInvoiceNo || ("PUR-" + deliveryNo);
+
+    try {
+
+        const existingDeliveries = JSON.parse(localStorage.getItem("salesDeliveries") || "[]");
+
+        const duplicateInvoice =
+            existingDeliveries.some(function(d) {
+                return d.direction === "purchase" &&
+                    String(d.invoiceNo || "").trim() === invoiceNo &&
+                    d.status !== "rejected" && d.status !== "cancelled";
+            });
+
+        if (duplicateInvoice) {
+            alert("❌ حواله‌ی خریدِ دیگری با شماره فاکتورِ «" + invoiceNo + "» ثبت شده است.");
+            return;
+        }
+
+    } catch (error) {}
+
+    const purchaseDelivery = {
+
+        id: "pur_" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
+
+        deliveryNo: deliveryNo,
+        invoiceNo: invoiceNo,
+
+        direction: "purchase",
+
+        date:
+            document.getElementById("purchaseDate").value.trim() ||
+            new Date().toLocaleDateString("fa-IR"),
+
+        supplierId: supplier.id,
+        supplierName: supplier.name,
+
+        purchaseType: purchaseType,
+
+        items: items,
+        total: stlpTreasuryMoney(total),
+
+        status: "pending",
+        stockDeducted: false,
+        treasuryRegistered: false,
+
+        createdAt: new Date().toISOString(),
+
+        source: "purchase-entry"
+
+    };
+
+    stlpAppendToStoreArraySync("salesDeliveries", purchaseDelivery, "id", purchaseDelivery.id);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("خرید", "ثبت حواله خرید", "حواله شماره " + deliveryNo + " از «" + supplier.name + "» — " + stlpTreasuryMoney(total));
+    }
+
+
+    // -------------------------------------------
+    // ریست فرم
+    // -------------------------------------------
+
+    document.getElementById("purchaseItemsBody").innerHTML = "";
+    document.getElementById("purchaseInvoiceNo").value = "";
+    document.getElementById("purchaseDate").value = "";
+    stlpRecalcPurchaseTotal();
+    addPurchaseItemRow();
+
+    renderPurchaseHistory();
+
+    alert(
+        "✅ حواله خرید شماره " + deliveryNo + " ثبت شد.\n\n" +
+        "📋 برای اینکه موجودی انبار اضافه شود و مبلغ در خزانه بنشیند،\n" +
+        "باید این حواله را در صفحه‌ی «حواله‌ها» تأیید کنید."
+    );
+
+}
+
+
+// =====================================================
+// رندر سوابق خرید
+// =====================================================
+
+function renderPurchaseHistory() {
+
+    const tbody = document.getElementById("purchaseHistoryTable");
+
+    if (!tbody) return;
+
+    const searchText =
+        (document.getElementById("purchaseHistorySearch")?.value || "").trim().toLowerCase();
+
+    let purchases = [];
+
+    try {
+
+        const deliveries = JSON.parse(
+            localStorage.getItem("salesDeliveries") || "[]"
+        );
+
+        purchases =
+            (Array.isArray(deliveries) ? deliveries : [])
+                .filter(function(d) { return d.direction === "purchase"; })
+                .slice()
+                .sort(function(a, b) {
+                    return String(b.createdAt).localeCompare(String(a.createdAt));
+                });
+
+    } catch (error) {
+
+        purchases = [];
+
+    }
+
+    if (searchText) {
+
+        purchases = purchases.filter(function(p) {
+            return JSON.stringify(p).toLowerCase().includes(searchText);
+        });
+
+    }
+
+    if (purchases.length === 0) {
+
+        tbody.innerHTML = '<tr><td colspan="7">سابقه‌ای یافت نشد.</td></tr>';
+        return;
+
+    }
+
+    tbody.innerHTML =
+        purchases.map(function(p) {
+
+            let statusHtml;
+
+            if (p.status === "pending") {
+
+                statusHtml = '<span class="badge-unpaid">🕒 در انتظار تأیید</span>';
+
+            } else if (p.status === "approved" && p.purchaseType === "credit" && !p.treasuryRegistered) {
+
+                statusHtml = '<span class="badge-unpaid">🔴 بدهی باز - در انتظار تسویه</span>';
+
+            } else if (p.status === "approved") {
+
+                statusHtml = '<span class="badge-paid">✓ تأیید و ثبت‌شده</span>';
+
+            } else if (p.status === "rejected") {
+
+                statusHtml = "🚫 رد شده";
+
+            } else if (p.status === "cancelled") {
+
+                statusHtml = "🟠 لغو شده";
+
+            } else {
+
+                statusHtml = p.status || "-";
+
+            }
+
+            return (
+                "<tr>" +
+                "<td>" + escapeHtml(p.date || "-") + "</td>" +
+                "<td>" + escapeHtml(p.supplierName || "-") + "</td>" +
+                "<td>" + escapeHtml(p.invoiceNo || p.deliveryNo || "-") + "</td>" +
+                "<td>" + escapeHtml(String(p.total || "-")) + "</td>" +
+                "<td>" + (p.purchaseType === "cash" ? "نقدی" : "نسیه") + "</td>" +
+                "<td>" + statusHtml + "</td>" +
+                "<td>" +
+                    '<a href="sales-delivery.html" style="color:#0d6efd;">مشاهده در حواله‌ها</a>' +
+                "</td>" +
+                "</tr>"
+            );
+
+        }).join("");
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    stlpFillSupplierSelect();
+    addPurchaseItemRow();
+    renderSuppliers();
+    renderPurchaseHistory();
+
+});
+
+</script>
+
+</body>
+</html>

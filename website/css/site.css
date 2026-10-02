@@ -1,0 +1,196 @@
+/* ===========================================================
+   STLP — Saba Tajhiz Laleh Parseh — shared site stylesheet
+   Unified design system replacing the old mixed dark-glass /
+   amazon-style theme. One language across every page.
+   =========================================================== */
+
+:root{
+  --bg:#faf9f6;
+  --bg-dark:#0c211b;
+  --ink:#12211d;
+  --ink-soft:#4b5a55;
+  --muted:#697a74;
+  --muted-2:#8b9a94;
+  --line:#e3e7e4;
+  --card:#ffffff;
+  --panel:#f4f6f5;
+  --accent:#0fa37f;
+  --accent-dark:#0b8267;
+  --accent-soft:#e6f5f0;
+  --danger:#c24444;
+  --radius-lg:20px;
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow:0 20px 45px -22px rgba(12,33,27,.25);
+  --shadow-sm:0 10px 24px -14px rgba(12,33,27,.18);
+  --maxw:1280px;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  font-family:'Vazirmatn', sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+img{ max-width:100%; display:block; }
+
+a{ color:var(--accent); text-decoration:none; }
+a:hover{ color:var(--accent-dark); }
+
+h1,h2,h3,h4{ margin:0; line-height:1.35; font-weight:800; }
+p{ margin:0; }
+
+.container{ max-width:var(--maxw); margin:0 auto; padding:0 40px; }
+
+@media (max-width:720px){
+  .container{ padding:0 20px; }
+}
+
+/* ---------- HEADER ---------- */
+header.site-header{
+  background:var(--bg-dark);
+  color:#f5f7f6;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.site-header .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-top:14px;
+  padding-bottom:14px;
+  gap:20px;
+}
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand img{ height:44px; width:auto; border-radius:10px; flex:none; }
+.brand-name{ font-weight:700; font-size:18px; }
+.brand-sub{ font-size:11px; color:#9db3ac; }
+
+nav.main-nav{ display:flex; gap:26px; font-size:14px; font-weight:600; }
+nav.main-nav a{ color:#e7efec; white-space:nowrap; }
+nav.main-nav a:hover{ color:var(--accent); }
+nav.main-nav a.active{ color:var(--accent); }
+
+.header-right{ display:flex; align-items:center; gap:18px; flex:none; }
+.header-phone{ font-size:13px; color:#cfe0da; white-space:nowrap; }
+.cart-link{ position:relative; display:flex; align-items:center; }
+.cart-badge{
+  position:absolute; top:-8px; inset-inline-start:-8px;
+  background:var(--accent); color:var(--bg-dark);
+  font-size:10px; font-weight:800; width:16px; height:16px;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+}
+
+.menu-btn{ display:none; font-size:24px; cursor:pointer; color:#fff; background:none; border:none; }
+
+#mobile-menu{
+  display:none;
+  position:fixed; inset:0; z-index:200;
+  background:rgba(12,33,27,.6);
+  backdrop-filter:blur(4px);
+  align-items:flex-start; justify-content:flex-end;
+}
+#mobile-menu.open{ display:flex; }
+#mobile-menu .sheet{
+  width:78%; max-width:300px; height:100%;
+  background:var(--bg-dark); padding:24px;
+  display:flex; flex-direction:column; gap:6px;
+}
+#mobile-menu a{ color:#e7efec; padding:12px 4px; font-weight:600; border-bottom:1px solid rgba(255,255,255,.08); }
+#mobile-menu .close-btn{ align-self:flex-end; color:#fff; font-size:22px; background:none; border:none; cursor:pointer; margin-bottom:10px; }
+
+@media (max-width:900px){
+  nav.main-nav{ display:none; }
+  .menu-btn{ display:block; }
+}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:8px;
+  padding:14px 28px;
+  border-radius:12px;
+  font-weight:700;
+  font-size:14.5px;
+  border:none;
+  cursor:pointer;
+  background:var(--accent);
+  color:#fff;
+  transition:.2s;
+}
+.btn:hover{ background:var(--accent-dark); color:#fff; }
+.btn-outline{
+  background:#fff;
+  color:var(--ink);
+  border:1.5px solid var(--line);
+}
+.btn-outline:hover{ border-color:var(--accent); color:var(--accent-dark); background:#fff; }
+.btn-dark{ background:var(--bg-dark); color:#fff; }
+.btn-dark:hover{ background:#123329; color:#fff; }
+.btn-sm{ padding:9px 16px; font-size:12.5px; border-radius:9px; }
+.btn-block{ width:100%; }
+
+/* ---------- CARDS / SECTIONS ---------- */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:24px;
+}
+.section{ padding:64px 0; }
+.section-tight{ padding:40px 0; }
+.section-alt{ background:#fff; border-top:1px solid #eef1ef; border-bottom:1px solid #eef1ef; }
+
+.eyebrow{
+  display:inline-block; background:var(--accent); color:#fff;
+  font-size:12px; font-weight:700; padding:6px 14px; border-radius:999px;
+  margin-bottom:18px;
+}
+
+.section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px; gap:16px; flex-wrap:wrap; }
+.section-title{ font-size:24px; }
+
+.grid{ display:grid; gap:20px; }
+.grid-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+.grid-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+.grid-4{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+@media (max-width:900px){
+  .grid-3,.grid-4{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:600px){
+  .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr; }
+}
+
+.badge{
+  display:inline-block; color:#fff; font-size:10.5px; font-weight:700;
+  padding:3px 10px; border-radius:999px;
+}
+
+/* ---------- FOOTER ---------- */
+footer.site-footer{ background:var(--bg-dark); color:#cfe0da; padding:44px 0 24px; }
+footer.site-footer .grid{ font-size:13px; line-height:2; }
+footer.site-footer h4{ color:#fff; font-size:13.5px; margin-bottom:8px; }
+footer.site-footer .muted{ color:#8fa59d; }
+footer.site-footer a{ color:#cfe0da; }
+footer.site-footer a:hover{ color:var(--accent); }
+.footer-bottom{
+  max-width:var(--maxw); margin:24px auto 0; padding:14px 40px 0;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:11.5px; color:#728a83; text-align:center;
+}
+
+/* ---------- UTILITIES ---------- */
+.muted{ color:var(--muted); }
+.center{ text-align:center; }
+.mt-8{ margin-top:8px;} .mt-16{margin-top:16px;} .mt-24{margin-top:24px;} .mt-32{margin-top:32px;}
+.stack{ display:flex; flex-direction:column; }
+.row{ display:flex; align-items:center; }
+.gap-8{gap:8px;} .gap-12{gap:12px;} .gap-16{gap:16px;} .gap-20{gap:20px;}

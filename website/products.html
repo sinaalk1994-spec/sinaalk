@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لیست قیمت محصولات Vaccuject — STLP</title>
+
+
+<link rel="stylesheet" href="css/site.css">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+
+<style>
+  .page-head{ padding:48px 0 28px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; justify-content:space-between; }
+  .page-head-left{ display:flex; align-items:center; gap:16px; }
+  .page-head-left img{ height:56px; }
+  .page-head h1{ font-size:22px; margin-bottom:4px; }
+  .page-head p{ font-size:13px; color:var(--muted); }
+
+  table.price-table{ width:100%; border-collapse:collapse; font-size:13.5px; background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+  table.price-table th, table.price-table td{ padding:12px 10px; text-align:center; border-bottom:1px solid var(--line); }
+  table.price-table th{ background:var(--panel); color:var(--ink-soft); font-weight:700; font-size:12.5px; }
+  table.price-table tbody tr:last-child td{ border-bottom:none; }
+  table.price-table tbody tr:hover{ background:#fbfdfc; }
+  .table-wrap{ overflow-x:auto; }
+
+  @media (max-width:768px){
+    table.price-table{ font-size:12px; }
+  }
+</style>
+<link rel="stylesheet" href="css/refresh.css">
+<link rel="stylesheet" href="css/site-complete.css">
+<link rel="stylesheet" href="css/site-unified.css"></head>
+<body class="refresh">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="STLP">
+      <div><div class="brand-name">STLP</div><div class="brand-sub">صبا تجهیز لاله پارسه</div></div>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" >خانه</a>
+      <a href="shop.html">فروشگاه</a>
+      <a href="brands.html">برندها</a>
+      <a href="about.html">درباره ما</a>
+      <a href="verify.html">تأیید اصالت</a>
+      <a href="track.html">پیگیری سفارش</a>
+    </nav>
+    <div class="header-right">
+      <a href="cart.html" class="cart-link" aria-label="سبد خرید">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e7efec" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;"></span>
+      </a>
+      
+      <button class="menu-btn" onclick="openMenu()" aria-label="منو">☰</button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-menu">
+  <div class="sheet">
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+    <a href="index.html">خانه</a>
+    <a href="shop.html">فروشگاه</a>
+    <a href="brands.html">برندها</a>
+    <a href="about.html">درباره ما</a>
+    <a href="verify.html">تأیید اصالت</a>
+    <a href="track.html">پیگیری سفارش</a>
+  </div>
+</div>
+
+<section class="container page-head">
+  <div class="page-head-left">
+    <img src="images/vaccuject-logo.png" alt="Vaccuject">
+    <div>
+      <h1>لیست قیمت محصولات Vaccuject</h1>
+      <p>قیمت‌ها به ریال — واحد، بسته (۱۰۰ عدد) و کارتن</p>
+    </div>
+  </div>
+  <a href="files/product-list.pdf" download class="btn">📄 دانلود لیست قیمت کامل (PDF)</a>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="container table-wrap">
+    <div class="table-scroll"><table class="price-table">
+      <thead>
+        <tr><th>کد</th><th>نوع</th><th>سایز</th><th>حجم (ml)</th><th>قیمت واحد</th><th>قیمت بسته</th><th>قیمت کارتن</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>PL-40</td><td>Plain</td><td>13×75</td><td>4</td><td>60,000</td><td>6,000,000</td><td>72,000,000</td></tr>
+        <tr><td>PL-60</td><td>Plain</td><td>13×100</td><td>6</td><td>68,000</td><td>6,800,000</td><td>81,600,000</td></tr>
+        <tr><td>PL-90</td><td>Plain</td><td>16×100</td><td>9</td><td>85,000</td><td>8,500,000</td><td>102,000,000</td></tr>
+        <tr><td>PT-18</td><td>PT-PTT</td><td>13×75</td><td>1.8</td><td>65,000</td><td>6,500,000</td><td>78,000,000</td></tr>
+        <tr><td>PT-27</td><td>PT-PTT</td><td>13×75</td><td>2.7</td><td>65,000</td><td>6,500,000</td><td>78,000,000</td></tr>
+        <tr><td>CA-40</td><td>CAT</td><td>13×75</td><td>4</td><td>62,000</td><td>6,200,000</td><td>74,400,000</td></tr>
+        <tr><td>CA-60</td><td>CAT</td><td>13×100</td><td>6</td><td>76,000</td><td>7,600,000</td><td>91,200,000</td></tr>
+        <tr><td>CA-90</td><td>CAT</td><td>16×100</td><td>9</td><td>76,000</td><td>7,600,000</td><td>91,200,000</td></tr>
+        <tr><td>GC-35</td><td>SST</td><td>13×100</td><td>3.5</td><td>70,000</td><td>7,000,000</td><td>84,000,000</td></tr>
+        <tr><td>GC-50</td><td>SST</td><td>13×100</td><td>5</td><td>80,000</td><td>8,000,000</td><td>96,000,000</td></tr>
+        <tr><td>GC-90</td><td>SST</td><td>16×100</td><td>9</td><td>99,000</td><td>9,900,000</td><td>118,800,000</td></tr>
+        <tr><td>LH-30</td><td>Heparin</td><td>13×75</td><td>3</td><td>67,000</td><td>6,700,000</td><td>80,400,000</td></tr>
+        <tr><td>LH-60</td><td>Heparin</td><td>13×100</td><td>5</td><td>75,000</td><td>7,500,000</td><td>90,000,000</td></tr>
+        <tr><td>SH-30</td><td>Heparin</td><td>13×75</td><td>3</td><td>67,000</td><td>6,700,000</td><td>80,400,000</td></tr>
+        <tr><td>SH-60</td><td>Heparin</td><td>13×100</td><td>6</td><td>75,000</td><td>7,500,000</td><td>90,000,000</td></tr>
+        <tr><td>K3-20</td><td>CBC</td><td>13×75</td><td>2</td><td>51,000</td><td>5,100,000</td><td>61,200,000</td></tr>
+        <tr><td>K3-30</td><td>CBC</td><td>13×75</td><td>4</td><td>51,000</td><td>5,100,000</td><td>61,200,000</td></tr>
+        <tr><td>K3-60</td><td>CBC</td><td>13×100</td><td>6</td><td>55,000</td><td>5,500,000</td><td>66,000,000</td></tr>
+        <tr><td>K2-20</td><td>CBC</td><td>13×75</td><td>2</td><td>51,000</td><td>5,100,000</td><td>61,200,000</td></tr>
+        <tr><td>K2-30</td><td>CBC</td><td>13×75</td><td>3</td><td>51,000</td><td>5,100,000</td><td>61,200,000</td></tr>
+        <tr><td>K2-60</td><td>CBC</td><td>13×100</td><td>6</td><td>55,000</td><td>5,500,000</td><td>66,000,000</td></tr>
+        <tr><td>GL-30</td><td>Glucose</td><td>13×75</td><td>3</td><td>55,000</td><td>5,500,000</td><td>66,000,000</td></tr>
+        <tr><td>ES-12</td><td>ESR</td><td>120×9</td><td>1.28</td><td>به‌زودی</td><td>به‌زودی</td><td>به‌زودی</td></tr>
+        <tr><td>ES-16</td><td>ESR</td><td>13×75</td><td>1.6</td><td>به‌زودی</td><td>به‌زودی</td><td>به‌زودی</td></tr>
+        <tr><td>ES-18</td><td>ESR</td><td>13×75</td><td>1.8</td><td>به‌زودی</td><td>به‌زودی</td><td>به‌زودی</td></tr>
+        <tr><td>ES-24</td><td>ESR</td><td>13×75</td><td>2.4</td><td>به‌زودی</td><td>به‌زودی</td><td>به‌زودی</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container grid grid-3">
+    <div>
+      <h4>STLP — صبا تجهیز لاله پارسه</h4>
+      <div class="muted">شماره ثبت ۶۴۷۲۰۸ &nbsp;|&nbsp; شناسه ملی ۱۴۰۱۴۲۴۵۵۱۹</div>
+    </div>
+    <div>
+      <h4>دسترسی سریع</h4>
+      <div class="muted"><a href="shop.html">محصولات</a> &nbsp;·&nbsp; <a href="brands.html">برندها</a> &nbsp;·&nbsp; <a href="about.html">درباره ما</a> &nbsp;·&nbsp; <a href="verify.html">تأیید اصالت</a></div>
+    </div>
+    <div>
+      <h4>تماس</h4>
+      <div class="muted">۰۹۱۲۰۶۱۳۰۰۲ &nbsp;·&nbsp; info@stlp.ir</div>
+    </div>
+  </div>
+  <div class="footer-bottom"><a href="contact.html">تماس و راهنمای خرید</a> · © STLP — تمامی حقوق محفوظ است</div>
+</footer>
+
+<script src="js/site.js"></script>
+<script src="js/refresh.js"></script><script src="js/live-prices.js"></script></body>
+</html>

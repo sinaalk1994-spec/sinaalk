@@ -1,0 +1,464 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+  <meta charset="utf-8">
+<script src="storage-sync.js"></script>
+
+  <title>مدیریت مشتریان - STLP</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+
+    .customer-form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+    }
+
+    .form-group input {
+      padding: 10px;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      font-family: inherit;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-buttons {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .form-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .save-btn {
+      background: #198754;
+      color: white;
+    }
+
+    .cancel-btn {
+      background: #777;
+      color: white;
+    }
+
+    #customerSearch {
+      padding: 10px;
+      width: 250px;
+      margin-bottom: 15px;
+      font-family: inherit;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #e9e3e3;
+      color: #000;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid #999;
+      text-align: center;
+    }
+
+    th {
+      background: #d3cccc;
+    }
+
+    .edit-btn {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+      margin-right: 5px;
+    }
+
+    .edit-btn:hover {
+      background: #0b5ed7;
+    }
+
+    .delete-btn:hover {
+      background: #bb2d3b;
+    }
+
+    .save-btn:hover {
+      background: #157347;
+    }
+
+    .cancel-btn:hover {
+      background: #5c636a;
+    }
+
+    @media (max-width: 900px) {
+
+      .customer-form {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .customer-form {
+        grid-template-columns: 1fr;
+      }
+
+      .full-width,
+      .form-buttons {
+        grid-column: auto;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="overlay">
+
+
+  <!-- ========================= -->
+  <!-- منوی بالا -->
+  <!-- ========================= -->
+
+  <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html" class="active">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+
+  <h2>
+    مدیریت مشتریان
+  </h2>
+
+
+  <!-- ========================= -->
+  <!-- فرم مشتری -->
+  <!-- ========================= -->
+
+  <div id="panel">
+
+
+    <div class="card">
+
+
+      <h3 id="formTitle">
+        ثبت مشتری جدید
+      </h3>
+
+
+      <div class="customer-form">
+
+
+        <div class="form-group">
+
+          <label for="buyerName">
+            نام مشتری / شرکت:
+          </label>
+
+          <input
+            id="buyerName"
+            type="text"
+            required>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="buyerNationalId">
+            شناسه ملی:
+          </label>
+
+          <input
+            id="buyerNationalId"
+            type="text">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="buyerEconCode">
+            کد اقتصادی:
+          </label>
+
+          <input
+            id="buyerEconCode"
+            type="text">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="buyerRegNo">
+            شماره ثبت:
+          </label>
+
+          <input
+            id="buyerRegNo"
+            type="text">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="buyerProvince">
+            استان:
+          </label>
+
+          <input
+            id="buyerProvince"
+            type="text">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="buyerCity">
+            شهرستان:
+          </label>
+
+          <input
+            id="buyerCity"
+            type="text">
+
+        </div>
+
+
+        <div class="form-group full-width">
+
+          <label for="buyerAddress">
+            آدرس:
+          </label>
+
+          <input
+            id="buyerAddress"
+            type="text"
+            required>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="buyerPhone">
+            تلفن:
+          </label>
+
+          <input
+            id="buyerPhone"
+            type="text">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="buyerPostalCode">
+            کدپستی:
+          </label>
+
+          <input
+            id="buyerPostalCode"
+            type="text">
+
+        </div>
+
+
+        <!-- دکمه‌ها -->
+
+        <div class="form-buttons">
+
+
+          <button
+            type="button"
+            id="saveCustomerBtn"
+            class="save-btn"
+            onclick="addCustomer()">
+
+            ➕ ذخیره مشتری
+
+          </button>
+
+
+          <button
+            type="button"
+            id="cancelEditBtn"
+            class="cancel-btn"
+            onclick="cancelEdit()"
+            style="display:none;">
+
+            ✖ لغو ویرایش
+
+          </button>
+
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- لیست مشتریان -->
+    <!-- ========================= -->
+
+    <div class="card">
+
+
+      <h3>
+        لیست مشتریان
+      </h3>
+
+
+      <input
+        id="customerSearch"
+        type="text"
+        oninput="searchCustomer()"
+        placeholder="جستجوی مشتری...">
+
+
+      <div class="table-container">
+
+
+        <table>
+
+
+          <thead>
+
+            <tr>
+
+              <th>نام مشتری</th>
+
+              <th>شناسه ملی</th>
+
+              <th>کد اقتصادی</th>
+
+              <th>شماره ثبت</th>
+
+              <th>استان</th>
+
+              <th>شهرستان</th>
+
+              <th>آدرس</th>
+
+              <th>تلفن</th>
+
+              <th>کدپستی</th>
+
+              <th>عملیات</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="customerTable">
+
+          </tbody>
+
+
+        </table>
+
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+<script src="app.js"></script>
+<script>
+stlpRequirePermission("customers");
+</script>
+
+</body>
+
+</html>

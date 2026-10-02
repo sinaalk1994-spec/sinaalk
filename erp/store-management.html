@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+<title>فروشگاه آنلاین - STLP</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="/css/store-admin.css">
+<style>
+
+/* store-admin.css چند متغیر رنگیِ سایت (site.css) را انتظار دارد
+   (--line/--accent/--ink-soft و ...) که این‌جا بارگذاری نمی‌شود؛
+   همان اسم‌ها را با رنگ‌های تیره‌ی خودِ ERP دوباره تعریف می‌کنیم تا
+   قواعد ساختاریِ store-admin.css (چیدمانِ فرم‌ها، جدول‌ها) بدون
+   نیاز به بازنویسی، با تمِ تیره‌ی ERP هماهنگ شوند. */
+:root {
+    --bg: #0c211b;
+    --ink: #f1f1f1;
+    --ink-soft: #b7c4bf;
+    --line: rgba(15, 163, 127, .35);
+    --card: rgba(18, 22, 21, .62);
+    --accent: #0fa37f;
+    --accent-dark: #0c8b6a;
+}
+
+.admin-wrap { padding-block: 6px 40px; }
+.admin-wrap .card { background: var(--stlp-card-bg); border: 1px solid var(--stlp-card-border); backdrop-filter: blur(10px); }
+
+.admin-stat { background: rgba(255,255,255,.06); border: 1px solid rgba(15,163,127,.35); }
+.admin-stat strong { color: #00ffca; }
+
+#admin-message { background: rgba(240,173,78,.15); color: #f7d9a0; border: 1px solid rgba(240,173,78,.35); }
+#admin-message:empty { display: none; }
+
+.storeadm-tabs {
+    display: flex;
+    gap: 10px;
+    margin: 22px 0 20px;
+    flex-wrap: wrap;
+}
+
+.storeadm-tab-btn {
+    background: rgba(255,255,255,.08);
+    border: 1px solid #0fa37f66;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.storeadm-tab-btn:hover { background: rgba(255,255,255,.15); }
+
+.storeadm-tab-btn.active { background: #0fa37f; border-color: #0fa37f; }
+
+.storeadm-tab-panel { display: none; }
+.storeadm-tab-panel.active { display: block; }
+
+#orders-search, #catalog-search { width: 100%; max-width: 420px; margin-bottom: 14px; }
+
+</style>
+</head>
+<body>
+
+<div class="overlay">
+
+    <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html" class="active">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+    <h2>🛒 فروشگاه آنلاین</h2>
+
+    <main class="admin-wrap">
+
+    <p class="warehouse-note">این انبار مستقل از انبار اصلی است — موجودی فقط از صفحهٔ «انبار اصلی» تغییر می‌کند (انتقال به فروشگاه آنلاین یا بازگشت از آن)، یا با تأیید/لغو سفارش‌ها خودکار کم/زیاد می‌شود؛ گردش انبار و نمودار زندهٔ موجودی هم در همان صفحهٔ انبار (تبِ «فروشگاه آنلاین») قابل‌مشاهده‌اند. همهٔ موجودی‌ها برحسب بسته است.</p>
+    <div id="admin-message" role="status" aria-live="polite"></div>
+
+    <div id="admin-panel" hidden>
+
+      <p id="order-alert" role="status" aria-live="polite"></p>
+
+      <div class="admin-actions">
+        <button id="export-data" class="btn btn-outline">خروجی اطلاعات JSON</button>
+        <button id="logout" class="btn btn-outline">خروج</button>
+      </div>
+
+      <div class="admin-stats">
+        <div class="admin-stat"><strong id="count-products">۰</strong><span>محصول</span></div>
+        <div class="admin-stat"><strong id="count-stock">۰</strong><span>بسته در انبار آنلاین</span></div>
+        <div class="admin-stat"><strong id="count-low">۰</strong><span>محصول کم‌موجودی</span></div>
+        <div class="admin-stat"><strong id="count-orders">۰</strong><span>سفارش در انتظار تأیید</span></div>
+      </div>
+
+      <div class="storeadm-tabs">
+        <button type="button" class="storeadm-tab-btn active" data-tab="inventory">📦 انبار</button>
+        <button type="button" class="storeadm-tab-btn" data-tab="orders">🧾 تأیید سفارش‌های آنلاین</button>
+      </div>
+
+      <div class="storeadm-tab-panel active" id="tab-inventory">
+
+        <section class="card"><h2>فهرست محصولات</h2><p class="warehouse-note">مشخصات (نام، نوع، برند، قیمت، عکس) و موجودی همگی از «انبار اصلی» می‌آیند — فقط تیکِ انتشار این‌جا قابل‌تغییر است.</p><input id="catalog-search" aria-label="جستجوی محصولات مدیریت" placeholder="کد، نام یا برند"><div class="table-scroll"><table><thead><tr><th>عکس</th><th>کد</th><th>نام</th><th>برند</th><th>قیمت بسته (ریال)</th><th>موجودی بسته</th><th>انتشار</th></tr></thead><tbody id="catalog-body"></tbody></table></div></section>
+
+      </div>
+
+      <div class="storeadm-tab-panel" id="tab-orders">
+
+        <section class="card"><h2>تنظیمات حسابداریِ فروش آنلاین</h2><p class="warehouse-note">وقتی سفارشی تأیید می‌شود، مبلغش به‌عنوان یک فاکتور رسمی و یک تراکنش خزانه در ERP ثبت می‌شود. اینجا مشخص کنید پول سفارش‌های آنلاین به کدام حساب خزانه واریز می‌شود.</p><form id="online-treasury-form" class="admin-form"><label class="wide">حساب دریافت پول آنلاین<select id="online-treasury-account"></select></label><button type="submit" class="btn wide">ذخیرهٔ تنظیمات</button></form></section>
+
+        <section class="card"><h2>سفارش‌های آنلاین</h2><p class="warehouse-note">ثبت سفارش موجودی را رزرو می‌کند. مراحل: در انتظار آپلود فیش ← در دست بررسی ← در انتظار بارگیری ← تحویل شده. تأیید فیش، فاکتور و سند خزانه می‌سازد؛ لغو سفارش (در هر مرحله قبل از تحویل)، موجودی را به همین انبار برمی‌گرداند.</p><input id="orders-search" aria-label="جستجوی سفارش‌ها" placeholder="جستجو بر اساس نام، تلفن یا شماره سفارش"><div class="table-scroll"><table><thead><tr><th>شماره</th><th>نام</th><th>تلفن</th><th>مبلغ</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody id="orders-body"></tbody></table></div></section>
+
+      </div>
+
+    </div>
+
+    <dialog id="order-dialog"><h2>جزئیات سفارش</h2><pre id="order-detail"></pre><form method="dialog"><button class="btn">بستن</button></form></dialog>
+
+    </main>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+
+if (stlpRequirePermission('onlineStore')) {
+
+    document.querySelectorAll('.storeadm-tab-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            document.querySelectorAll('.storeadm-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+            document.querySelectorAll('.storeadm-tab-panel').forEach(function(p){ p.classList.remove('active'); });
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    const ordersSearchInput = document.getElementById('orders-search');
+
+    function applyOrdersFilter() {
+        const q = ordersSearchInput.value.trim().toLowerCase();
+        document.querySelectorAll('#orders-body tr').forEach(function(tr){
+            tr.style.display = (!q || tr.textContent.toLowerCase().includes(q)) ? '' : 'none';
+        });
+    }
+
+    ordersSearchInput.addEventListener('input', applyOrdersFilter);
+
+    new MutationObserver(applyOrdersFilter).observe(document.getElementById('orders-body'), { childList: true });
+
+    const storeAdminScript = document.createElement('script');
+    storeAdminScript.src = '/js/store-admin.js';
+    document.body.appendChild(storeAdminScript);
+
+}
+
+</script>
+
+</body>
+</html>

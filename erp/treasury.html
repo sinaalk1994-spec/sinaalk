@@ -1,0 +1,3010 @@
+﻿<!doctype html>
+
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+
+<title>خزانه - STLP</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+
+/* =====================================================
+   تقویم
+===================================================== */
+
+.treasury-date-picker {
+    position: relative;
+}
+
+.treasury-date-picker input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px;
+    border-radius: 8px;
+    border: 1px solid #0fa37f88;
+    background: white;
+    color: #111;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.treasury-calendar {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: 290px;
+    background: #fff;
+    border: 1px solid #0fa37f;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+    padding: 12px;
+    z-index: 9999;
+    color: #111;
+}
+
+.treasury-calendar.show {
+    display: block;
+}
+
+.treasury-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.treasury-calendar-header button {
+    border: none;
+    background: #0fa37f;
+    color: white;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.treasury-calendar-title {
+    font-weight: 800;
+    color: #0fa37f;
+}
+
+.treasury-calendar-weekdays,
+.treasury-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+}
+
+.treasury-calendar-weekdays div {
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    padding: 5px 0;
+}
+
+.treasury-calendar-days button {
+    border: none;
+    background: #f5f5f5;
+    border-radius: 6px;
+    padding: 7px 2px;
+    cursor: pointer;
+    color: #222;
+    font-family: inherit;
+}
+
+.treasury-calendar-days button:hover {
+    background: #0fa37f;
+    color: white;
+}
+
+.treasury-calendar-days button.today {
+    background: #d1f5ec;
+    color: #087f63;
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   پنل اصلی
+===================================================== */
+
+#panel {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+
+/* =====================================================
+   کارت‌های خلاصه
+===================================================== */
+
+.treasury-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.treasury-stat {
+    background: rgba(255,255,255,.08);
+    border: 1px solid #0fa37f66;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.treasury-stat-title {
+    color: #00ffca;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.treasury-stat-value {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.money-in {
+    color: #198754 !important;
+    font-weight: 800;
+}
+
+.money-out {
+    color: #dc3545 !important;
+    font-weight: 800;
+}
+
+.money-balance {
+    color: #00ffca !important;
+    font-weight: 900;
+}
+
+
+/* =====================================================
+   حساب‌ها
+===================================================== */
+
+.treasury-accounts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.treasury-account {
+    background: rgba(255,255,255,.06);
+    border: 1px solid #0fa37f55;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.treasury-account-name {
+    color: #00ffca;
+    font-weight: 700;
+}
+
+.treasury-account-value {
+    margin-top: 8px;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+
+/* =====================================================
+   داشبورد چک‌ها
+===================================================== */
+
+.treasury-check-dashboard {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+/* هدر داشبورد چک */
+
+.treasury-check-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.treasury-check-header h3 {
+    margin: 0 0 6px;
+    color: #00ffca;
+}
+
+.treasury-check-header span {
+    color: #aaa;
+    font-size: 13px;
+}
+
+
+/* دکمه ثبت چک */
+
+.check-dashboard-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 18px;
+    background: #0fa37f;
+    color: white;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.check-dashboard-btn:hover {
+    background: #0c8b6a;
+}
+
+
+/* =====================================================
+   آمار چک‌ها
+===================================================== */
+
+.check-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.check-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 16px;
+
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.06);
+
+    border: 1px solid #0fa37f55;
+}
+
+.check-stat-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(15,163,127,.12);
+
+    font-size: 20px;
+}
+
+.check-stat-title {
+    font-size: 13px;
+    color: #aaa;
+}
+
+.check-stat-value {
+    margin-top: 5px;
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+}
+
+.check-stat-in {
+    border-color: #19875466;
+}
+
+.check-stat-out {
+    border-color: #dc354566;
+}
+
+.check-stat-pending {
+    border-color: #ffc10766;
+}
+
+.check-stat-approved {
+    border-color: #0d6efd66;
+}
+
+
+/* =====================================================
+   فیلتر چک‌ها
+===================================================== */
+
+.check-filters {
+    display: grid;
+
+    grid-template-columns:
+        2fr
+        1fr
+        1fr
+        1fr
+        auto;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+}
+
+.check-filters input,
+.check-filters select {
+
+    width: 100%;
+
+    height: 44px;
+
+    box-sizing: border-box;
+
+    padding: 0 12px;
+
+    border-radius: 8px;
+
+    border: 1px solid #0fa37f88;
+
+    background: white;
+
+    color: #111;
+
+    font-family: inherit;
+
+    outline: none;
+}
+
+.check-filter-btn {
+
+    height: 44px;
+
+    padding: 0 18px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #0fa37f;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.check-filter-btn:hover {
+    background: #0c8d6e;
+}
+
+
+/* =====================================================
+   جدول چک‌ها
+===================================================== */
+
+.treasury-check-table {
+    min-width: 1100px !important;
+}
+
+.treasury-check-table th {
+    white-space: nowrap;
+}
+
+.treasury-check-table td {
+    vertical-align: middle;
+}
+
+
+/* =====================================================
+   وضعیت چک
+===================================================== */
+
+.check-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+}
+
+.check-status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.check-status-approved {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+.check-status-paid {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.check-status-returned {
+    background: #f8d7da;
+    color: #842029;
+}
+
+
+/* =====================================================
+   عملیات چک
+===================================================== */
+
+.check-action-btn {
+
+    border: none;
+
+    border-radius: 6px;
+
+    padding: 6px 9px;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    margin: 2px;
+
+}
+
+.check-view-btn {
+    background: #6c757d;
+}
+
+.check-edit-btn {
+    background: #0d6efd;
+}
+
+.check-approve-btn {
+    background: #198754;
+}
+
+.check-return-btn {
+    background: #dc3545;
+}
+
+
+/* =====================================================
+   فرم خزانه
+===================================================== */
+
+.treasury-form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 17px;
+    margin-top: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: #00ffca;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #0fa37f88;
+    border-radius: 8px;
+    background: #fff;
+    color: #111;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+
+/* =====================================================
+   انتقال بین حساب‌ها
+===================================================== */
+
+#treasuryTransferFields {
+    grid-column: 1 / -1;
+    padding: 15px;
+    border: 1px solid #0fa37f55;
+    border-radius: 10px;
+    background: rgba(15,163,127,.05);
+}
+
+.treasury-transfer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 17px;
+    width: 100%;
+}
+
+.treasury-transfer-info {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #e8fff8;
+    color: #08785f;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   دکمه‌های فرم
+===================================================== */
+
+.form-buttons {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.form-buttons button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    color: white;
+}
+
+.save-btn {
+    background: #0fa37f;
+}
+
+.save-btn:hover {
+    background: #0c8b6a;
+}
+
+.cancel-btn {
+    background: #666;
+}
+
+
+/* =====================================================
+   فیلتر خزانه
+===================================================== */
+
+.treasury-filters {
+    display: grid;
+
+    grid-template-columns:
+        2fr
+        1fr
+        1fr
+        1fr
+        1fr;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+}
+
+.treasury-filters input,
+.treasury-filters select {
+    padding: 11px;
+    border-radius: 8px;
+    border: 1px solid #0fa37f88;
+    font-family: inherit;
+    background: white;
+    color: #111;
+}
+
+.treasury-export-btn {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #198754;
+    color: white;
+    font-family: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.treasury-export-btn:hover {
+    background: #157347;
+}
+
+
+/* =====================================================
+   جدول خزانه
+===================================================== */
+
+.table-container {
+    overflow-x: auto;
+}
+
+.table-container table {
+    width: 100%;
+    min-width: 1350px;
+    border-collapse: collapse;
+    background: white;
+    color: #111;
+}
+
+.table-container th {
+    background: #0fa37f;
+    color: white;
+    padding: 12px 8px;
+    border: 1px solid #0b8065;
+    white-space: nowrap;
+}
+
+.table-container td {
+    padding: 10px 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.table-container tbody tr:hover td {
+    background: #eefcf8;
+}
+
+
+/* =====================================================
+   عملیات خزانه
+===================================================== */
+
+.edit-treasury-btn,
+.delete-treasury-btn {
+    border: none;
+    color: white;
+    padding: 7px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+}
+
+.edit-treasury-btn {
+    background: #0d6efd;
+}
+
+.delete-treasury-btn {
+    background: #dc3545;
+    margin-right: 4px;
+}
+
+
+/* =====================================================
+   دکمه اعمال فیلتر خزانه
+===================================================== */
+
+#applyTreasuryFilterBtn {
+
+    font-family: "Vazirmatn", sans-serif !important;
+
+    font-size: 14px !important;
+
+    font-weight: 700 !important;
+
+    line-height: 1.5 !important;
+
+    height: 44px !important;
+
+    min-height: 44px !important;
+
+    padding: 0 20px !important;
+
+    border: none !important;
+
+    border-radius: 8px !important;
+
+    background: #0fa37f !important;
+
+    color: #fff !important;
+
+    cursor: pointer;
+
+    display: inline-flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    box-sizing: border-box !important;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+
+}
+
+#applyTreasuryFilterBtn:hover {
+
+    background: #0c8d6e !important;
+
+    box-shadow:
+        0 3px 8px
+        rgba(15, 163, 127, 0.2);
+
+}
+
+#applyTreasuryFilterBtn:active {
+    transform: translateY(1px);
+}
+
+
+/* =====================================================
+   وضعیت چک فرم
+===================================================== */
+
+.check-fields {
+    display: none;
+}
+
+
+/* =====================================================
+   تقویم ساده
+===================================================== */
+
+#simpleTreasuryCalendar,
+#simpleTreasuryCalendar button {
+    font-family: "Vazirmatn", sans-serif !important;
+}
+
+#simpleTreasuryCalendar #calendarDays button {
+    color: #000000 !important;
+    background: #f1f1f1 !important;
+    font-weight: 600 !important;
+}
+
+#simpleTreasuryCalendar > div:nth-child(2) b {
+    color: #000000 !important;
+}
+
+
+/* =====================================================
+   موبایل
+===================================================== */
+
+@media(max-width:1100px) {
+
+    .treasury-stats,
+    .treasury-accounts {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .treasury-form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .treasury-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .check-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .check-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+
+@media(max-width:600px) {
+
+    .treasury-stats,
+    .treasury-accounts,
+    .treasury-form,
+    .treasury-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .treasury-transfer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .form-buttons button {
+        width: 100%;
+    }
+
+    .check-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .check-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .treasury-check-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .check-dashboard-btn {
+        width: 100%;
+    }
+
+}
+
+/* =====================================================
+   تب‌های خزانه
+===================================================== */
+
+.treasury-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.treasury-tab-btn {
+    background: rgba(255,255,255,.08);
+    border: 1px solid #0fa37f66;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.treasury-tab-btn:hover {
+    background: rgba(255,255,255,.15);
+}
+
+.treasury-tab-btn.active {
+    background: #0fa37f;
+    border-color: #0fa37f;
+}
+
+
+/* =====================================================
+   داشبورد/مدیریت حساب‌ها (پویا)
+===================================================== */
+
+.treasury-accounts-dash {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.treasury-account-card {
+    position: relative;
+    background: rgba(255,255,255,.06);
+    border: 1px solid #0fa37f55;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.treasury-account-card .acc-icon {
+    font-size: 22px;
+}
+
+.treasury-account-card .acc-name {
+    color: #00ffca;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.treasury-account-card .acc-sheba {
+    color: #aaa;
+    font-size: 11px;
+    margin-top: 3px;
+    direction: ltr;
+    text-align: left;
+}
+
+.treasury-account-card .acc-value {
+    margin-top: 10px;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.treasury-account-card .acc-del {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #dc3545;
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.treasury-account-card .acc-del:hover {
+    background: #b52d3a;
+}
+
+.treasury-add-account-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 25px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="overlay">
+
+
+<!-- =========================================
+     منوی بالا
+========================================== -->
+
+<button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html" class="active">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+
+<h2>
+    مدیریت خزانه
+</h2>
+
+
+<div class="treasury-tabs">
+
+    <button
+        type="button"
+        id="tabBtnTransactions"
+        class="treasury-tab-btn active"
+        onclick="stlpShowTreasuryTab('panel')"
+    >
+        📊 تراکنش‌ها
+    </button>
+
+    <button
+        type="button"
+        id="tabBtnAccounts"
+        class="treasury-tab-btn"
+        onclick="stlpShowTreasuryTab('accountsPanel')"
+    >
+        🏦 حساب‌ها
+    </button>
+
+    <button
+        type="button"
+        id="tabBtnAcct"
+        class="treasury-tab-btn"
+        onclick="stlpShowTreasuryTab('acctPanel')"
+    >
+        📚 حسابداری
+    </button>
+
+</div>
+
+
+<div id="panel">
+
+
+<!-- =========================================
+     خلاصه خزانه
+========================================== -->
+
+<div class="treasury-stats">
+
+    <div class="treasury-stat">
+
+        <div class="treasury-stat-title">
+            مجموع دریافت
+        </div>
+
+        <div
+            id="totalIn"
+            class="treasury-stat-value money-in"
+        >
+            ۰ ریال
+        </div>
+
+    </div>
+
+
+    <div class="treasury-stat">
+
+        <div class="treasury-stat-title">
+            مجموع پرداخت
+        </div>
+
+        <div
+            id="totalOut"
+            class="treasury-stat-value money-out"
+        >
+            ۰ ریال
+        </div>
+
+    </div>
+
+
+    <div class="treasury-stat">
+
+        <div class="treasury-stat-title">
+            موجودی کل خزانه
+        </div>
+
+        <div
+            id="treasuryBalance"
+            class="treasury-stat-value money-balance"
+        >
+            ۰ ریال
+        </div>
+
+    </div>
+
+
+    <div class="treasury-stat">
+
+        <div class="treasury-stat-title">
+            تعداد تراکنش‌ها
+        </div>
+
+        <div
+            id="treasuryTransactionCount"
+            class="treasury-stat-value"
+        >
+            ۰
+        </div>
+
+    </div>
+
+
+    <div class="treasury-stat">
+
+        <div class="treasury-stat-title">
+            📊 مانده فیلتر فعلی
+        </div>
+
+        <div
+            id="filteredTreasuryBalance"
+            class="treasury-stat-value money-balance"
+        >
+            ۰ ریال
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     حساب‌ها
+========================================== -->
+
+<div class="treasury-accounts" id="treasuryAccountsBox">
+
+    <!-- کارت‌های حساب به‌صورت پویا توسط app.js اینجا رندر می‌شوند -->
+
+</div>
+
+
+<!-- =====================================================
+     داشبورد چک‌ها
+===================================================== -->
+
+<div class="card treasury-check-dashboard">
+
+
+    <!-- هدر -->
+
+    <div class="treasury-check-header">
+
+        <div>
+
+            <h3>
+                📋 مدیریت چک‌ها
+            </h3>
+
+            <span>
+                مدیریت چک‌های دریافتی و پرداختی خزانه
+            </span>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="check-dashboard-btn"
+        >
+            ➕ ثبت چک
+        </button>
+
+    </div>
+
+
+    <!-- تبِ نمای سه‌گانه: همه‌ی چک‌ها / سررسیدشده‌ها / برگشتی‌ها -->
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin:16px 0;">
+        <button type="button" id="checkTabBtnAll" class="check-dashboard-btn" onclick="stlpSwitchCheckTab('all')">📋 همه‌ی چک‌ها</button>
+        <button type="button" id="checkTabBtnDue" class="check-dashboard-btn" onclick="stlpSwitchCheckTab('due')">🕒 چک‌های سررسیدشده</button>
+        <button type="button" id="checkTabBtnReturned" class="check-dashboard-btn" onclick="stlpSwitchCheckTab('returned')">↩️ چک‌های برگشتی</button>
+    </div>
+
+
+    <div id="checkTabPanelDue" style="display:none;">
+
+        <p style="color:#888; font-size:13px; margin:0 0 12px;">چک‌هایی (دریافتی یا پرداختی) که تاریخ سررسیدشان امروز یا قبل‌تر است و هنوز وصول/تأیید یا برگشت نخورده‌اند — بر اساسِ سررسید، نزدیک‌ترین بالا.</p>
+
+        <div class="table-container">
+            <table class="treasury-check-table">
+                <thead>
+                    <tr>
+                        <th>نوع</th>
+                        <th>شماره چک</th>
+                        <th>بانک</th>
+                        <th>طرف حساب</th>
+                        <th>مبلغ</th>
+                        <th>سررسید</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="dueChequesTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <div id="checkTabPanelReturned" style="display:none;">
+
+        <p style="color:#888; font-size:13px; margin:0 0 12px;">چک‌هایی که برگشت خورده‌اند — اگر به یک حواله وصل بودند، آن حواله خودکار دوباره در انتظارِ تسویه قرار می‌گیرد (نقدی یا چکِ جدید)؛ در غیرِ این صورت از همین‌جا تعیین‌تکلیف کنید.</p>
+
+        <div class="table-container">
+            <table class="treasury-check-table">
+                <thead>
+                    <tr>
+                        <th>نوع</th>
+                        <th>شماره چک</th>
+                        <th>بانک</th>
+                        <th>طرف حساب</th>
+                        <th>مبلغ</th>
+                        <th>سررسید</th>
+                        <th>تعیینِ تکلیف</th>
+                    </tr>
+                </thead>
+                <tbody id="returnedChequesTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <div id="checkTabPanelAll">
+
+
+    <!-- آمار چک‌ها -->
+
+    <div class="check-stats">
+
+
+        <div class="check-stat check-stat-in">
+
+            <div class="check-stat-icon">
+                💚
+            </div>
+
+            <div>
+
+                <div class="check-stat-title">
+                    چک‌های دریافتی
+                </div>
+
+                <div class="check-stat-value">
+                    ۰ ریال
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="check-stat check-stat-out">
+
+            <div class="check-stat-icon">
+                🔴
+            </div>
+
+            <div>
+
+                <div class="check-stat-title">
+                    چک‌های پرداختی
+                </div>
+
+                <div class="check-stat-value">
+                    ۰ ریال
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="check-stat check-stat-pending">
+
+            <div class="check-stat-icon">
+                ⏳
+            </div>
+
+            <div>
+
+                <div class="check-stat-title">
+                    در انتظار
+                </div>
+
+                <div class="check-stat-value">
+                    ۰ ریال
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="check-stat check-stat-approved">
+
+            <div class="check-stat-icon">
+                ✅
+            </div>
+
+            <div>
+
+                <div class="check-stat-title">
+                    تأیید / وصول شده
+                </div>
+
+                <div class="check-stat-value">
+                    ۰ ریال
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- فیلتر چک‌ها -->
+
+    <div class="check-filters">
+
+
+        <input
+            type="text"
+            id="checkSearch"
+            placeholder="🔎 جستجوی شماره چک، طرف حساب..."
+        >
+
+
+        <select id="checkStatusFilter">
+
+            <option value="">
+                همه وضعیت‌ها
+            </option>
+
+            <option value="pending">
+                ⏳ در انتظار
+            </option>
+
+            <option value="approved">
+                ✅ تأیید شده
+            </option>
+
+            <option value="paid">
+                💰 وصول شده
+            </option>
+
+            <option value="returned">
+                ↩️ برگشتی
+            </option>
+
+        </select>
+
+
+        <select id="checkTypeFilter">
+
+            <option value="">
+                همه چک‌ها
+            </option>
+
+            <option value="received">
+                💚 دریافتی
+            </option>
+
+            <option value="issued">
+                🔴 پرداختی
+            </option>
+
+        </select>
+
+
+        <select id="checkBankFilter">
+
+            <option value="">
+                همه بانک‌ها
+            </option>
+
+        </select>
+
+
+        <button
+            type="button"
+            class="check-filter-btn"
+        >
+            🔎 اعمال فیلتر
+        </button>
+
+
+    </div>
+
+
+    <!-- جدول چک‌ها -->
+
+    <div class="table-container">
+
+        <table class="treasury-check-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        ردیف
+                    </th>
+
+                    <th>
+                        نوع
+                    </th>
+
+                    <th>
+                        شماره چک
+                    </th>
+
+                    <th>
+                        بانک
+                    </th>
+
+                    <th>
+                        طرف حساب
+                    </th>
+
+                    <th>
+                        مبلغ
+                    </th>
+
+                    <th>
+                        سررسید
+                    </th>
+
+                    <th>
+                        وضعیت
+                    </th>
+
+                    <th>
+                        عملیات
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="treasuryCheckTable">
+
+                <tr>
+
+                    <td colspan="9">
+
+                        هنوز چکی ثبت نشده است.
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================
+     ثبت تراکنش
+========================================== -->
+
+<div class="card">
+
+    <h3 id="treasuryFormTitle">
+        ثبت تراکنش جدید
+    </h3>
+
+
+    <div class="treasury-form">
+
+
+        <!-- نوع تراکنش -->
+
+        <div class="form-group">
+
+            <label>
+                نوع تراکنش
+            </label>
+
+            <select id="treasuryType">
+
+                <option value="in">
+                    ➕ دریافت / ورود
+                </option>
+
+                <option value="out">
+                    ➖ پرداخت / خروج
+                </option>
+
+                <option value="transfer">
+                    🔄 انتقال بین حساب‌ها
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- حساب -->
+
+        <div
+            id="treasuryAccountGroup"
+            class="form-group"
+        >
+
+            <label>
+                حساب
+            </label>
+
+            <select id="treasuryAccount">
+
+                <option value="cash">
+                    💵 صندوق
+                </option>
+
+                <option value="bank">
+                    🏦 بانک
+                </option>
+
+                <option value="pos">
+                    💳 کارت‌خوان
+                </option>
+
+                <option value="other">
+                    📦 سایر
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- مبدأ و مقصد انتقال -->
+
+        <div
+            id="treasuryTransferFields"
+            style="display:none;"
+        >
+
+            <div class="treasury-transfer-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        حساب مبدأ
+                    </label>
+
+                    <select id="treasuryTransferFrom">
+
+                        <option value="cash">
+                            💵 صندوق
+                        </option>
+
+                        <option value="bank">
+                            🏦 بانک
+                        </option>
+
+                        <option value="pos">
+                            💳 کارت‌خوان
+                        </option>
+
+                        <option value="other">
+                            📦 سایر
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        حساب مقصد
+                    </label>
+
+                    <select id="treasuryTransferTo">
+
+                        <option value="bank">
+                            🏦 بانک
+                        </option>
+
+                        <option value="cash">
+                            💵 صندوق
+                        </option>
+
+                        <option value="pos">
+                            💳 کارت‌خوان
+                        </option>
+
+                        <option value="other">
+                            📦 سایر
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="treasury-transfer-info">
+
+                🔄 انتقال بین حساب‌ها موجودی کل خزانه را تغییر نمی‌دهد؛
+                فقط موجودی حساب مبدأ کم و به حساب مقصد اضافه می‌شود.
+
+            </div>
+
+        </div>
+
+
+        <!-- مبلغ -->
+
+        <div class="form-group">
+
+            <label>
+                مبلغ (ریال)
+            </label>
+
+            <input
+                id="treasuryAmount"
+                type="number"
+                min="1"
+            >
+
+        </div>
+
+
+        <!-- تاریخ -->
+
+        <div class="form-group">
+
+            <label>
+                تاریخ
+            </label>
+
+            <input
+                id="treasuryDate"
+                type="text"
+            >
+
+        </div>
+
+
+        <!-- طرف حساب -->
+
+        <div class="form-group">
+
+            <label>
+                طرف حساب
+            </label>
+
+            <input
+                id="treasuryParty"
+                type="text"
+                placeholder="مشتری / فروشنده / ..."
+            >
+
+        </div>
+
+
+        <!-- روش پرداخت -->
+
+        <div
+            id="treasuryMethodGroup"
+            class="form-group"
+        >
+
+            <label>
+                روش پرداخت
+            </label>
+
+            <select id="treasuryMethod">
+
+                <option value="cash">
+                    نقدی
+                </option>
+
+                <option value="pos">
+                    کارت‌خوان
+                </option>
+
+                <option value="bank">
+                    انتقال بانکی
+                </option>
+
+                <option value="cheque">
+                    چک
+                </option>
+
+                <option value="other">
+                    سایر
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- شماره پیگیری -->
+
+        <div class="form-group">
+
+            <label>
+                شماره پیگیری
+            </label>
+
+            <input
+                id="treasuryTracking"
+                type="text"
+            >
+
+        </div>
+
+
+        <!-- شماره فاکتور -->
+
+        <div class="form-group">
+
+            <label>
+                شماره فاکتور
+            </label>
+
+            <input
+                id="treasuryInvoiceNo"
+                type="text"
+            >
+
+        </div>
+
+
+        <!-- اطلاعات چک -->
+
+        <div
+            id="checkFields"
+            class="full-width"
+            style="display:none;"
+        >
+
+            <div class="treasury-form">
+
+                <div class="form-group">
+
+                    <label>
+                        شماره چک
+                    </label>
+
+                    <input
+                        id="treasuryCheckNo"
+                        type="text"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        بانک چک
+                    </label>
+
+                    <input
+                        id="treasuryCheckBank"
+                        type="text"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        تاریخ سررسید
+                    </label>
+
+                    <input
+                        id="treasuryCheckDueDate"
+                        type="text"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- شرح -->
+
+        <div class="form-group full-width">
+
+            <label>
+                شرح
+            </label>
+
+            <textarea
+                id="treasuryDescription"
+                placeholder="شرح تراکنش"
+            ></textarea>
+
+        </div>
+
+
+        <!-- دکمه‌ها -->
+
+        <div class="form-buttons">
+
+            <button
+                type="button"
+                id="treasurySaveBtn"
+                class="save-btn"
+                onclick="saveTreasuryTransaction()"
+            >
+                💰 ثبت تراکنش
+            </button>
+
+
+            <button
+                type="button"
+                class="cancel-btn"
+                onclick="resetTreasuryForm()"
+            >
+                ✖ پاک کردن
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     گردش خزانه
+========================================== -->
+
+<div class="card">
+
+    <h3>
+        گردش خزانه
+    </h3>
+
+
+    <div class="treasury-filters">
+
+
+        <input
+            id="treasurySearch"
+            type="text"
+            placeholder="جستجو..."
+            oninput="filterTreasury()"
+        >
+
+
+        <select
+            id="treasuryFilterType"
+            onchange="filterTreasury()"
+        >
+
+            <option value="">
+                همه تراکنش‌ها
+            </option>
+
+            <option value="in">
+                دریافت
+            </option>
+
+            <option value="out">
+                پرداخت
+            </option>
+
+            <option value="transfer">
+                انتقال
+            </option>
+
+        </select>
+
+
+        <select
+            id="treasuryFilterAccount"
+            onchange="filterTreasury()"
+        >
+
+            <option value="">
+                همه حساب‌ها
+            </option>
+
+            <option value="cash">
+                صندوق
+            </option>
+
+            <option value="bank">
+                بانک
+            </option>
+
+            <option value="pos">
+                کارت‌خوان
+            </option>
+
+            <option value="other">
+                سایر
+            </option>
+
+        </select>
+
+
+        <select
+            id="treasuryFilterMethod"
+            onchange="filterTreasury()"
+        >
+
+            <option value="">
+                همه روش‌های پرداخت
+            </option>
+
+            <option value="cash">
+                نقدی
+            </option>
+
+            <option value="pos">
+                کارت‌خوان
+            </option>
+
+            <option value="bank">
+                انتقال بانکی
+            </option>
+
+            <option value="cheque">
+                چک
+            </option>
+
+            <option value="other">
+                سایر
+            </option>
+
+        </select>
+
+
+        <div class="treasury-date-picker">
+
+            <input
+                id="treasuryFromDate"
+                type="text"
+                placeholder="از تاریخ"
+                autocomplete="off"
+                readonly
+            >
+
+            <div
+                id="treasuryFromCalendar"
+                class="treasury-calendar"
+            ></div>
+
+        </div>
+
+
+        <div class="treasury-date-picker">
+
+            <input
+                id="treasuryToDate"
+                type="text"
+                placeholder="تا تاریخ"
+                autocomplete="off"
+                readonly
+            >
+
+            <div
+                id="treasuryToCalendar"
+                class="treasury-calendar"
+            ></div>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="treasury-export-btn"
+            onclick="exportTreasuryExcel()"
+        >
+            📊 خروجی اکسل
+        </button>
+
+
+        <button
+            type="button"
+            id="applyTreasuryFilterBtn"
+            onclick="filterTreasury()"
+        >
+            🔎 اعمال فیلتر
+        </button>
+
+
+        <button
+            type="button"
+            onclick="stlpBulkDeleteTreasuryTransactions()"
+        >
+            🗑 حذف گروهی
+        </button>
+
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        <input type="checkbox" onchange="stlpToggleCheckboxGroup(this, '.treasury-check')" title="انتخاب همه">
+                    </th>
+
+                    <th>
+                        ردیف
+                    </th>
+
+                    <th>
+                        تاریخ
+                    </th>
+
+                    <th>
+                        نوع
+                    </th>
+
+                    <th>
+                        حساب
+                    </th>
+
+                    <th>
+                        مبلغ
+                    </th>
+
+                    <th>
+                        طرف حساب
+                    </th>
+
+                    <th>
+                        روش پرداخت
+                    </th>
+
+                    <th>
+                        شماره فاکتور
+                    </th>
+
+                    <th>
+                        پیگیری
+                    </th>
+
+                    <th>
+                        چک
+                    </th>
+
+                    <th>
+                        شرح
+                    </th>
+
+                    <th>
+                        مانده حساب
+                    </th>
+
+                    <th>
+                        عملیات
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="treasuryTable"></tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- =====================================================
+     تب «حساب‌ها» - مدیریت حساب‌های خزانه
+===================================================== -->
+
+<div id="accountsPanel" class="card" style="display:none;">
+
+    <h3>
+        🏦 مدیریت حساب‌های خزانه
+    </h3>
+
+    <p style="color:#aaa; font-size:13px; margin-top:-8px;">
+        هر تعداد حساب (صندوق، بانک، کارت‌خوان، سایر) که نیاز دارید اضافه کنید.
+        چک‌ها هم می‌توانند در هرکدام از این حساب‌ها بنشینند؛ کافی است هنگام ثبت چک
+        همان حساب را از لیست «حساب» انتخاب کنید.
+    </p>
+
+    <div class="treasury-add-account-form">
+
+        <div class="form-group">
+            <label>نام حساب</label>
+            <input id="newAccName" type="text" placeholder="مثلاً بانک ملت">
+        </div>
+
+        <div class="form-group">
+            <label>نوع</label>
+            <select id="newAccType">
+                <option value="bank">🏦 بانک</option>
+                <option value="cash">💵 صندوق</option>
+                <option value="pos">💳 کارت‌خوان</option>
+                <option value="online">🌐 آنلاین</option>
+                <option value="other">📦 سایر</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>شماره شبا (اختیاری)</label>
+            <input id="newAccSheba" type="text" placeholder="IR...">
+        </div>
+
+        <button type="button" onclick="stlpAddTreasuryAccountUI()">
+            ➕ افزودن حساب
+        </button>
+
+    </div>
+
+    <h3>
+        💰 حساب نقدیِ حواله‌ها
+    </h3>
+
+    <p style="color:#aaa; font-size:13px; margin-top:-8px;">
+        وقتی حواله‌ی فروش یا خریدِ نقدی تأیید می‌شود، پولش خودکار به یکی از
+        حساب‌های بالا ثبت می‌شود — اینجا مشخص کنید کدام حساب (پیش‌فرض: صندوق).
+    </p>
+
+    <div class="treasury-add-account-form">
+
+        <div class="form-group">
+            <label>دریافت نقدیِ حواله‌های فروش</label>
+            <select id="deliverySalesAccount"></select>
+        </div>
+
+        <div class="form-group">
+            <label>پرداخت نقدیِ حواله‌های خرید</label>
+            <select id="deliveryPurchaseAccount"></select>
+        </div>
+
+        <button type="button" onclick="stlpSaveDeliveryTreasurySettingsUI()">
+            💾 ذخیره تنظیمات
+        </button>
+
+    </div>
+
+    <h3>موجودی همه حساب‌ها</h3>
+
+    <div class="treasury-accounts-dash" id="treasuryAccountsDash">
+
+        <!-- کارت‌های حساب با دکمه حذف، به‌صورت پویا رندر می‌شوند -->
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     تب «حسابداری» - سرفصل حساب‌ها، اسناد، دفتر کل، تراز و صورت‌های مالی
+===================================================== -->
+
+<div id="acctPanel" class="card" style="display:none;">
+
+    <h3>📚 حسابداری</h3>
+
+    <p style="color:#aaa; font-size:13px; margin-top:-8px;">
+        یک دفتر حسابداری واقعی و دوطرفه — هر تراکنش خزانه (دریافت، پرداخت، انتقال)
+        و هر فاکتور/خرید نقدی خودکار سند بدهکار/بستانکار می‌سازد. سند دستی هم می‌توانید ثبت کنید.
+    </p>
+
+    <div class="treasury-tabs" id="acctSubTabs" style="margin-bottom:16px; flex-wrap:wrap;">
+
+        <button type="button" id="acctTabBtn-dashboard" class="treasury-tab-btn active" onclick="stlpAcctGoTab('dashboard')">📊 داشبورد</button>
+        <button type="button" id="acctTabBtn-accounts" class="treasury-tab-btn" onclick="stlpAcctGoTab('accounts')">📁 سرفصل حساب‌ها</button>
+        <button type="button" id="acctTabBtn-journal" class="treasury-tab-btn" onclick="stlpAcctGoTab('journal')">📝 اسناد حسابداری</button>
+        <button type="button" id="acctTabBtn-ledger" class="treasury-tab-btn" onclick="stlpAcctGoTab('ledger')">📖 دفتر کل</button>
+        <button type="button" id="acctTabBtn-trial" class="treasury-tab-btn" onclick="stlpAcctGoTab('trial')">⚖️ تراز آزمایشی</button>
+        <button type="button" id="acctTabBtn-balance" class="treasury-tab-btn" onclick="stlpAcctGoTab('balance')">🏦 ترازنامه</button>
+        <button type="button" id="acctTabBtn-income" class="treasury-tab-btn" onclick="stlpAcctGoTab('income')">📈 سود و زیان</button>
+        <button type="button" id="acctTabBtn-ar" class="treasury-tab-btn" onclick="stlpAcctGoTab('ar')">👥 مانده مشتریان</button>
+        <button type="button" id="acctTabBtn-ap" class="treasury-tab-btn" onclick="stlpAcctGoTab('ap')">🚚 مانده تأمین‌کنندگان</button>
+
+    </div>
+
+    <div id="acctContent"></div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================
+     SheetJS
+========================================== -->
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+
+<!-- =========================================
+     App
+========================================== -->
+
+<script src="app.js"></script>
+
+
+<!-- =========================================
+     دسترسی
+========================================== -->
+
+<script>
+stlpRequirePermission("treasury");
+</script>
+
+
+<!-- =========================================
+     تقویم فیلتر خزانه
+========================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    const fromDate =
+        document.getElementById(
+            "treasuryFromDate"
+        );
+
+
+    const toDate =
+        document.getElementById(
+            "treasuryToDate"
+        );
+
+
+    if (!fromDate || !toDate) {
+
+        console.log(
+            "فیلدهای تاریخ پیدا نشدند"
+        );
+
+        return;
+
+    }
+
+
+    function createDateInput(input) {
+
+
+        input.addEventListener(
+            "click",
+            function () {
+
+
+                const old =
+                    document.getElementById(
+                        "simpleTreasuryCalendar"
+                    );
+
+
+                if (old) {
+
+                    old.remove();
+
+                }
+
+
+                const calendar =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                calendar.id =
+                    "simpleTreasuryCalendar";
+
+
+                calendar.style.position =
+                    "absolute";
+
+
+                calendar.style.zIndex =
+                    "999999";
+
+
+                calendar.style.background =
+                    "#ffffff";
+
+
+                calendar.style.color =
+                    "#111";
+
+
+                calendar.style.border =
+                    "1px solid #0fa37f";
+
+
+                calendar.style.borderRadius =
+                    "12px";
+
+
+                calendar.style.padding =
+                    "12px";
+
+
+                calendar.style.boxShadow =
+                    "0 8px 30px rgba(0,0,0,.25)";
+
+
+                calendar.style.width =
+                    "280px";
+
+
+                calendar.style.direction =
+                    "rtl";
+
+
+                let now =
+                    new Date();
+
+
+                let gy =
+                    now.getFullYear();
+
+
+                let gm =
+                    now.getMonth() + 1;
+
+
+                let gd =
+                    now.getDate();
+
+
+                function toJalali(
+                    gy,
+                    gm,
+                    gd
+                ) {
+
+
+                    let g_d_m = [
+
+                        0,
+                        31,
+                        59,
+                        90,
+                        120,
+                        151,
+                        181,
+                        212,
+                        243,
+                        273,
+                        304,
+                        334
+
+                    ];
+
+
+                    let gy2 =
+                        gm > 2
+                            ? gy + 1
+                            : gy;
+
+
+                    let days =
+                        355666 +
+                        365 * gy +
+                        Math.floor(
+                            (gy2 + 3) / 4
+                        ) -
+                        Math.floor(
+                            (gy2 + 99) / 100
+                        ) +
+                        Math.floor(
+                            (gy2 + 399) / 400
+                        ) +
+                        gd +
+                        g_d_m[gm - 1];
+
+
+                    let jy =
+                        -1595 +
+                        33 *
+                        Math.floor(
+                            days / 12053
+                        );
+
+
+                    days %= 12053;
+
+
+                    jy +=
+                        4 *
+                        Math.floor(
+                            days / 1461
+                        );
+
+
+                    days %= 1461;
+
+
+                    if (days > 365) {
+
+
+                        jy +=
+                            Math.floor(
+                                (days - 1) / 365
+                            );
+
+
+                        days =
+                            (days - 1) % 365;
+
+                    }
+
+
+                    let jm;
+
+
+                    if (days < 186) {
+
+
+                        jm =
+                            1 +
+                            Math.floor(
+                                days / 31
+                            );
+
+                    } else {
+
+
+                        jm =
+                            7 +
+                            Math.floor(
+                                (days - 186) / 30
+                            );
+
+                    }
+
+
+                    let jd;
+
+
+                    if (days < 186) {
+
+
+                        jd =
+                            1 +
+                            days % 31;
+
+                    } else {
+
+
+                        jd =
+                            1 +
+                            (days - 186) % 30;
+
+                    }
+
+
+                    return {
+
+                        y: jy,
+                        m: jm,
+                        d: jd
+
+                    };
+
+                }
+
+
+                const today =
+                    toJalali(
+                        gy,
+                        gm,
+                        gd
+                    );
+
+
+                const months = [
+
+                    "فروردین",
+                    "اردیبهشت",
+                    "خرداد",
+                    "تیر",
+                    "مرداد",
+                    "شهریور",
+                    "مهر",
+                    "آبان",
+                    "آذر",
+                    "دی",
+                    "بهمن",
+                    "اسفند"
+
+                ];
+
+
+                let year =
+                    today.y;
+
+
+                let month =
+                    today.m;
+
+
+                function render() {
+
+
+                    calendar.innerHTML = `
+
+                        <div style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            margin-bottom:10px;
+                        ">
+
+                            <button
+                                id="prevMonth"
+                                type="button"
+                                style="
+                                    border:0;
+                                    background:#0fa37f;
+                                    color:white;
+                                    border-radius:6px;
+                                    width:32px;
+                                    height:32px;
+                                    cursor:pointer;
+                                ">
+                                ‹
+                            </button>
+
+
+                            <strong
+                                style="
+                                    color:#0fa37f;
+                                ">
+                                ${months[month - 1]}
+                                ${year}
+                            </strong>
+
+
+                            <button
+                                id="nextMonth"
+                                type="button"
+                                style="
+                                    border:0;
+                                    background:#0fa37f;
+                                    color:white;
+                                    border-radius:6px;
+                                    width:32px;
+                                    height:32px;
+                                    cursor:pointer;
+                                ">
+                                ›
+                            </button>
+
+                        </div>
+
+
+                        <div style="
+                            display:grid;
+                            grid-template-columns:
+                                repeat(7,1fr);
+                            gap:4px;
+                            text-align:center;
+                        ">
+
+                            <b>ش</b>
+                            <b>ی</b>
+                            <b>د</b>
+                            <b>س</b>
+                            <b>چ</b>
+                            <b>پ</b>
+                            <b>ج</b>
+
+                        </div>
+
+
+                        <div
+                            id="calendarDays"
+                            style="
+                                display:grid;
+                                grid-template-columns:
+                                    repeat(7,1fr);
+                                gap:4px;
+                                margin-top:6px;
+                            ">
+                        </div>
+
+
+                        <button
+                            id="todayButton"
+                            type="button"
+                            style="
+                                width:100%;
+                                margin-top:10px;
+                                padding:8px;
+                                border:0;
+                                border-radius:7px;
+                                background:#e8f8f3;
+                                color:#0fa37f;
+                                cursor:pointer;
+                                font-family:inherit;
+                                font-weight:bold;
+                            ">
+                            امروز
+                        </button>
+
+                    `;
+
+
+                    const daysBox =
+                        calendar.querySelector(
+                            "#calendarDays"
+                        );
+
+
+                    let daysInMonth;
+
+
+                    if (month <= 6) {
+
+                        daysInMonth = 31;
+
+                    } else if (month <= 11) {
+
+                        daysInMonth = 30;
+
+                    } else {
+
+                        const remainder =
+                            (
+                                (
+                                    25 * year +
+                                    11
+                                ) %
+                                33 +
+                                33
+                            ) %
+                            33;
+
+
+                        const isLeap =
+                            remainder < 8;
+
+
+                        daysInMonth =
+                            isLeap
+                                ? 30
+                                : 29;
+
+                    }
+
+
+                    function jalaliToGregorian(
+                        jy,
+                        jm,
+                        jd
+                    ) {
+
+
+                        let gy =
+                            jy + 621;
+
+
+                        let days;
+
+
+                        if (jm <= 6) {
+
+                            days =
+                                (jm - 1) * 31 +
+                                (jd - 1);
+
+                        } else {
+
+                            days =
+                                186 +
+                                (jm - 7) * 30 +
+                                (jd - 1);
+
+                        }
+
+
+                        let date =
+                            new Date(
+                                gy,
+                                2,
+                                20
+                            );
+
+
+                        date.setDate(
+                            date.getDate() +
+                            days
+                        );
+
+
+                        return date;
+
+                    }
+
+
+                    let firstDate =
+                        jalaliToGregorian(
+                            year,
+                            month,
+                            1
+                        );
+
+
+                    let startDay =
+                        (
+                            firstDate.getDay() +
+                            1
+                        ) % 7;
+
+
+                    for (
+                        let i = 0;
+                        i < startDay;
+                        i++
+                    ) {
+
+
+                        const empty =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        daysBox.appendChild(
+                            empty
+                        );
+
+                    }
+
+
+                    for (
+                        let day = 1;
+                        day <= daysInMonth;
+                        day++
+                    ) {
+
+
+                        const button =
+                            document.createElement(
+                                "button"
+                            );
+
+
+                        button.type =
+                            "button";
+
+
+                        button.textContent =
+                            day;
+
+
+                        button.style.border =
+                            "0";
+
+
+                        button.style.borderRadius =
+                            "6px";
+
+
+                        button.style.padding =
+                            "7px 2px";
+
+
+                        button.style.cursor =
+                            "pointer";
+
+
+                        button.style.background =
+                            "#f1f1f1";
+
+
+                        button.style.fontFamily =
+                            "inherit";
+
+
+                        button.addEventListener(
+                            "click",
+                            function () {
+
+
+                                input.value =
+                                    year +
+                                    "/" +
+                                    String(month)
+                                        .padStart(
+                                            2,
+                                            "0"
+                                        ) +
+                                    "/" +
+                                    String(day)
+                                        .padStart(
+                                            2,
+                                            "0"
+                                        );
+
+
+                                input.dispatchEvent(
+                                    new Event(
+                                        "input",
+                                        {
+                                            bubbles:
+                                                true
+                                        }
+                                    )
+                                );
+
+
+                                calendar.remove();
+
+                            }
+                        );
+
+
+                        daysBox.appendChild(
+                            button
+                        );
+
+                    }
+
+
+                    calendar
+                        .querySelector(
+                            "#prevMonth"
+                        )
+                        .onclick =
+                        function () {
+
+
+                            month--;
+
+
+                            if (month < 1) {
+
+                                month = 12;
+                                year--;
+
+                            }
+
+
+                            render();
+
+                        };
+
+
+                    calendar
+                        .querySelector(
+                            "#nextMonth"
+                        )
+                        .onclick =
+                        function () {
+
+
+                            month++;
+
+
+                            if (month > 12) {
+
+                                month = 1;
+                                year++;
+
+                            }
+
+
+                            render();
+
+                        };
+
+
+                    calendar
+                        .querySelector(
+                            "#todayButton"
+                        )
+                        .onclick =
+                        function () {
+
+
+                            input.value =
+                                today.y +
+                                "/" +
+                                String(today.m)
+                                    .padStart(
+                                        2,
+                                        "0"
+                                    ) +
+                                "/" +
+                                String(today.d)
+                                    .padStart(
+                                        2,
+                                        "0"
+                                    );
+
+
+                            input.dispatchEvent(
+                                new Event(
+                                    "input",
+                                    {
+                                        bubbles:
+                                            true
+                                    }
+                                )
+                            );
+
+
+                            calendar.remove();
+
+                        };
+
+                }
+
+
+                document.body.appendChild(
+                    calendar
+                );
+
+
+                const rect =
+                    input.getBoundingClientRect();
+
+
+                calendar.style.top =
+                    (
+                        rect.bottom +
+                        window.scrollY +
+                        5
+                    ) + "px";
+
+
+                calendar.style.left =
+                    (
+                        rect.left +
+                        window.scrollX
+                    ) + "px";
+
+
+                render();
+
+            }
+        );
+
+    }
+
+
+    createDateInput(fromDate);
+
+    createDateInput(toDate);
+
+});
+
+</script>
+
+</body>
+
+</html>

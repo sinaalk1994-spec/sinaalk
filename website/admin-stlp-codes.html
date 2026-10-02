@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>STLP — Admin Code Generator</title>
+  <style>
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,'Vazirmatn',sans-serif;
+      background:#050608;
+      color:#eaecef;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+    }
+    .card{
+      background:rgba(0,0,0,0.8);
+      border-radius:18px;
+      padding:24px;
+      width:95%;
+      max-width:480px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.7);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    h1{
+      margin-top:0;
+      margin-bottom:16px;
+      font-size:20px;
+      text-align:center;
+    }
+    label{
+      display:block;
+      margin-top:10px;
+      font-size:14px;
+    }
+    input{
+      width:100%;
+      padding:9px;
+      border-radius:10px;
+      border:1px solid #333;
+      background:#0b0b0b;
+      color:#fff;
+      font-family:inherit;
+      font-size:14px;
+    }
+    button{
+      margin-top:14px;
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:0;
+      background:linear-gradient(90deg,#0fa37f,#e24a38);
+      color:#041214;
+      font-weight:700;
+      cursor:pointer;
+      font-size:14px;
+    }
+    button:hover{
+      opacity:0.9;
+    }
+    .hint{
+      font-size:12px;
+      color:#a0a7b0;
+      margin-top:8px;
+    }
+    .error{
+      margin-top:10px;
+      font-size:13px;
+      color:#ff9999;
+    }
+    .success{
+      margin-top:10px;
+      font-size:13px;
+      color:#8fffa3;
+    }
+    .divider{
+      height:1px;
+      background:linear-gradient(90deg,transparent,#444,transparent);
+      margin:18px 0;
+    }
+  </style>
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/refresh.css">
+<link rel="stylesheet" href="css/site-complete.css">
+<link rel="stylesheet" href="css/site-unified.css"></head>
+<body class="refresh"><header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="images/logo.png" alt="STLP">
+      <div><div class="brand-name">STLP</div><div class="brand-sub">صبا تجهیز لاله پارسه</div></div>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" >خانه</a>
+      <a href="shop.html">فروشگاه</a>
+      <a href="brands.html">برندها</a>
+      <a href="about.html">درباره ما</a>
+      <a href="verify.html">تأیید اصالت</a>
+      <a href="track.html">پیگیری سفارش</a>
+    </nav>
+    <div class="header-right">
+      <a href="cart.html" class="cart-link" aria-label="سبد خرید">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e7efec" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;"></span>
+      </a>
+      
+      <button class="menu-btn" onclick="openMenu()" aria-label="منو">☰</button>
+    </div>
+  </div>
+</header><div id="mobile-menu">
+  <div class="sheet">
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+    <a href="index.html">خانه</a>
+    <a href="shop.html">فروشگاه</a>
+    <a href="brands.html">برندها</a>
+    <a href="about.html">درباره ما</a>
+    <a href="verify.html">تأیید اصالت</a>
+    <a href="track.html">پیگیری سفارش</a>
+  </div>
+</div>
+
+<div class="card" id="login-card">
+  <h1>STLP Internal — Admin</h1>
+  <div class="hint">این صفحه فقط برای استفاده داخلی STLP است و در سایت لینک نشده است.</div>
+  <div class="error" id="login-error">ابتدا باید از طریق داشبورد وارد شوید.</div>
+  <button onclick="location.href='/erp/login.html'">ورود به داشبورد</button>
+</div>
+
+<div class="card" id="admin-card" style="display:none;">
+  <h1>تولید سریال اصالت STLP</h1>
+
+  <label>سال (YYYY)</label>
+  <input id="gen-year" placeholder="مثلاً 2025">
+
+  <label>شروع از شماره (NNNNNN)</label>
+  <input id="gen-start" type="number" min="1" value="1">
+
+  <label>تعداد کد برای تولید</label>
+  <input id="gen-count" type="number" min="1" max="10000" value="10">
+
+  <button onclick="generateCsv()">تولید و دانلود فایل CSV</button>
+
+  <div class="hint">
+    فرمت کدها: <code>STLP-YYYY-NNNNNN-C</code><br>
+    C بر اساس Checksum محاسبه می‌شود و همان الگوریتمی است که در صفحهٔ Verify استفاده می‌شود.
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="hint">
+    پیشنهاد: این فایل CSV را برای چاپ QR و آرشیو داخلی استفاده کنید.  
+    این صفحه را در جایی از سایت لینک نکنید و فقط خودتان آدرس آن را بدانید.
+  </div>
+
+  <div id="admin-msg" class="success" style="display:none;"></div>
+</div>
+
+<script>
+/* ---------------------------
+   دسترسی این صفحه دیگر با یک رمزِ ثابت که مستقیماً داخلِ همین کدِ
+   جاوااسکریپت نوشته شده بود کنترل نمی‌شود (هر کسی سورسِ صفحه را
+   می‌دید، آن رمز را هم می‌دید؛ و حتی بدونِ دیدنِ رمز، تابعِ تولیدِ کد
+   از کنسولِ مرورگر مستقیماً صدازدنی بود). حالا هم نشستِ ادمین و هم
+   خودِ تولیدِ کدها، هر دو سمتِ سرور و پشتِ همون نشستِ داشبورد است —
+   دقیقاً همون سیستمِ نشست/CSRF که store-admin.js برای مدیریتِ
+   فروشگاه آنلاین استفاده می‌کند.
+----------------------------*/
+let stlpAdminCodesCsrf = "";
+
+async function stlpAdminCodesRequest(path, data){
+  const r = await fetch(path, data ? {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-CSRF-Token": stlpAdminCodesCsrf },
+    body: JSON.stringify(data)
+  } : {});
+  const result = await r.json();
+  if(!r.ok) throw new Error(result.error || "خطا");
+  return result;
+}
+
+fetch("/api/session").then(function(r){ return r.json(); }).then(function(s){
+  if(s.authenticated){
+    stlpAdminCodesCsrf = s.csrf;
+    document.getElementById("login-card").style.display = "none";
+    document.getElementById("admin-card").style.display = "block";
+  }
+}).catch(function(){});
+
+/* ---------------------------
+   تولید CSV برای سریال‌ها — الگوریتمِ چک‌سام (STLP-YYYY-NNNNNN-C)
+   حالا فقط سمتِ سرور اجرا می‌شود؛ این صفحه فقط نتیجه را می‌گیرد
+----------------------------*/
+async function generateCsv(){
+  const yearInput = document.getElementById("gen-year").value.trim();
+  const startInput = document.getElementById("gen-start").value;
+  const countInput = document.getElementById("gen-count").value;
+  const msg = document.getElementById("admin-msg");
+
+  const year = Number(yearInput || new Date().getFullYear());
+  const start = Math.max(1, parseInt(startInput||"1",10));
+  const count = Math.max(1, Math.min(10000, parseInt(countInput||"10",10)));
+
+  if(!/^\d{4}$/.test(String(year))){
+    alert("سال باید 4 رقمی باشد (مثلاً 2025)");
+    return;
+  }
+
+  let codes;
+  try{
+    const result = await stlpAdminCodesRequest("/api/admin-codes/generate", { year: year, start: start, count: count });
+    codes = result.codes;
+  }catch(error){
+    alert("❌ " + error.message);
+    return;
+  }
+
+  let csv = "code\n" + codes.join("\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `stlp_codes_${year}_${start}_count${count}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  msg.style.display="block";
+  msg.innerText = `تعداد ${count} کد برای سال ${year} تولید و دانلود شد.`;
+}
+</script>
+<footer class="site-footer">
+  <div class="container grid grid-3">
+    <div>
+      <h4>STLP — صبا تجهیز لاله پارسه</h4>
+      <div class="muted">شماره ثبت ۶۴۷۲۰۸ &nbsp;|&nbsp; شناسه ملی ۱۴۰۱۴۲۴۵۵۱۹</div>
+    </div>
+    <div>
+      <h4>دسترسی سریع</h4>
+      <div class="muted"><a href="shop.html">محصولات</a> &nbsp;·&nbsp; <a href="brands.html">برندها</a> &nbsp;·&nbsp; <a href="about.html">درباره ما</a> &nbsp;·&nbsp; <a href="verify.html">تأیید اصالت</a></div>
+    </div>
+    <div>
+      <h4>تماس</h4>
+      <div class="muted">۰۹۱۲۰۶۱۳۰۰۲ &nbsp;·&nbsp; info@stlp.ir</div>
+    </div>
+  </div>
+  <div class="footer-bottom"><a href="contact.html">تماس و راهنمای خرید</a> · © STLP — تمامی حقوق محفوظ است</div>
+</footer><script src="js/site.js"></script><script src="js/refresh.js"></script></body>
+</html>

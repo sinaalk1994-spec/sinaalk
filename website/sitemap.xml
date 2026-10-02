@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://stlp.ir/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://stlp.ir/shop.html</loc>
+  </url>
+
+  <url>
+    <loc>https://stlp.ir/cart.html</loc>
+  </url>
+
+  <url>
+    <loc>https://stlp.ir/checkout.html</loc>
+  </url>
+
+  <url>
+    <loc>https://stlp.ir/products.html</loc>
+  </url>
+
+  <url>
+    <loc>https://stlp.ir/about.html</loc>
+  </url>
+
+  <url>
+    <loc>https://stlp.ir/verify.html</loc>
+  </url>
+
+</urlset>

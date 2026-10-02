@@ -1,0 +1,11 @@
+erp/server/data/
+website/store-data/
+changes-before-store-sso/
+__pycache__/
+node_modules/
+*.db
+*.sqlite3
+*.bak-*
+*.corrupted-backup-*
+.claude/
+stlp/

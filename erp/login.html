@@ -1,0 +1,229 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+<script src="storage-sync.js"></script>
+  <title>ورود به سیستم STLP</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+
+    .login-wrap {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-card {
+        max-width: 380px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .login-logo {
+        width: 110px;
+        height: 110px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+
+    .login-company-name {
+        color: #00ffca;
+        font-size: 18px;
+        font-weight: 800;
+        margin-bottom: 18px;
+    }
+
+    .login-card h2 {
+        margin-top: 0;
+    }
+
+    .login-field {
+        text-align: right;
+        margin-bottom: 14px;
+    }
+
+    .login-field label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: #ccc;
+    }
+
+    .login-input-wrap {
+        position: relative;
+    }
+
+    .login-field input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px 13px;
+        border-radius: 8px;
+        border: 1px solid rgba(15,163,127,.45);
+        font-family: inherit;
+        font-size: 14px;
+        background: rgba(255,255,255,.96);
+        color: #111;
+        outline: none;
+    }
+
+    .login-field input:focus {
+        border-color: #00ffca;
+        box-shadow: 0 0 0 3px rgba(0,255,202,.10);
+    }
+
+    .toggle-pass-btn {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+        padding: 4px;
+        color: #555;
+    }
+
+    .login-submit-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        margin-top: 6px;
+    }
+
+    .login-note {
+        margin-top: 16px;
+        font-size: 12px;
+        color: #999;
+        line-height: 1.8;
+    }
+
+    .login-error {
+        display: none;
+        background: rgba(220,53,69,.15);
+        border: 1px solid #dc3545;
+        color: #ffb3ba;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 13px;
+        margin-bottom: 14px;
+        text-align: right;
+    }
+
+  </style>
+</head>
+<body>
+<div class="overlay">
+
+  <div class="login-wrap">
+
+    <div class="card login-card">
+
+        <img src="assets/logo.png" class="login-logo" alt="لوگو">
+
+        <div class="login-company-name">صبا تجهیز لاله پارسه</div>
+
+        <h2>ورود به سیستم STLP</h2>
+
+        <div id="loginError" class="login-error"></div>
+
+        <form id="loginForm" onsubmit="return stlpHandleLoginSubmit(event)">
+
+            <div class="login-field">
+                <label>نام کاربری</label>
+                <input id="username" type="text" autocomplete="username" autofocus>
+            </div>
+
+            <div class="login-field">
+                <label>رمز عبور</label>
+                <div class="login-input-wrap">
+                    <input id="password" type="password" autocomplete="current-password">
+                    <button type="button" class="toggle-pass-btn" onclick="stlpTogglePasswordVisibility()">👁</button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-submit-btn" id="loginSubmitBtn">ورود</button>
+
+        </form>
+
+        <div class="login-note">
+            🔒 اطلاعات ورود شما به‌صورت رمزنگاری‌شده (SHA-256) ذخیره می‌شود.<br>
+            بعد از چند بار تلاش ناموفق، حساب موقتاً قفل می‌شود.
+        </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+
+function stlpTogglePasswordVisibility() {
+
+    const field = document.getElementById("password");
+
+    field.type = field.type === "password" ? "text" : "password";
+
+}
+
+function stlpShowLoginError(message) {
+
+    const box = document.getElementById("loginError");
+
+    box.textContent = message;
+    box.style.display = "block";
+
+}
+
+function stlpHideLoginError() {
+
+    const box = document.getElementById("loginError");
+
+    box.style.display = "none";
+    box.textContent = "";
+
+}
+
+async function stlpHandleLoginSubmit(event) {
+
+    event.preventDefault();
+
+    stlpHideLoginError();
+
+    const btn = document.getElementById("loginSubmitBtn");
+
+    btn.disabled = true;
+    btn.textContent = "در حال بررسی...";
+
+    try {
+
+        await login();
+
+    } finally {
+
+        btn.disabled = false;
+        btn.textContent = "ورود";
+
+    }
+
+    return false;
+
+}
+
+// اگر از قبل وارد شده، مستقیم به صفحه اصلی برود
+
+if (
+    typeof stlpCurrentUser === "function" &&
+    stlpCurrentUser()
+) {
+
+    location.href = "home.html";
+
+}
+
+</script>
+</body>
+</html>

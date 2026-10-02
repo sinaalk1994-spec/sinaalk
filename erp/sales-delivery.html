@@ -1,0 +1,3654 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+<script src="storage-sync.js"></script>
+
+    <title>حواله‌های فروش - STLP</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+
+        #panel {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .delivery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        /* ========================================
+   دکمه و فرم تسویه حواله غیرنقدی
+======================================== */
+
+.settle-delivery-btn {
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 14px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 6px;
+}
+
+.settle-delivery-btn:hover {
+    background: #0b5ed7;
+}
+
+.settle-form-group {
+    margin-bottom: 14px;
+    text-align: right;
+}
+
+.settle-form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 700;
+    color: #333;
+}
+
+.settle-form-group input,
+.settle-form-group select {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.delivery-quick-filter {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.delivery-quick-filter button {
+    background: rgba(255,255,255,.08);
+    border: 1px solid #0fa37f66;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.delivery-quick-filter button.active {
+    background: #0fa37f;
+    border-color: #0fa37f;
+}
+
+
+.delivery-info {
+            background: rgba(15,163,127,.08);
+            border: 1px solid #0fa37f55;
+            border-radius: 10px;
+            padding: 15px;
+            line-height: 1.9;
+        }
+
+        .delivery-table-container {
+            overflow-x: auto;
+        }
+
+        .delivery-table {
+            width: 100%;
+            min-width: 1100px;
+            border-collapse: collapse;
+            background: white;
+            color: #111;
+        }
+
+        .delivery-table th {
+            background: #0fa37f;
+            color: white;
+            padding: 12px 8px;
+            border: 1px solid #0b8065;
+            white-space: nowrap;
+        }
+
+        .delivery-table td {
+            padding: 10px 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .delivery-table tbody tr:hover td {
+            background: #eefcf8;
+        }
+
+        .delivery-pending {
+            color: #856404;
+            background: #fff3cd;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .delivery-approved {
+            color: #146c43;
+            background: #d1e7dd;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .approve-delivery-btn {
+            border: none;
+            background: #198754;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+        }
+
+        .approve-delivery-btn:hover {
+            background: #157347;
+        }
+
+        .empty-delivery {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+        .reject-delivery-btn {
+    background: #dc2626 !important;
+    color: white !important;
+    margin-right: 5px;
+}
+.cancel-delivery-btn {
+    background: #ea580c !important;
+    color: white !important;
+    margin-right: 5px;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+}
+.cancel-delivery-btn:hover {
+    background: #c2410c !important;
+}
+
+.delivery-table td {
+    vertical-align: middle;
+}
+
+.delivery-table th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.delivery-table td:nth-child(8) {
+    white-space: normal;
+    min-width: 220px;
+}
+/* ========================================
+   پنجره جزئیات حواله فروش
+======================================== */
+
+.delivery-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+
+.delivery-modal.show {
+    display: flex;
+}
+
+
+.delivery-modal-box {
+    width: 100%;
+    max-width: 1100px;
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: white;
+    color: #111;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.3);
+
+    padding: 25px;
+
+    position: relative;
+}
+
+
+.delivery-modal-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+
+    padding-bottom: 15px;
+
+    border-bottom: 2px solid #0fa37f;
+}
+
+
+.delivery-modal-header h3 {
+    margin: 0;
+
+    color: #0fa37f;
+}
+
+
+
+/* اطلاعات اصلی */
+
+.delivery-detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 25px;
+}
+
+
+.delivery-detail-item {
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    padding: 12px;
+
+    line-height: 1.8;
+}
+
+
+.delivery-detail-item strong {
+    display: block;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    margin-bottom: 3px;
+}
+
+
+/* جدول کالاها */
+
+.delivery-items-title {
+    color: #0fa37f;
+
+    margin-bottom: 10px;
+}
+
+
+.delivery-items-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-bottom: 20px;
+}
+
+
+.delivery-items-table th {
+    background: #0fa37f;
+
+    color: white;
+
+    padding: 10px 8px;
+
+    border: 1px solid #0b8065;
+
+    white-space: nowrap;
+}
+
+
+.delivery-items-table td {
+    padding: 9px 8px;
+
+    border: 1px solid #ddd;
+
+    text-align: center;
+}
+
+
+.delivery-items-table tbody tr:hover td {
+    background: #eefcf8;
+}
+
+
+/* جمع فاکتور */
+
+.delivery-detail-total {
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 15px;
+}
+
+
+.delivery-detail-total-box {
+    font-size: 18px;
+
+    font-weight: bold;
+
+    color: #146c43;
+}
+
+
+/* دلیل رد */
+
+.delivery-reject-box {
+    background: #fee2e2;
+
+    border: 1px solid #fecaca;
+
+    color: #991b1b;
+
+    border-radius: 10px;
+
+    padding: 12px;
+
+    margin-top: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* موبایل */
+
+@media (max-width: 800px) {
+
+    .delivery-detail-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .delivery-detail-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .delivery-modal-box {
+        padding: 15px;
+    }
+
+}
+.delivery-number-link {
+    display: inline;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+
+    color: #0fa37f;
+    font-weight: 700;
+
+    padding: 0 !important;
+    margin: 0;
+
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.delivery-number-link:hover {
+    color: #087f63;
+    text-decoration: underline;
+}
+/* ========================================
+   پنل جستجوی حواله‌های فروش
+======================================== */
+
+.delivery-search-panel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+    padding: 14px;
+
+    background: #f8fafc;
+
+    border: 1px solid #dbe5e1;
+
+    border-radius: 10px;
+}
+
+.delivery-search-input {
+    flex: 1;
+
+    min-width: 250px;
+
+    height: 44px;
+
+    padding: 0 14px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: #111;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+}
+
+.delivery-search-input:focus {
+    border-color: #0fa37f;
+
+    box-shadow:
+        0 0 0 3px rgba(15,163,127,.12);
+}
+
+.delivery-search-clear {
+    height: 44px;
+
+    padding: 0 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #64748b;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-weight: 700;
+}
+
+.delivery-search-clear:hover {
+    background: #475569;
+}
+
+
+@media (max-width: 600px) {
+
+    .delivery-search-panel {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .delivery-search-input {
+        min-width: 0;
+        width: 100%;
+    }
+
+}
+
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="overlay">
+
+    <!-- منوی بالا -->
+
+    <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html" class="active">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+
+    <h2>
+        حواله‌های فروش
+    </h2>
+
+
+    <div id="panel">
+
+        <div class="card">
+
+            <div class="delivery-header">
+
+                <h3>
+                    مدیریت حواله‌های فروش
+                </h3>
+
+            </div>
+
+
+            <div class="delivery-info">
+
+                📦 حواله فروش بعد از ثبت نهایی فاکتور ایجاد می‌شود.
+
+                <br>
+
+                ⚠️ موجودی انبار تا زمانی که حواله تأیید نشود،
+                کسر نخواهد شد.
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                لیست حواله‌های فروش
+            </h3>
+
+            <div class="delivery-quick-filter">
+
+                <button
+                    type="button"
+                    class="delivery-quick-filter-btn active"
+                    data-filter=""
+                    onclick="stlpSetDeliveryQuickFilter('')"
+                >
+                    همه
+                </button>
+
+                <button
+                    type="button"
+                    class="delivery-quick-filter-btn"
+                    data-filter="pending-approval"
+                    onclick="stlpSetDeliveryQuickFilter('pending-approval')"
+                >
+                    🟡 در انتظار تأیید
+                </button>
+
+                <button
+                    type="button"
+                    class="delivery-quick-filter-btn"
+                    data-filter="pending-settlement"
+                    onclick="stlpSetDeliveryQuickFilter('pending-settlement')"
+                >
+                    🕒 غیرنقدی - در انتظار تسویه
+                </button>
+
+                <button
+                    type="button"
+                    class="delivery-quick-filter-btn"
+                    data-filter="settled"
+                    onclick="stlpSetDeliveryQuickFilter('settled')"
+                >
+                    ✅ تسویه‌شده
+                </button>
+
+            </div>
+
+            <div class="delivery-search-panel">
+
+    <input
+        type="text"
+        id="salesDeliverySearch"
+        class="delivery-search-input"
+        placeholder="🔎 جستجو بر اساس شماره حواله، فاکتور، مشتری، تاریخ، مبلغ، کالا و..."
+        autocomplete="off"
+    >
+
+    <button
+        type="button"
+        id="clearSalesDeliverySearch"
+        class="delivery-search-clear"
+    >
+        ✕ پاک کردن
+    </button>
+
+</div>
+
+
+            <div class="delivery-table-container">
+
+                <table class="delivery-table">
+
+                    <thead>
+
+                       <tr>
+
+    <th>ردیف</th>
+
+    <th>نوع حواله</th>
+
+    <th>شماره حواله</th>
+
+    <th>شماره فاکتور</th>
+
+    <th>تاریخ</th>
+
+    <th>مشتری / تأمین‌کننده</th>
+
+    <th>نوع خرید</th>
+
+    <th>تعداد کالا</th>
+
+    <th>شرح کالاها</th>
+
+    <th>مبلغ فاکتور</th>
+
+    <th>وضعیت</th>
+
+    <th>عملیات</th>
+
+</tr>
+
+                    </thead>
+
+
+                    <tbody id="salesDeliveryTable">
+
+                    </tbody>
+<script>
+
+// ========================================
+// فیلتر سریع فعلی صفحه حواله‌ها
+// ========================================
+
+let stlpDeliveryQuickFilter = "";
+
+function stlpSetDeliveryQuickFilter(filter) {
+
+    stlpDeliveryQuickFilter = filter;
+
+    document
+        .querySelectorAll(".delivery-quick-filter-btn")
+        .forEach(function(btn) {
+
+            btn.classList.toggle(
+                "active",
+                btn.dataset.filter === filter
+            );
+
+        });
+
+    renderSalesDeliveries();
+
+}
+
+
+function renderSalesDeliveries() {
+
+    const table = document.getElementById("salesDeliveryTable");
+
+    if (!table) {
+        return;
+    }
+
+    const deliveries = JSON.parse(
+        localStorage.getItem("salesDeliveries") || "[]"
+    );
+
+    table.innerHTML = "";
+
+    // ========================================
+    // کادر جستجو
+    // ========================================
+
+    const searchInput =
+        document.getElementById("salesDeliverySearch");
+
+    const clearButton =
+        document.getElementById("clearSalesDeliverySearch");
+
+    const searchText =
+        searchInput
+            ? String(searchInput.value || "")
+                .trim()
+                .toLowerCase()
+            : "";
+
+
+    // ========================================
+    // ساخت لیست با index اصلی
+    // ========================================
+
+    let filteredDeliveries =
+        deliveries.map(function(delivery, originalIndex) {
+
+            return {
+                delivery: delivery,
+                originalIndex: originalIndex
+            };
+
+        });
+
+
+    // ========================================
+    // جستجو
+    // ========================================
+
+    if (searchText) {
+
+        filteredDeliveries =
+            filteredDeliveries.filter(function(item) {
+
+                return JSON.stringify(item.delivery)
+                    .toLowerCase()
+                    .includes(searchText);
+
+            });
+
+    }
+
+
+    // ========================================
+    // فیلتر سریع (در انتظار تأیید / تسویه / تسویه‌شده)
+    // ========================================
+
+    if (stlpDeliveryQuickFilter) {
+
+        filteredDeliveries =
+            filteredDeliveries.filter(function(item) {
+
+                const d = item.delivery;
+
+                if (stlpDeliveryQuickFilter === "pending-approval") {
+
+                    return (
+                        d.status !== "approved" &&
+                        d.status !== "rejected"
+                    );
+
+                }
+
+                if (stlpDeliveryQuickFilter === "pending-settlement") {
+
+                    return (
+                        d.status === "approved" &&
+                        d.purchaseType === "credit" &&
+                        !d.treasuryRegistered
+                    );
+
+                }
+
+                if (stlpDeliveryQuickFilter === "settled") {
+
+                    return (
+                        d.status === "approved" &&
+                        d.purchaseType === "credit" &&
+                        d.treasuryRegistered === true
+                    );
+
+                }
+
+                return true;
+
+            });
+
+    }
+
+
+    // ========================================
+    // جدیدترین حواله بالاتر
+    // ========================================
+
+    filteredDeliveries.sort(function(a, b) {
+
+        const dateA =
+            new Date(
+                a.delivery.createdAt || 0
+            ).getTime();
+
+        const dateB =
+            new Date(
+                b.delivery.createdAt || 0
+            ).getTime();
+
+
+        if (
+            Number.isFinite(dateA) &&
+            Number.isFinite(dateB) &&
+            dateA !== dateB
+        ) {
+
+            return dateB - dateA;
+
+        }
+
+
+        return (
+            b.originalIndex -
+            a.originalIndex
+        );
+
+    });
+
+
+    // ========================================
+    // اگر هیچ حواله‌ای وجود ندارد
+    // ========================================
+
+    if (deliveries.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td
+                    colspan="12"
+                    class="empty-delivery"
+                >
+                    هنوز حواله فروشی ثبت نشده است.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    // ========================================
+    // اگر جستجو نتیجه‌ای نداشت
+    // ========================================
+
+    if (filteredDeliveries.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td
+                    colspan="12"
+                    class="empty-delivery"
+                >
+                    🔎 موردی مطابق جستجوی شما پیدا نشد.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    // ========================================
+    // نمایش حواله‌ها
+    // ========================================
+
+    filteredDeliveries.forEach(function(item) {
+
+        const delivery =
+            item.delivery;
+
+        const index =
+            item.originalIndex;
+
+
+        const row =
+            document.createElement("tr");
+
+
+        // ========================================
+        // آیا این حواله غیرنقدی و در انتظار تسویه است؟
+        // ========================================
+
+        const needsSettlement =
+            delivery.status === "approved" &&
+            delivery.purchaseType === "credit" &&
+            !delivery.treasuryRegistered;
+
+
+        // ========================================
+        // وضعیت
+        // ========================================
+
+        let statusHtml = "";
+
+
+        if (needsSettlement) {
+
+            statusHtml = `
+                <span
+                    style="
+                        display:inline-block;
+                        background:#dbeafe;
+                        color:#1e40af;
+                        padding:6px 12px;
+                        border-radius:7px;
+                        font-weight:bold;
+                    "
+                >
+                    🕒 در انتظار تسویه
+                </span>
+            `;
+
+        }
+
+        else if (delivery.status === "approved") {
+
+            statusHtml = `
+                <span
+                    style="
+                        display:inline-block;
+                        background:#dcfce7;
+                        color:#166534;
+                        padding:6px 12px;
+                        border-radius:7px;
+                        font-weight:bold;
+                    "
+                >
+                    🟢 تأیید شده
+                </span>
+            `;
+
+        }
+
+        else if (delivery.status === "rejected") {
+
+            statusHtml = `
+                <span
+                    style="
+                        display:inline-block;
+                        background:#fee2e2;
+                        color:#991b1b;
+                        padding:6px 12px;
+                        border-radius:7px;
+                        font-weight:bold;
+                    "
+                >
+                    🔴 باطل شده
+                </span>
+            `;
+
+        }
+
+        else if (delivery.status === "cancelled") {
+
+            statusHtml = `
+                <span
+                    style="
+                        display:inline-block;
+                        background:#ffedd5;
+                        color:#9a3412;
+                        padding:6px 12px;
+                        border-radius:7px;
+                        font-weight:bold;
+                    "
+                >
+                    🟠 لغو شده (بعد از تأیید)
+                </span>
+            `;
+
+        }
+
+        else {
+
+            statusHtml = `
+                <span
+                    style="
+                        display:inline-block;
+                        background:#fef3c7;
+                        color:#92400e;
+                        padding:6px 12px;
+                        border-radius:7px;
+                        font-weight:bold;
+                    "
+                >
+                    🟡 در انتظار تأیید
+                </span>
+            `;
+
+        }
+
+
+        // ========================================
+        // عملیات
+        // ========================================
+
+        let actionHtml = "";
+
+
+        if (needsSettlement) {
+
+            actionHtml = `
+                <button
+                    type="button"
+                    class="settle-delivery-btn"
+                    onclick="openSettleDeliveryModal(${index})"
+                >
+                    💳 تسویه شد
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-delivery-btn"
+                    onclick="cancelApprovedSalesDelivery(${index})"
+                >
+                    🟠 لغو حواله
+                </button>
+            `;
+
+        }
+
+        else if (delivery.status === "approved") {
+
+            actionHtml = `
+                <div>
+
+                    <span
+                        style="
+                            color:#166534;
+                            font-weight:bold;
+                        "
+                    >
+                        ✓ انجام شد
+                    </span>
+
+                    <br>
+
+                    <button
+                        type="button"
+                        class="cancel-delivery-btn"
+                        onclick="cancelApprovedSalesDelivery(${index})"
+                    >
+                        🟠 لغو حواله
+                    </button>
+
+                </div>
+            `;
+
+        }
+
+        else if (delivery.status === "rejected") {
+
+            actionHtml = `
+                <div>
+
+                    <span
+                        style="
+                            color:#991b1b;
+                            font-weight:bold;
+                        "
+                    >
+                        🔴 باطل شده
+                    </span>
+
+                    ${
+                        delivery.rejectReason
+                            ? `
+                                <div
+                                    style="
+                                        margin-top:5px;
+                                        color:#7f1d1d;
+                                        font-size:12px;
+                                    "
+                                >
+                                    دلیل:
+                                    ${delivery.rejectReason}
+                                </div>
+                            `
+                            : ""
+                    }
+
+                </div>
+            `;
+
+        }
+
+        else if (delivery.status === "cancelled") {
+
+            actionHtml = `
+                <div>
+
+                    <span
+                        style="
+                            color:#9a3412;
+                            font-weight:bold;
+                        "
+                    >
+                        🟠 لغو شده
+                    </span>
+
+                    ${
+                        delivery.cancelReason
+                            ? `
+                                <div
+                                    style="
+                                        margin-top:5px;
+                                        color:#7c2d12;
+                                        font-size:12px;
+                                    "
+                                >
+                                    دلیل:
+                                    ${delivery.cancelReason}
+                                </div>
+                            `
+                            : ""
+                    }
+
+                </div>
+            `;
+
+        }
+
+        else {
+
+            actionHtml = `
+                <button
+                    type="button"
+                    class="approve-delivery-btn"
+                    onclick="approveSalesDelivery(${index})"
+                >
+                    ✅ تأیید حواله
+                </button>
+
+                <button
+                    type="button"
+                    class="approve-delivery-btn reject-delivery-btn"
+                    onclick="rejectSalesDelivery(${index})"
+                >
+                    ❌ رد حواله
+                </button>
+            `;
+
+        }
+
+
+        // ========================================
+        // کالاها
+        // ========================================
+
+        const items =
+            Array.isArray(delivery.items)
+                ? delivery.items
+                : [];
+
+
+        // ========================================
+        // تعداد کل کالاها
+        // ========================================
+
+        const totalQuantity =
+            items.reduce(function(total, item) {
+
+                const quantity =
+                    Number(
+                        item.quantity ||
+                        item.qty ||
+                        item.count ||
+                        0
+                    );
+
+                return total +
+                    (
+                        Number.isFinite(quantity)
+                            ? quantity
+                            : 0
+                    );
+
+            }, 0);
+
+
+        // ========================================
+        // شرح کالاها
+        // ========================================
+
+        const itemsHtml =
+            items.length > 0
+
+                ? items.map(function(item) {
+
+                    const name =
+                        item.name ||
+                        item.desc ||
+                        item.title ||
+                        item.productName ||
+                        item.product ||
+                        item.code ||
+                        "کالا";
+
+
+                    // تعدادِ حواله‌ی خرید بعد از تبدیل واحد ممکن است اعشاری
+                    // باشد؛ خام چاپ کردنش «۰٫۳۷۰۳۷۰۳…» نشان می‌داد. اگر خرید
+                    // بر مبنای کارتن/عدد بوده، مقدارِ اصلیِ واردشده هم کنارش
+                    // نمایش داده می‌شود
+                    let quantity =
+                        Math.round(Number(
+                            item.quantity ||
+                            item.qty ||
+                            item.count ||
+                            0
+                        ) * 1000) / 1000;
+
+                    if (item.purchaseUnit && item.purchaseUnit !== "بسته" && item.purchaseQty) {
+                        quantity = quantity + " بسته (" + item.purchaseQty + " " + item.purchaseUnit + ")";
+                    }
+
+
+                    return `
+                        <div
+                            style="
+                                padding:4px 0;
+                                border-bottom:1px solid #eee;
+                            "
+                        >
+                            ${name}
+
+                            <strong>
+                                × ${quantity}
+                            </strong>
+                        </div>
+                    `;
+
+                }).join("")
+
+                : "-";
+
+
+        // ========================================
+        // نوع خرید
+        // ========================================
+
+        const purchaseTypeText =
+            delivery.purchaseType === "credit"
+
+                ? `
+                    <span
+                        style="
+                            background:#fff3cd;
+                            color:#856404;
+                            padding:5px 9px;
+                            border-radius:6px;
+                            font-weight:bold;
+                        "
+                    >
+                        📄 غیر نقدی
+                    </span>
+                `
+
+                : `
+                    <span
+                        style="
+                            background:#d1e7dd;
+                            color:#146c43;
+                            padding:5px 9px;
+                            border-radius:6px;
+                            font-weight:bold;
+                        "
+                    >
+                        💰 نقدی
+                    </span>
+                `;
+
+
+        // ========================================
+        // ساخت ردیف
+        // ========================================
+
+        row.innerHTML = `
+
+            <td>
+                ${index + 1}
+            </td>
+
+
+            <td>
+                ${
+                    delivery.direction === "purchase"
+                        ? '<span style="background:#fef3c7;color:#92400e;padding:4px 9px;border-radius:6px;font-weight:700;font-size:12px;">🚚 خرید</span>'
+                        : '<span style="background:#dbeafe;color:#1e40af;padding:4px 9px;border-radius:6px;font-weight:700;font-size:12px;">🧾 فروش</span>'
+                }
+            </td>
+
+
+            <td>
+
+                <a
+                    href="#"
+                    class="delivery-number-link"
+                    onclick="
+                        openSalesDeliveryModal(${index});
+                        return false;
+                    "
+                >
+                    📋 ${delivery.deliveryNo || "-"}
+                </a>
+
+            </td>
+
+
+            <td>
+                ${delivery.invoiceNo || "-"}
+            </td>
+
+
+            <td>
+                ${delivery.date || "-"}
+            </td>
+
+
+            <td>
+                <strong>
+                    ${
+                        delivery.direction === "purchase"
+                            ? (delivery.supplierName || "-")
+                            : (delivery.customer || "-")
+                    }
+                </strong>
+            </td>
+
+
+            <td>
+                ${purchaseTypeText}
+            </td>
+
+
+            <td>
+                <strong>
+                    ${totalQuantity}
+                </strong>
+            </td>
+
+
+            <td
+                style="
+                    text-align:right;
+                    min-width:220px;
+                    white-space:normal;
+                    line-height:1.8;
+                "
+            >
+                ${itemsHtml}
+            </td>
+
+
+            <td>
+                <strong>
+                    ${delivery.total || "0 ریال"}
+                </strong>
+            </td>
+
+
+            <td>
+                ${statusHtml}
+            </td>
+
+
+            <td>
+                ${actionHtml}
+            </td>
+
+        `;
+
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+// ========================================
+// اجرای اولیه + فعال کردن جستجو
+// ========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        const searchInput =
+            document.getElementById(
+                "salesDeliverySearch"
+            );
+
+
+        const clearButton =
+            document.getElementById(
+                "clearSalesDeliverySearch"
+            );
+
+
+        // نمایش اولیه
+        renderSalesDeliveries();
+
+
+        // جستجوی لحظه‌ای
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "input",
+                function() {
+
+                    renderSalesDeliveries();
+
+                }
+            );
+
+        }
+
+
+        // پاک کردن
+        if (clearButton) {
+
+            clearButton.addEventListener(
+                "click",
+                function() {
+
+                    if (searchInput) {
+
+                        searchInput.value = "";
+
+                        searchInput.focus();
+
+                    }
+
+                    renderSalesDeliveries();
+
+                }
+            );
+
+        }
+
+    }
+);
+
+
+</script>
+<script src="app.js"></script>
+<script>
+stlpRequirePermission("delivery");
+</script>
+<script>
+
+function approveSalesDelivery(index) {
+
+    try {
+
+        // =========================================
+        // دریافت حواله‌ها
+        // =========================================
+
+        const deliveries = JSON.parse(
+            localStorage.getItem("salesDeliveries") || "[]"
+        );
+
+        if (!Array.isArray(deliveries)) {
+            alert("❌ اطلاعات حواله‌ها معتبر نیست.");
+            return false;
+        }
+
+
+        // =========================================
+        // پیدا کردن حواله
+        // =========================================
+
+        const delivery = deliveries[index];
+
+        if (!delivery) {
+            alert("❌ حواله پیدا نشد.");
+            return false;
+        }
+
+
+        console.log(
+            "📋 حواله انتخاب‌شده:",
+            delivery
+        );
+
+
+        // =========================================
+        // جلوگیری از تأیید دوباره
+        // =========================================
+
+        if (
+            delivery.status === "approved" ||
+            delivery.stockDeducted === true
+        ) {
+
+            alert(
+                "⚠️ این حواله قبلاً تأیید شده است."
+            );
+
+            return false;
+        }
+
+
+        // =========================================
+        // بررسی کالاها
+        // =========================================
+
+        if (
+            !Array.isArray(delivery.items) ||
+            delivery.items.length === 0
+        ) {
+
+            alert(
+                "❌ کالایی در این حواله ثبت نشده است."
+            );
+
+            return false;
+        }
+
+
+        // =========================================
+        // بررسی تابع انبار
+        // =========================================
+
+        const isPurchase =
+            delivery.direction === "purchase";
+
+        const invFn =
+            isPurchase
+                ? stlpApplyPurchaseToInventory
+                : stlpDeductInvoiceStock;
+
+        if (typeof invFn !== "function") {
+
+            console.error(
+                "❌ تابع انبار مربوطه پیدا نشد."
+            );
+
+            alert(
+                "❌ تابع " +
+                (isPurchase ? "افزایش" : "کسر") +
+                " موجودی انبار پیدا نشد."
+            );
+
+            return false;
+        }
+
+
+        // =========================================
+        // اعمال روی انبار (افزایش برای خرید / کسر برای فروش)
+        // برای فروش: قبل از کسرِ واقعی، رزروِ همین حواله (که موقعِ
+        // ثبتِ فاکتور روی همین کالاها گرفته شده بود) آزاد می‌شود —
+        // چون این کسر واقعی جایگزینِ همان نگه‌داشتِ موقت می‌شود
+        // =========================================
+
+        if (!isPurchase && typeof stlpReleaseInvoiceReservation === "function") {
+            stlpReleaseInvoiceReservation(delivery.items);
+        }
+
+        const stockResult =
+            isPurchase
+                ? stlpApplyPurchaseToInventory(
+                    delivery.items,
+                    delivery.supplierName,
+                    delivery.id
+                  )
+                : stlpDeductInvoiceStock(
+                    delivery.items
+                  );
+
+
+        if (stockResult !== true) {
+
+            // حواله هنوز «در انتظار» می‌ماند، پس رزروش هم باید برگردد —
+            // قبلاً چند خط بالاتر آزاد شده بود و حواله بدونِ رزرو می‌ماند
+            if (!isPurchase && typeof stlpReserveInvoiceStock === "function") {
+                stlpReserveInvoiceStock(delivery.items);
+            }
+
+            alert(
+                "❌ " +
+                (isPurchase ? "افزایش" : "کسر") +
+                " موجودی انجام نشد.\n" +
+                "حواله تأیید نشد."
+            );
+
+            return false;
+        }
+
+
+        console.log(
+            "✅ موجودی انبار به‌روزرسانی شد."
+        );
+
+
+        // =========================================
+        // ثبت در خزانه
+        // فقط برای حواله نقدی (فروش یا خرید)
+        // =========================================
+
+        if (
+            delivery.purchaseType !== "credit"
+        ) {
+
+
+            // -------------------------------------
+            // بررسی تابع خزانه
+            // -------------------------------------
+
+            const treasuryFn =
+                isPurchase
+                    ? stlpAddPurchaseTreasury
+                    : stlpAddInvoiceTreasury;
+
+            if (typeof treasuryFn !== "function") {
+
+                console.error(
+                    "❌ تابع ثبت خزانه پیدا نشد."
+                );
+
+                alert(
+                    "❌ تابع ثبت خزانه پیدا نشد."
+                );
+
+                return false;
+            }
+
+
+            console.log(
+                "💰 در حال ثبت در خزانه..."
+            );
+
+
+            // -------------------------------------
+            // ثبت در خزانه — حساب مقصد از تنظیمات «حساب نقدیِ
+            // حواله‌ها» در صفحه‌ی خزانه خوانده می‌شود (پیش‌فرض صندوق)
+            // -------------------------------------
+
+            const deliveryTreasurySettings =
+                typeof stlpGetDeliveryTreasurySettings === "function"
+                    ? stlpGetDeliveryTreasurySettings()
+                    : { salesAccountId: "cash", purchaseAccountId: "cash" };
+
+            const treasuryResult =
+                isPurchase
+                    ? stlpAddPurchaseTreasury({
+
+                        invoiceNo: delivery.invoiceNo,
+                        date: delivery.date,
+                        supplierName: delivery.supplierName,
+                        total: delivery.total,
+                        accountId: deliveryTreasurySettings.purchaseAccountId
+
+                      })
+                    : stlpAddInvoiceTreasury({
+
+                        invoiceNo: delivery.invoiceNo,
+                        date: delivery.date,
+                        customer: delivery.customer,
+                        total: delivery.total,
+                        accountId: deliveryTreasurySettings.salesAccountId
+
+                      });
+
+
+            console.log(
+                "نتیجه ثبت خزانه:",
+                treasuryResult
+            );
+
+
+            // -------------------------------------
+            // بررسی نتیجه خزانه
+            // -------------------------------------
+
+            if (
+                treasuryResult !== true
+            ) {
+
+                console.error(
+                    "❌ ثبت در خزانه ناموفق بود:",
+                    delivery
+                );
+
+                // موجودی چند خط بالاتر (stlpApplyPurchaseToInventory /
+                // stlpDeductInvoiceStock) از قبل واقعاً کم/زیاد و در
+                // انبار ذخیره شده — قبلاً اینجا فقط return false می‌شد
+                // بدون برگرداندنِ آن، یعنی delivery.stockDeducted هرگز
+                // true نمی‌شد. نتیجه: اگر کاربر دوباره روی «تأیید» این
+                // حواله می‌زد (چون status/stockDeducted هیچ‌کدام تنظیم
+                // نشده بودند، گاردِ «قبلاً تأیید شده» هم رد می‌شد)،
+                // موجودی برای بار دوم کم/زیاد می‌شد. الان همان تغییرِ
+                // انبار را برمی‌گردانیم تا حواله دقیقاً به حالت قبل از
+                // این تلاش برگردد و بشود بی‌خطر دوباره امتحان کرد.
+                const reverseFn =
+                    isPurchase
+                        ? stlpReversePurchaseFromInventory
+                        : stlpRestoreInvoiceStock;
+
+                if (typeof reverseFn === "function") {
+
+                    const reverted =
+                        isPurchase
+                            ? reverseFn(delivery.items, delivery.id)
+                            : reverseFn(delivery.items);
+
+                    if (reverted !== true) {
+
+                        console.error(
+                            "⚠️ برگرداندنِ موجودی بعد از شکستِ ثبتِ خزانه هم ناموفق بود — موجودیِ انبار را دستی بررسی کنید."
+                        );
+
+                    }
+
+                } else {
+
+                    console.error(
+                        "⚠️ تابع برگرداندنِ موجودی پیدا نشد — موجودیِ انبار را دستی بررسی کنید."
+                    );
+
+                }
+
+                alert(
+                    "❌ ثبت در خزانه انجام نشد.\n" +
+                    "حواله تأیید نشد و موجودیِ انبار به حالت قبل برگشت."
+                );
+
+
+                return false;
+            }
+
+
+            // علامت ثبت خزانه
+            delivery.treasuryRegistered =
+                true;
+
+
+            console.log(
+                "✅ مبلغ در خزانه ثبت شد."
+            );
+        }
+
+
+        // =========================================
+        // تأیید نهایی حواله
+        // =========================================
+
+        delivery.status =
+            "approved";
+
+
+        delivery.stockDeducted =
+            true;
+
+
+        delivery.approvedAt =
+            new Date().toISOString();
+
+
+        // =========================================
+        // ذخیره حواله
+        // =========================================
+
+        deliveries[index] =
+            delivery;
+
+
+        localStorage.setItem(
+            "salesDeliveries",
+            JSON.stringify(deliveries)
+        );
+
+
+        if (typeof stlpLogActivity === "function") {
+            stlpLogActivity(
+                isPurchase ? "خرید" : "حواله‌ها",
+                "تأیید حواله " + (isPurchase ? "خرید" : "فروش"),
+                "حواله شماره " + (delivery.deliveryNo || "-") + " — «" + (delivery.customer || delivery.supplierName || "-") + "»"
+            );
+        }
+
+
+        // =========================================
+        // نمایش مجدد
+        // =========================================
+
+        if (
+            typeof renderSalesDeliveries ===
+            "function"
+        ) {
+
+            renderSalesDeliveries();
+        }
+
+
+        // =========================================
+        // پیام موفقیت
+        // =========================================
+
+        if (
+            delivery.purchaseType !== "credit"
+        ) {
+
+            alert(
+                "✅ حواله " +
+                (isPurchase ? "خرید" : "فروش") +
+                " شماره " +
+                (delivery.deliveryNo || "-") +
+                " با موفقیت تأیید شد.\n\n" +
+
+                "📦 موجودی انبار " +
+                (isPurchase ? "افزایش یافت.\n" : "کسر شد.\n") +
+
+                "💰 مبلغ در خزانه ثبت شد."
+            );
+
+        } else {
+
+            alert(
+                "✅ حواله " +
+                (isPurchase ? "خرید" : "فروش") +
+                " شماره " +
+                (delivery.deliveryNo || "-") +
+                " با موفقیت تأیید شد.\n\n" +
+
+                "📦 موجودی انبار " +
+                (isPurchase ? "افزایش یافت.\n" : "کسر شد.\n") +
+
+                "📄 غیرنقدی است - در انتظار تسویه."
+            );
+        }
+
+
+        return true;
+
+
+    } catch (error) {
+
+
+        console.error(
+            "❌ خطا در تأیید حواله:",
+            error
+        );
+
+
+        alert(
+            "❌ خطایی هنگام تأیید حواله رخ داد:\n\n" +
+            (error && error.message ? error.message : error) +
+            "\n\n(این پیام رو برای پیگیری بفرستید)"
+        );
+
+
+        return false;
+    }
+}
+
+
+// =========================================
+// مهم: قابل دسترس کردن تابع برای onclick
+// =========================================
+
+window.approveSalesDelivery =
+    approveSalesDelivery;
+
+function rejectSalesDelivery(index) {
+
+    try {
+
+        const deliveries = JSON.parse(
+            localStorage.getItem("salesDeliveries") || "[]"
+        );
+
+        if (
+            !Array.isArray(deliveries) ||
+            index < 0 ||
+            index >= deliveries.length
+        ) {
+            alert("❌ حواله پیدا نشد.");
+            return false;
+        }
+
+        const delivery = deliveries[index];
+
+        // قبلاً تأیید شده
+        if (
+            delivery.status === "approved" ||
+            delivery.stockDeducted === true
+        ) {
+            alert(
+                "❌ این حواله قبلاً تأیید شده و قابل رد کردن نیست."
+            );
+            return false;
+        }
+
+        // قبلاً رد شده
+        if (delivery.status === "rejected") {
+            alert("⚠️ این حواله قبلاً رد شده است.");
+            return false;
+        }
+
+        // گرفتن دلیل رد
+        const reason = prompt(
+            "دلیل رد حواله شماره " +
+            (delivery.deliveryNo || "-") +
+            " را وارد کنید:"
+        );
+
+        if (reason === null) {
+            return false;
+        }
+
+        const rejectReason = String(reason).trim();
+
+        if (!rejectReason) {
+            alert("❌ لطفاً دلیل رد را وارد کنید.");
+            return false;
+        }
+
+        // تأیید نهایی
+        const confirmReject = confirm(
+            "آیا از رد این حواله مطمئن هستید؟\n\n" +
+            "شماره حواله: " +
+            (delivery.deliveryNo || "-") +
+            "\n\nدلیل:\n" +
+            rejectReason
+        );
+
+        if (!confirmReject) {
+            return false;
+        }
+
+        // ثبت وضعیت
+        delivery.status = "rejected";
+
+        delivery.rejectedAt =
+            new Date().toISOString();
+
+        delivery.rejectReason =
+            rejectReason;
+
+        delivery.stockDeducted = false;
+
+        delivery.treasuryRegistered = false;
+
+        // فروش انجام نشد — رزروی که موقع ثبت فاکتور روی این کالاها
+        // گرفته شده بود آزاد می‌شود (موجودی هیچ‌وقت واقعاً کسر نشده بود)
+        if (
+            delivery.direction !== "purchase" &&
+            typeof stlpReleaseInvoiceReservation === "function"
+        ) {
+            stlpReleaseInvoiceReservation(delivery.items);
+        }
+
+        // ذخیره
+        deliveries[index] = delivery;
+
+        localStorage.setItem(
+            "salesDeliveries",
+            JSON.stringify(deliveries)
+        );
+
+        if (typeof stlpLogActivity === "function") {
+            stlpLogActivity("حواله‌ها", "رد حواله", "حواله شماره " + (delivery.deliveryNo || "-") + " — دلیل: " + rejectReason);
+        }
+
+        // نمایش مجدد
+        if (
+            typeof renderSalesDeliveries === "function"
+        ) {
+            renderSalesDeliveries();
+        }
+
+        alert(
+            "🔴 حواله شماره " +
+            (delivery.deliveryNo || "-") +
+            " رد شد."
+        );
+
+        console.log(
+            "🔴 حواله رد شد:",
+            delivery
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "❌ خطا در رد حواله:",
+            error
+        );
+
+        alert(
+            "❌ خطایی هنگام رد حواله رخ داد."
+        );
+
+        return false;
+    }
+}
+
+
+// =====================================================
+// لغو حواله‌ای که قبلاً تأیید شده
+// (برمی‌گرداند: موجودی انبار + حذف تراکنش خزانه مربوطه)
+// =====================================================
+
+function cancelApprovedSalesDelivery(index) {
+
+    try {
+
+        const deliveries = JSON.parse(
+            localStorage.getItem("salesDeliveries") || "[]"
+        );
+
+        if (
+            !Array.isArray(deliveries) ||
+            index < 0 ||
+            index >= deliveries.length
+        ) {
+            alert("❌ حواله پیدا نشد.");
+            return false;
+        }
+
+        const delivery = deliveries[index];
+
+        if (delivery.status !== "approved") {
+            alert("❌ فقط حواله‌ی تأییدشده را می‌توان لغو کرد.");
+            return false;
+        }
+
+        const reason = prompt(
+            "دلیل لغو حواله‌ی تأییدشده‌ی شماره " +
+            (delivery.deliveryNo || "-") +
+            " را وارد کنید:"
+        );
+
+        if (reason === null) return false;
+
+        const cancelReason = String(reason).trim();
+
+        if (!cancelReason) {
+            alert("❌ لطفاً دلیل لغو را وارد کنید.");
+            return false;
+        }
+
+        const confirmCancel = confirm(
+            "⚠️ با لغو این حواله:\n" +
+            "- موجودی انبار برگردانده می‌شود.\n" +
+            (
+                delivery.treasuryRegistered
+                    ? "- تراکنش ثبت‌شده در خزانه حذف می‌شود.\n"
+                    : ""
+            ) +
+            "\nشماره حواله: " +
+            (delivery.deliveryNo || "-") +
+            "\n\nآیا مطمئن هستید؟"
+        );
+
+        if (!confirmCancel) return false;
+
+
+        const isPurchase =
+            delivery.direction === "purchase";
+
+        // این چک باید قبل از هر جهش (برگرداندنِ موجودی و بعد حذفِ
+        // تراکنشِ خزانه) اجرا شود، وگرنه یک abort اینجا حواله را در
+        // حالتِ نیمه‌کاره رها می‌کرد (موجودی برگشته ولی status هنوز
+        // approved و تراکنشِ خزانه هم حذف‌نشده). اگر یکی از تراکنش‌های
+        // مرتبط چکی باشد که واقعاً وصول/پرداخت شده (checkStatus==="paid")،
+        // یعنی پول واقعاً جابه‌جا شده — حذفِ کورکورانه‌اش پایین‌تر آن
+        // مبلغ را بی‌سروصدا از مانده‌ی محاسبه‌شده‌ی حساب پاک می‌کند
+        // بدون اینکه در دنیای واقعی برگشته باشد. برای این حالت باید از
+        // مسیرِ برگشتِ چک (returnTreasuryCheck/reverseTreasuryCheck در
+        // صفحه‌ی خزانه) استفاده شود، نه لغوِ این حواله.
+        if (
+            delivery.treasuryRegistered === true &&
+            typeof stlpTreasury !== "undefined" &&
+            Array.isArray(stlpTreasury)
+        ) {
+
+            const invoiceNoForCheck =
+                String(delivery.invoiceNo || "").trim();
+
+            const validSourcesForCheck =
+                isPurchase
+                    ? ["purchase", "purchase-settlement"]
+                    : ["invoice", "delivery-settlement"];
+
+            const hasPaidCheque =
+                stlpTreasury.some(function(item) {
+                    return (
+                        invoiceNoForCheck !== "" &&
+                        String(item.invoiceNo || "").trim() === invoiceNoForCheck &&
+                        validSourcesForCheck.indexOf(item.source) !== -1 &&
+                        item.checkStatus === "paid"
+                    );
+                });
+
+            if (hasPaidCheque) {
+
+                alert(
+                    "❌ این حواله با یک چکِ «وصول/پرداخت‌شده» تسویه شده — پول آن واقعاً جابه‌جا شده است.\n\n" +
+                    "برای لغو، اول از صفحه‌ی خزانه (تب چک‌ها) همان چک را «برگشت بخورده» ثبت کنید، بعد این حواله را لغو کنید."
+                );
+
+                return false;
+
+            }
+
+        }
+
+
+        // -------------------------------------------
+        // برگرداندن موجودی انبار
+        // فروش: برگرداندن (افزایش) / خرید: کسر (چون قبلاً اضافه شده بود)
+        // -------------------------------------------
+
+        if (delivery.stockDeducted === true) {
+
+            const reverseFn =
+                isPurchase
+                    ? stlpReversePurchaseFromInventory
+                    : stlpRestoreInvoiceStock;
+
+            if (typeof reverseFn !== "function") {
+
+                alert(
+                    "❌ تابع برگرداندن موجودی انبار پیدا نشد.\n" +
+                    "لغو حواله متوقف شد."
+                );
+
+                return false;
+
+            }
+
+            const restored =
+                isPurchase
+                    ? stlpReversePurchaseFromInventory(delivery.items, delivery.id)
+                    : stlpRestoreInvoiceStock(delivery.items);
+
+            if (restored !== true) {
+
+                alert(
+                    "❌ برگرداندن موجودی انبار انجام نشد.\n" +
+                    "لغو حواله متوقف شد."
+                );
+
+                return false;
+
+            }
+
+        }
+
+
+        // -------------------------------------------
+        // حذف تراکنش خزانه مربوطه (اگر ثبت شده بود)
+        // -------------------------------------------
+
+        // این پرچم را جدا نگه می‌داریم چون delivery.treasuryRegistered
+        // چند خط پایین‌تر (قبل از نمایش پیام نهایی) به false برمی‌گردد؛
+        // بدون آن، پیام پایانی نمی‌توانست بفهمد آیا واقعاً تراکنشی حذف
+        // شده یا نه، و قبلاً به‌جای این پرچم از delivery.settlementAccount
+        // استفاده می‌کرد — فیلدی که فقط توسط مسیر «تسویه» ست می‌شود، نه
+        // توسط تأیید نقدیِ معمولی — یعنی برای لغوِ یک حواله‌ی نقدیِ
+        // تأییدشده، با اینکه تراکنش خزانه‌اش واقعاً حذف می‌شد، پیام به
+        // کاربر می‌گفت انگار حذف نشده.
+        let treasuryTransactionRemoved = false;
+
+        if (
+            delivery.treasuryRegistered === true &&
+            typeof stlpTreasury !== "undefined" &&
+            Array.isArray(stlpTreasury)
+        ) {
+
+            const invoiceNo =
+                String(delivery.invoiceNo || "").trim();
+
+            const validSources =
+                isPurchase
+                    ? ["purchase", "purchase-settlement"]
+                    : ["invoice", "delivery-settlement"];
+
+            const removedTransactions = [];
+
+            stlpTreasury =
+                stlpTreasury.filter(function(item) {
+
+                    const isMatch =
+                        invoiceNo !== "" &&
+                        String(item.invoiceNo || "").trim() === invoiceNo &&
+                        validSources.indexOf(item.source) !== -1;
+
+                    if (isMatch) {
+                        removedTransactions.push(item);
+                    }
+
+                    return !isMatch;
+
+                });
+
+            removedTransactions.forEach(function(item) {
+
+                if (
+                    typeof deleteTreasuryAccountingEntry ===
+                    "function"
+                ) {
+
+                    deleteTreasuryAccountingEntry(item.id);
+
+                }
+
+                // deleteTreasuryAccountingEntry فقط رکورد قدیمیِ
+                // stlp_accounting_entries را پاک می‌کند، نه سندِ
+                // واقعیِ دفتر کل — بدون این خط، سندِ حسابداریِ این
+                // تراکنش برای همیشه یتیم می‌ماند (دقیقاً همان باگی
+                // که در حذف دستیِ تراکنش از صفحه‌ی خزانه هم بود)
+                if (
+                    typeof stlpRemoveJournalEntriesBySource ===
+                    "function"
+                ) {
+
+                    stlpRemoveJournalEntriesBySource("treasury", item.id);
+
+                }
+
+            });
+
+            treasuryTransactionRemoved = removedTransactions.length > 0;
+
+            if (typeof saveTreasury === "function") {
+                saveTreasury();
+            }
+
+            if (typeof renderTreasury === "function") {
+                renderTreasury();
+            }
+
+        }
+
+
+        // -------------------------------------------
+        // به‌روزرسانی وضعیت حواله
+        // -------------------------------------------
+
+        delivery.status = "cancelled";
+        delivery.cancelledAt = new Date().toISOString();
+        delivery.cancelReason = cancelReason;
+        delivery.stockDeducted = false;
+        delivery.treasuryRegistered = false;
+
+        deliveries[index] = delivery;
+
+        localStorage.setItem(
+            "salesDeliveries",
+            JSON.stringify(deliveries)
+        );
+
+        if (
+            typeof renderSalesDeliveries === "function"
+        ) {
+            renderSalesDeliveries();
+        }
+
+        alert(
+            "🟠 حواله شماره " +
+            (delivery.deliveryNo || "-") +
+            " لغو شد.\n\n" +
+            "📦 موجودی انبار برگردانده شد." +
+            (
+                treasuryTransactionRemoved
+                    ? "\n💰 تراکنش خزانه حذف شد."
+                    : ""
+            )
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "❌ خطا در لغو حواله:",
+            error
+        );
+
+        alert(
+            "❌ خطایی هنگام لغو حواله رخ داد.\n" +
+            (error.message || error)
+        );
+
+        return false;
+
+    }
+
+}
+
+window.cancelApprovedSalesDelivery =
+    cancelApprovedSalesDelivery;
+
+</script>
+<!-- ========================================
+     پنجره جزئیات حواله فروش
+======================================== -->
+<script>
+
+// ========================================
+// باز کردن جزئیات حواله فروش
+// ========================================
+
+function openSalesDeliveryModal(index) {
+
+    try {
+
+        const deliveries =
+            JSON.parse(
+                localStorage.getItem("salesDeliveries") || "[]"
+            );
+
+
+        if (
+            !Array.isArray(deliveries) ||
+            !deliveries[index]
+        ) {
+
+            alert("❌ اطلاعات حواله پیدا نشد.");
+
+            return;
+        }
+
+
+        const delivery =
+            deliveries[index];
+
+
+        const container =
+            document.getElementById(
+                "salesDeliveryDetails"
+            );
+
+
+        const modal =
+            document.getElementById(
+                "salesDeliveryModal"
+            );
+
+
+        if (!container || !modal) {
+
+            console.error(
+                "❌ پنجره جزئیات پیدا نشد."
+            );
+
+            return;
+        }
+
+
+        // ========================================
+        // کالاهای حواله
+        // ========================================
+
+        const items =
+            Array.isArray(delivery.items)
+                ? delivery.items
+                : [];
+
+
+        // ========================================
+        // ساخت ردیف کالاها
+        // ========================================
+
+        let itemsHtml = "";
+
+
+        if (items.length === 0) {
+
+            itemsHtml = `
+                <tr>
+
+                    <td
+                        colspan="7"
+                        style="
+                            padding:20px;
+                            color:#777;
+                        "
+                    >
+                        کالایی در این حواله ثبت نشده است.
+                    </td>
+
+                </tr>
+            `;
+
+        } else {
+
+            items.forEach(
+                function(item, itemIndex) {
+
+                    const name =
+                        item.name ||
+                        item.title ||
+                        item.productName ||
+                        item.product ||
+                        "کالا";
+
+
+                    const quantity =
+                        Number(
+                            item.quantity ||
+                            item.qty ||
+                            item.count ||
+                            0
+                        );
+
+
+                    const unitPrice =
+                        item.unitPrice ||
+                        item.price ||
+                        item.salePrice ||
+                        0;
+
+
+                    const discount =
+                        item.discount ||
+                        0;
+
+
+                    const total =
+                        item.total ||
+                        item.finalTotal ||
+                        (
+                            Number(unitPrice) *
+                            quantity
+                        );
+
+
+                    itemsHtml += `
+
+                        <tr>
+
+                            <td>
+                                ${itemIndex + 1}
+                            </td>
+
+                            <td
+                                style="
+                                    text-align:right;
+                                "
+                            >
+                                ${name}
+                            </td>
+
+                            <td>
+                                ${quantity}
+                            </td>
+
+                            <td>
+                                ${unitPrice || "-"}
+                            </td>
+
+                            <td>
+                                ${discount || "-"}
+                            </td>
+
+                            <td>
+                                ${total || "-"}
+                            </td>
+
+                            <td>
+                                ${item.unit || "-"}
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            );
+
+        }
+
+
+        // ========================================
+        // وضعیت حواله
+        // ========================================
+
+        let statusText = "";
+        let statusColor = "";
+        let statusBackground = "";
+
+
+        if (
+            delivery.status === "approved"
+        ) {
+
+            statusText =
+                "🟢 تأیید شده";
+
+            statusColor =
+                "#166534";
+
+            statusBackground =
+                "#dcfce7";
+
+        }
+
+        else if (
+            delivery.status === "rejected"
+        ) {
+
+            statusText =
+                "🔴 باطل شده";
+
+            statusColor =
+                "#991b1b";
+
+            statusBackground =
+                "#fee2e2";
+
+        }
+
+        else {
+
+            statusText =
+                "🟡 در انتظار تأیید";
+
+            statusColor =
+                "#92400e";
+
+            statusBackground =
+                "#fef3c7";
+
+        }
+
+
+        // ========================================
+        // نوع خرید
+        // ========================================
+
+        const purchaseType =
+            delivery.purchaseType === "credit"
+                ? "📄 غیر نقدی"
+                : "💰 نقدی";
+
+
+        // ========================================
+        // ساخت جزئیات
+        // ========================================
+
+        container.innerHTML = `
+
+            <div class="delivery-detail-grid">
+
+
+                <div class="delivery-detail-item">
+
+                    <strong>
+                        شماره حواله
+                    </strong>
+
+                    ${delivery.deliveryNo || "-"}
+
+                </div>
+
+
+                <div class="delivery-detail-item">
+
+                    <strong>
+                        شماره فاکتور
+                    </strong>
+
+                    ${delivery.invoiceNo || "-"}
+
+                </div>
+
+
+                <div class="delivery-detail-item">
+
+                    <strong>
+                        تاریخ
+                    </strong>
+
+                    ${delivery.date || "-"}
+
+                </div>
+
+
+                <div class="delivery-detail-item">
+
+                    <strong>
+                        ${delivery.direction === "purchase" ? "تأمین‌کننده" : "مشتری"}
+                    </strong>
+
+                    ${
+                        delivery.direction === "purchase"
+                            ? (delivery.supplierName || "-")
+                            : (delivery.customer || "-")
+                    }
+
+                </div>
+
+
+                <div class="delivery-detail-item">
+
+                    <strong>
+                        نوع خرید
+                    </strong>
+
+                    ${purchaseType}
+
+                </div>
+
+
+                <div class="delivery-detail-item">
+
+                    <strong>
+                        وضعیت حواله
+                    </strong>
+
+                    <span
+                        style="
+                            display:inline-block;
+                            background:${statusBackground};
+                            color:${statusColor};
+                            padding:5px 10px;
+                            border-radius:6px;
+                            font-weight:bold;
+                        "
+                    >
+                        ${statusText}
+                    </span>
+
+                </div>
+
+
+                <div class="delivery-detail-item">
+
+                    <strong>
+                        مبلغ فاکتور
+                    </strong>
+
+                    ${delivery.total || "0 ریال"}
+
+                </div>
+
+
+                <div class="delivery-detail-item">
+
+                    <strong>
+                        تعداد ردیف کالا
+                    </strong>
+
+                    ${items.length}
+
+                </div>
+
+
+            </div>
+
+
+            <h4 class="delivery-items-title">
+
+                📦 ریز کالاهای فاکتور
+
+            </h4>
+
+
+            <div
+                style="
+                    overflow-x:auto;
+                "
+            >
+
+                <table class="delivery-items-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ردیف
+                            </th>
+
+                            <th>
+                                کالا
+                            </th>
+
+                            <th>
+                                تعداد
+                            </th>
+
+                            <th>
+                                قیمت واحد
+                            </th>
+
+                            <th>
+                                تخفیف
+                            </th>
+
+                            <th>
+                                مبلغ
+                            </th>
+
+                            <th>
+                                واحد
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${itemsHtml}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="delivery-detail-total">
+
+                <div class="delivery-detail-total-box">
+
+                    💰 مبلغ نهایی فاکتور:
+
+                    ${delivery.total || "0 ریال"}
+
+                </div>
+
+            </div>
+            <div
+    style="
+        display:flex;
+        justify-content:flex-start;
+        gap:10px;
+        margin-top:20px;
+        flex-wrap:wrap;
+    "
+>
+
+    <button
+        type="button"
+        onclick="downloadSalesDeliveryExcel(${index})"
+        style="
+            background:#198754;
+            color:white;
+            border:none;
+            padding:10px 18px;
+            border-radius:8px;
+            cursor:pointer;
+            font-family:inherit;
+            font-weight:bold;
+        "
+    >
+        📊 دانلود Excel فاکتور
+    </button>
+
+</div>
+            
+
+
+            ${
+                delivery.status === "rejected"
+                    ? `
+
+                        <div class="delivery-reject-box">
+
+                            <strong>
+                                ❌ دلیل رد حواله:
+                            </strong>
+
+                            <br>
+
+                            ${
+                                delivery.rejectReason ||
+                                "دلیلی ثبت نشده است."
+                            }
+
+                        </div>
+
+                      `
+                    : ""
+            }
+
+        `;
+
+
+        // ========================================
+        // نمایش پنجره
+        // ========================================
+
+        modal.classList.add("show");
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ خطا در نمایش جزئیات حواله:",
+            error
+        );
+
+        alert(
+            "❌ خطایی هنگام نمایش جزئیات حواله رخ داد."
+        );
+
+    }
+
+}
+
+
+// ========================================
+// بستن پنجره
+// ========================================
+
+function closeSalesDeliveryModal() {
+
+    const modal =
+        document.getElementById(
+            "salesDeliveryModal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove("show");
+
+    }
+
+}
+
+
+// ========================================
+// کلیک روی فضای بیرون پنجره
+// ========================================
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const modal =
+            document.getElementById(
+                "salesDeliveryModal"
+            );
+
+
+        if (
+            modal &&
+            event.target === modal
+        ) {
+
+            closeSalesDeliveryModal();
+
+        }
+
+    }
+);
+
+
+// ========================================
+// بستن با کلید ESC
+// ========================================
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeSalesDeliveryModal();
+
+        }
+
+    }
+);
+
+
+// ========================================
+// قابل دسترس برای onclick
+// ========================================
+
+window.openSalesDeliveryModal =
+    openSalesDeliveryModal;
+
+
+window.closeSalesDeliveryModal =
+    closeSalesDeliveryModal;
+
+</script>
+
+<div
+    id="salesDeliveryModal"
+    class="delivery-modal"
+>
+
+    <div class="delivery-modal-box">
+
+        <!-- سربرگ -->
+
+        <div class="delivery-modal-header">
+
+            <h3>
+                📋 جزئیات حواله فروش
+            </h3>
+
+            <button
+                type="button"
+                class="delivery-modal-close"
+                onclick="closeSalesDeliveryModal()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+
+        <!-- اطلاعات اصلی -->
+
+        <div
+            id="salesDeliveryDetails"
+        >
+
+            <!-- اطلاعات توسط JavaScript قرار می‌گیرد -->
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+async function downloadSalesDeliveryExcel(index) {
+
+    try {
+
+        const deliveries = JSON.parse(
+            localStorage.getItem("salesDeliveries") || "[]"
+        );
+
+        if (!Array.isArray(deliveries) || !deliveries[index]) {
+            alert("❌ اطلاعات حواله پیدا نشد.");
+            return;
+        }
+
+        const delivery = deliveries[index];
+
+        if (delivery.direction === "purchase") {
+
+            alert(
+                "⚠️ خروجی اکسل رسمی فقط برای حواله‌های فروش طراحی شده است.\n" +
+                "برای خرید، جزئیات را از تب «سوابق خرید» در صفحه‌ی تأمین‌کنندگان مشاهده کنید."
+            );
+
+            return;
+
+        }
+
+        const items = [];
+
+        const deliveryItems =
+            Array.isArray(delivery.items)
+                ? delivery.items
+                : [];
+
+        deliveryItems.forEach(function(item) {
+
+            if (
+                !item ||
+                typeof item !== "object" ||
+                Array.isArray(item)
+            ) {
+                return;
+            }
+
+            items.push({
+
+                code:
+                    item.code ||
+                    item.productCode ||
+                    "-",
+
+                desc:
+                    item.name ||
+                    item.title ||
+                    item.productName ||
+                    item.desc ||
+                    item.product ||
+                    "",
+
+                qty:
+                    Number(
+                        item.quantity ||
+                        item.qty ||
+                        item.count ||
+                        0
+                    ),
+
+                unitPrice:
+                    Number(
+                        item.unitPrice ||
+                        item.price ||
+                        item.salePrice ||
+                        0
+                    ),
+
+                discPercent:
+                    Number(
+                        item.discountPercent ||
+                        item.discount ||
+                        item.discPercent ||
+                        0
+                    ),
+
+                unit:
+                    item.unit ||
+                    ""
+
+            });
+
+        });
+
+        const customer =
+            delivery.customerObj || {};
+
+        const opts = {
+
+            code:
+                String(
+                    delivery.invoiceNo ||
+                    delivery.deliveryNo ||
+                    ""
+                ),
+
+            dateFa:
+                delivery.date || "",
+
+            buyerName:
+                customer.name ||
+                delivery.customer ||
+                "",
+
+            buyerAddress:
+                customer.address ||
+                customer.addr ||
+                "",
+
+            buyerPhone:
+                customer.phone || "",
+
+            buyerEconCode:
+                customer.econCode ||
+                customer.econ ||
+                "",
+
+            buyerRegNo:
+                customer.regNo ||
+                customer.reg ||
+                "",
+
+            buyerProvince:
+                customer.province || "",
+
+            buyerCity:
+                customer.city || "",
+
+            buyerPostalCode:
+                customer.postalCode || "",
+
+            buyerNationalId:
+                customer.nationalId ||
+                customer.national ||
+                "",
+
+            isCash:
+                delivery.purchaseType !== "credit",
+
+            items: items
+        };
+
+        if (
+            typeof stlpGenerateInvoiceXLSX !==
+            "function"
+        ) {
+            alert("❌ تابع ساخت Excel پیدا نشد.");
+            return;
+        }
+
+        const blob =
+            await stlpGenerateInvoiceXLSX(opts);
+
+        if (!blob) {
+            alert("❌ فایل Excel ساخته نشد.");
+            return;
+        }
+
+        if (
+            typeof stlpDownloadBlob !==
+            "function"
+        ) {
+            alert("❌ تابع دانلود فایل پیدا نشد.");
+            return;
+        }
+
+        const fileNumber =
+            delivery.invoiceNo ||
+            delivery.deliveryNo ||
+            "بدون-شماره";
+
+        stlpDownloadBlob(
+            blob,
+            "فاکتور-" + fileNumber + ".xlsx"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "❌ خطا در دانلود Excel:",
+            error
+        );
+
+        alert(
+            "❌ خطا در ساخت فایل Excel:\n" +
+            (error.message || error)
+        );
+    }
+}
+
+window.downloadSalesDeliveryExcel =
+    downloadSalesDeliveryExcel;
+
+</script>
+
+
+<!-- =====================================================
+     پنجره تسویه حواله غیرنقدی
+===================================================== -->
+
+<div id="settleDeliveryModal" class="delivery-modal">
+
+    <div class="delivery-modal-box" style="max-width:480px;">
+
+        <div class="delivery-modal-header">
+
+            <h3>💳 تسویه حواله غیرنقدی</h3>
+
+            <button
+                type="button"
+                class="delivery-modal-close"
+                onclick="closeSettleDeliveryModal()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <p id="settleDeliverySummary" style="margin-top:-10px; color:#555;"></p>
+
+        <div class="settle-form-group">
+            <label>روش دریافت</label>
+            <select id="settleMethod" onchange="stlpUpdateSettleCheckFields()">
+                <option value="cash">نقدی / کارت به کارت</option>
+                <option value="cheque">چک</option>
+            </select>
+        </div>
+
+        <div class="settle-form-group">
+            <label>حساب مقصد (کجا نشست؟)</label>
+            <select id="settleAccount"></select>
+        </div>
+
+        <div id="settleCheckFields" style="display:none;">
+
+            <div class="settle-form-group">
+                <label>شماره چک</label>
+                <input id="settleCheckNo" type="text">
+            </div>
+
+            <div class="settle-form-group">
+                <label>بانک صادرکننده چک</label>
+                <input id="settleCheckBank" type="text">
+            </div>
+
+            <div class="settle-form-group">
+                <label>تاریخ سررسید</label>
+                <input id="settleCheckDueDate" type="text" placeholder="مثلاً 1404/06/01">
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            class="settle-delivery-btn"
+            style="width:100%;"
+            onclick="stlpConfirmSettleDelivery()"
+        >
+            ✔ ثبت تسویه در خزانه
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let stlpSettlingDeliveryIndex = -1;
+
+
+// =====================================================
+// باز کردن پنجره تسویه
+// =====================================================
+
+function openSettleDeliveryModal(index) {
+
+    const deliveries = JSON.parse(
+        localStorage.getItem("salesDeliveries") || "[]"
+    );
+
+    const delivery = deliveries[index];
+
+    if (!delivery) {
+        alert("❌ حواله پیدا نشد.");
+        return;
+    }
+
+    stlpSettlingDeliveryIndex = index;
+
+    const summary =
+        document.getElementById("settleDeliverySummary");
+
+    if (summary) {
+
+        const partyName =
+            delivery.direction === "purchase"
+                ? (delivery.supplierName || "-")
+                : (delivery.customer || "-");
+
+        summary.textContent =
+            "حواله " + (delivery.deliveryNo || "-") +
+            " | فاکتور " + (delivery.invoiceNo || "-") +
+            " | " + partyName +
+            " | مبلغ: " + (delivery.total || "0 ریال");
+
+    }
+
+
+    // پر کردن حساب‌ها از لیست پویای خزانه
+
+    const accSel =
+        document.getElementById("settleAccount");
+
+    if (accSel) {
+
+        if (
+            typeof stlpTreasuryAccounts !== "undefined" &&
+            Array.isArray(stlpTreasuryAccounts)
+        ) {
+
+            accSel.innerHTML =
+                stlpTreasuryAccounts
+                    .map(function(acc) {
+
+                        return (
+                            '<option value="' + acc.id + '">' +
+                            (acc.icon || "") + " " +
+                            (acc.name || acc.id) +
+                            "</option>"
+                        );
+
+                    })
+                    .join("");
+
+        } else {
+
+            accSel.innerHTML =
+                '<option value="cash">صندوق</option>' +
+                '<option value="bank">بانک</option>';
+
+        }
+
+    }
+
+
+    const methodSel =
+        document.getElementById("settleMethod");
+
+    if (methodSel) methodSel.value = "cash";
+
+    stlpUpdateSettleCheckFields();
+
+
+    const modal =
+        document.getElementById("settleDeliveryModal");
+
+    if (modal) modal.classList.add("show");
+
+}
+
+
+// =====================================================
+// نمایش/مخفی کردن فیلدهای چک
+// =====================================================
+
+function stlpUpdateSettleCheckFields() {
+
+    const method =
+        document.getElementById("settleMethod")?.value;
+
+    const box =
+        document.getElementById("settleCheckFields");
+
+    if (box) {
+
+        box.style.display =
+            method === "cheque" ? "block" : "none";
+
+    }
+
+}
+
+
+// =====================================================
+// بستن پنجره تسویه
+// =====================================================
+
+function closeSettleDeliveryModal() {
+
+    const modal =
+        document.getElementById("settleDeliveryModal");
+
+    if (modal) modal.classList.remove("show");
+
+    stlpSettlingDeliveryIndex = -1;
+
+}
+
+
+// =====================================================
+// ثبت نهایی تسویه در خزانه
+// =====================================================
+
+function stlpConfirmSettleDelivery() {
+
+    try {
+
+        const index = stlpSettlingDeliveryIndex;
+
+        if (index < 0) {
+            alert("❌ حواله‌ای برای تسویه انتخاب نشده است.");
+            return;
+        }
+
+        const deliveries = JSON.parse(
+            localStorage.getItem("salesDeliveries") || "[]"
+        );
+
+        const delivery = deliveries[index];
+
+        if (!delivery) {
+            alert("❌ حواله پیدا نشد.");
+            return;
+        }
+
+        if (delivery.treasuryRegistered === true) {
+            alert("⚠️ این حواله قبلاً تسویه و در خزانه ثبت شده است.");
+            closeSettleDeliveryModal();
+            return;
+        }
+
+        const invoiceNo =
+            String(delivery.invoiceNo || "").trim();
+
+        // بدون فیلتر «source»، این بررسی شماره‌فاکتورِ حواله را با
+        // شماره‌ی هر تراکنش دیگری در کل خزانه مقایسه می‌کرد — مثلاً
+        // اگر یک فاکتور نقدیِ فروش به‌طور تصادفی همان شماره را داشت،
+        // تسویه‌ی این حواله‌ی خرید/فروشِ نسیه بدون دلیل واقعی رد
+        // می‌شد. الان فقط با تراکنش‌های همان نوع (خرید در برابر
+        // فروش) مقایسه می‌شود — دقیقاً مثل منطق حذفِ حواله در بالا.
+        const settleValidSources =
+            delivery.direction === "purchase"
+                ? ["purchase", "purchase-settlement"]
+                : ["invoice", "delivery-settlement"];
+
+        const duplicate =
+            typeof stlpTreasury !== "undefined" &&
+            stlpTreasury.some(function(item) {
+                // چکِ برگشتی دیگر یک تسویه‌ی معتبر نیست (برگشتش همین حواله را
+                // دوباره «تسویه‌نشده» کرده) — بدونِ این استثنا، تسویه‌ی مجدد
+                // (نقد یا چکِ تازه) همیشه با «قبلاً ثبت شده» رد می‌شد
+                return String(item.invoiceNo || "").trim() === invoiceNo &&
+                       invoiceNo !== "" &&
+                       item.checkStatus !== "returned" &&
+                       settleValidSources.indexOf(item.source) !== -1;
+            });
+
+        if (duplicate) {
+            alert("❌ برای این شماره فاکتور قبلاً تراکنش خزانه ثبت شده است.");
+            return;
+        }
+
+        const amount =
+            typeof stlpParseMoney === "function"
+                ? stlpParseMoney(delivery.total)
+                : Number(String(delivery.total || "").replace(/[^\d.-]/g, "")) || 0;
+
+        if (amount <= 0) {
+            alert("❌ مبلغ فاکتور معتبر نیست.");
+            return;
+        }
+
+        const method =
+            document.getElementById("settleMethod")?.value || "cash";
+
+        const account =
+            document.getElementById("settleAccount")?.value || "cash";
+
+        const isCheque = method === "cheque";
+
+        const checkNo =
+            document.getElementById("settleCheckNo")?.value.trim() || "";
+
+        const checkBank =
+            document.getElementById("settleCheckBank")?.value.trim() || "";
+
+        const checkDueDate =
+            document.getElementById("settleCheckDueDate")?.value.trim() || "";
+
+        if (isCheque) {
+
+            if (!checkNo) {
+                alert("لطفاً شماره چک را وارد کنید.");
+                return;
+            }
+
+            if (!checkDueDate) {
+                alert("لطفاً تاریخ سررسید چک را وارد کنید.");
+                return;
+            }
+
+            if (typeof stlpIsValidJalaliDateText === "function" && !stlpIsValidJalaliDateText(checkDueDate)) {
+                alert("تاریخ سررسید را به‌صورتِ شمسی (مثلاً 1404/08/01) وارد کنید.");
+                return;
+            }
+
+        }
+
+        const isPurchase =
+            delivery.direction === "purchase";
+
+        const partyName =
+            isPurchase
+                ? (delivery.supplierName || "")
+                : (delivery.customer || "");
+
+        const transaction = {
+
+            id:
+                Date.now() + "_" +
+                Math.random().toString(36).substring(2, 8),
+
+            type: isPurchase ? "out" : "in",
+
+            account: account,
+
+            transferFrom: "",
+            transferTo: "",
+
+            amount: amount,
+
+            date:
+                delivery.date ||
+                new Date().toLocaleDateString("fa-IR"),
+
+            party: partyName,
+
+            method: isCheque ? "cheque" : "cash",
+
+            tracking: "",
+
+            invoiceNo: invoiceNo,
+
+            description:
+                (isPurchase ? "تسویه بدهی خرید شماره " : "تسویه حواله غیرنقدی شماره ") +
+                (delivery.deliveryNo || "-") +
+                " (فاکتور " + (invoiceNo || "-") + ")",
+
+            checkNo: isCheque ? checkNo : "",
+            checkBank: isCheque ? checkBank : "",
+            checkDueDate: isCheque ? checkDueDate : "",
+
+            checkStatus: isCheque ? "pending" : "",
+            checkDirection: isCheque ? (isPurchase ? "issued" : "received") : "",
+            balanceApplied: isCheque ? false : true,
+
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+
+            source: isPurchase ? "purchase-settlement" : "delivery-settlement"
+
+        };
+
+        if (typeof stlpTreasury === "undefined") {
+            alert("❌ ماژول خزانه (app.js) بارگذاری نشده است.");
+            return;
+        }
+
+        stlpTreasury.push(transaction);
+
+        if (typeof saveTreasury === "function") saveTreasury();
+
+        if (typeof saveTreasuryAccountingEntry === "function") {
+            saveTreasuryAccountingEntry(transaction);
+        }
+
+        if (typeof renderTreasury === "function") renderTreasury();
+
+        // علامت‌گذاری حواله به‌عنوان تسویه‌شده
+
+        delivery.treasuryRegistered = true;
+        delivery.settledAt = new Date().toISOString();
+        delivery.settlementMethod = transaction.method;
+        delivery.settlementAccount = account;
+
+        deliveries[index] = delivery;
+
+        localStorage.setItem(
+            "salesDeliveries",
+            JSON.stringify(deliveries)
+        );
+
+        if (typeof stlpLogActivity === "function") {
+            stlpLogActivity("حواله‌ها", "تسویه حواله", "حواله شماره " + (delivery.deliveryNo || "-") + " — " + (typeof stlpTreasuryMoney === "function" ? stlpTreasuryMoney(amount) : amount));
+        }
+
+        closeSettleDeliveryModal();
+
+        if (typeof renderSalesDeliveries === "function") {
+            renderSalesDeliveries();
+        }
+
+        alert(
+            "✅ تسویه حواله شماره " +
+            (delivery.deliveryNo || "-") +
+            " با موفقیت در خزانه ثبت شد."
+        );
+
+    } catch (error) {
+
+        console.error("❌ خطا در ثبت تسویه:", error);
+
+        alert(
+            "❌ خطایی هنگام ثبت تسویه رخ داد.\n" +
+            (error.message || error)
+        );
+
+    }
+
+}
+
+
+window.openSettleDeliveryModal = openSettleDeliveryModal;
+window.closeSettleDeliveryModal = closeSettleDeliveryModal;
+window.stlpUpdateSettleCheckFields = stlpUpdateSettleCheckFields;
+window.stlpConfirmSettleDelivery = stlpConfirmSettleDelivery;
+
+
+// بستن با کلیک بیرون از پنجره
+
+document.addEventListener("click", function(event) {
+
+    const modal =
+        document.getElementById("settleDeliveryModal");
+
+    if (modal && event.target === modal) {
+        closeSettleDeliveryModal();
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>

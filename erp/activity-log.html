@@ -1,0 +1,460 @@
+﻿<!doctype html>
+
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+>
+
+<title>لاگ فعالیت سیستم - STLP</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+
+.treasury-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.treasury-stat {
+    background: rgba(255,255,255,.08);
+    border: 1px solid #0fa37f66;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.treasury-stat-title {
+    color: #00ffca;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.treasury-stat-value {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: #00ffca;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #0fa37f88;
+    border-radius: 8px;
+    background: #fff;
+    color: #111;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+.treasury-add-account-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 25px;
+}
+
+.table-container { overflow-x: auto; }
+
+.table-container table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    background: white;
+    color: #111;
+}
+
+.table-container th {
+    background: #0fa37f;
+    color: white;
+    padding: 12px 8px;
+    border: 1px solid #0b8065;
+    white-space: nowrap;
+}
+
+.table-container td {
+    padding: 10px 8px;
+    border: 1px solid #ddd;
+    text-align: right;
+}
+
+.table-container tbody tr:hover td { background: #eefcf8; }
+
+.crm-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.log-module-treasury { background: #d1e7dd; color: #0f5132; }
+.log-module-crm { background: #cfe2ff; color: #084298; }
+.log-module-customers { background: #fff3cd; color: #856404; }
+.log-module-accounting { background: #e2d9f3; color: #3f2a68; }
+.log-module-default { background: #e9ecef; color: #495057; }
+
+.lock-note {
+    text-align: center;
+    padding: 60px 20px;
+    color: #ff8b96;
+    font-size: 15px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="overlay">
+
+
+<!-- =========================================
+     منوی بالا (استاندارد سراسری سیستم)
+========================================== -->
+
+<button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html" class="active">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+
+<h2>
+    🕒 لاگ فعالیت کل سیستم
+</h2>
+
+<p style="color:#aaa; font-size:13px; margin-top:-10px;">
+    هر افزودن، ویرایش، حذف و عملیات مهم — در خزانه، حسابداری، مشتریان، CRM و بقیه‌ی ماژول‌ها —
+    همراه با نام کاربر و زمان دقیق اینجا ثبت می‌شود. فقط مدیر سیستم به این صفحه دسترسی دارد.
+    این لاگ روی سرور فقط «افزودنی» است — هیچ‌کس (حتی مدیر سیستم) نمی‌تواند رکوردی از آن را
+    ویرایش یا حذف کند.
+</p>
+
+
+<div id="pageContent">
+
+    <div class="treasury-stats" id="logStats"></div>
+
+
+    <div class="treasury-add-account-form">
+
+        <div class="form-group">
+            <label>جستجو</label>
+            <input id="logSearch" type="text" placeholder="کاربر، عملیات، جزئیات...">
+        </div>
+
+        <div class="form-group">
+            <label>ماژول</label>
+            <select id="logModuleFilter"><option value="">همه ماژول‌ها</option></select>
+        </div>
+
+        <div class="form-group">
+            <label>کاربر</label>
+            <select id="logUserFilter"><option value="">همه کاربران</option></select>
+        </div>
+
+        <div class="form-group">
+            <label>از تاریخ</label>
+            <input id="logFromDate" type="date">
+        </div>
+
+        <div class="form-group">
+            <label>تا تاریخ</label>
+            <input id="logToDate" type="date">
+        </div>
+
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button" id="btnClearLogFilters">پاک کردن فیلترها</button>
+        </div>
+
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button" id="btnExportLog">📊 خروجی اکسل</button>
+        </div>
+
+    </div>
+
+
+    <div id="logCount" style="margin-bottom:10px; font-size:13px; color:#00ffca;"></div>
+
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>تاریخ و ساعت</th>
+                    <th>ماژول</th>
+                    <th>کاربر</th>
+                    <th>عملیات</th>
+                    <th>جزئیات</th>
+                </tr>
+            </thead>
+            <tbody id="logTableBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+
+</div><!-- /.overlay -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="app.js"></script>
+
+
+<script>
+
+function logModuleBadgeClass(module) {
+
+    if (module === "خزانه") return "crm-badge log-module-treasury";
+    if (module === "CRM") return "crm-badge log-module-crm";
+    if (module === "مشتریان") return "crm-badge log-module-customers";
+    if (module === "حسابداری") return "crm-badge log-module-accounting";
+    return "crm-badge log-module-default";
+
+}
+
+
+function logPopulateFilters() {
+
+    const modules = Array.from(new Set(stlpActivityLog.map(function(e) { return e.module || "سیستم"; }))).sort();
+    const users = Array.from(new Set(stlpActivityLog.map(function(e) { return e.user || "ناشناس"; }))).sort();
+
+    const moduleSel = document.getElementById("logModuleFilter");
+    const userSel = document.getElementById("logUserFilter");
+
+    if (moduleSel) {
+        const current = moduleSel.value;
+        moduleSel.innerHTML = '<option value="">همه ماژول‌ها</option>' +
+            modules.map(function(m) { return '<option value="' + escapeHtml(m) + '">' + escapeHtml(m) + '</option>'; }).join("");
+        moduleSel.value = current;
+    }
+
+    if (userSel) {
+        const current = userSel.value;
+        userSel.innerHTML = '<option value="">همه کاربران</option>' +
+            users.map(function(u) { return '<option value="' + escapeHtml(u) + '">' + escapeHtml(u) + '</option>'; }).join("");
+        userSel.value = current;
+    }
+
+}
+
+
+function logGetFiltered() {
+
+    const q = (document.getElementById("logSearch")?.value || "").trim().toLowerCase();
+    const moduleFilter = document.getElementById("logModuleFilter")?.value || "";
+    const userFilter = document.getElementById("logUserFilter")?.value || "";
+    const fromDate = document.getElementById("logFromDate")?.value || "";
+    const toDate = document.getElementById("logToDate")?.value || "";
+
+    const fromTs = fromDate ? new Date(fromDate + "T00:00:00").getTime() : null;
+    const toTs = toDate ? new Date(toDate + "T23:59:59").getTime() : null;
+
+    return stlpActivityLog.filter(function(e) {
+
+        if (moduleFilter && e.module !== moduleFilter) return false;
+        if (userFilter && e.user !== userFilter) return false;
+        if (fromTs !== null && e.ts < fromTs) return false;
+        if (toTs !== null && e.ts > toTs) return false;
+
+        if (q) {
+            const text = [e.module, e.user, e.action, e.details].join(" ").toLowerCase();
+            if (!text.includes(q)) return false;
+        }
+
+        return true;
+
+    });
+
+}
+
+
+function logRenderStats() {
+
+    const box = document.getElementById("logStats");
+    if (!box) return;
+
+    const total = stlpActivityLog.length;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayCount = stlpActivityLog.filter(function(e) { return e.ts >= today.getTime(); }).length;
+
+    const userCount = new Set(stlpActivityLog.map(function(e) { return e.user; })).size;
+    const moduleCount = new Set(stlpActivityLog.map(function(e) { return e.module; })).size;
+
+    box.innerHTML = `
+        <div class="treasury-stat">
+            <div class="treasury-stat-title">جمع کل فعالیت‌ها</div>
+            <div class="treasury-stat-value">${total.toLocaleString("fa-IR")}</div>
+        </div>
+        <div class="treasury-stat">
+            <div class="treasury-stat-title">فعالیت امروز</div>
+            <div class="treasury-stat-value">${todayCount.toLocaleString("fa-IR")}</div>
+        </div>
+        <div class="treasury-stat">
+            <div class="treasury-stat-title">تعداد کاربران فعال</div>
+            <div class="treasury-stat-value">${userCount.toLocaleString("fa-IR")}</div>
+        </div>
+        <div class="treasury-stat">
+            <div class="treasury-stat-title">تعداد ماژول‌ها</div>
+            <div class="treasury-stat-value">${moduleCount.toLocaleString("fa-IR")}</div>
+        </div>
+    `;
+
+}
+
+
+function logRenderTable() {
+
+    const filtered = logGetFiltered().slice().sort(function(a, b) { return (b.ts || 0) - (a.ts || 0); });
+
+    const body = document.getElementById("logTableBody");
+
+    if (body) {
+        body.innerHTML = filtered.map(function(e) {
+            return `
+                <tr>
+                    <td>${escapeHtml(e.date || "")}</td>
+                    <td><span class="${logModuleBadgeClass(e.module)}">${escapeHtml(e.module || "سیستم")}</span></td>
+                    <td>${escapeHtml(e.user || "")}</td>
+                    <td>${escapeHtml(e.action || "")}</td>
+                    <td>${escapeHtml(e.details || "")}</td>
+                </tr>
+            `;
+        }).join("") || '<tr><td colspan="5">هیچ فعالیتی با این فیلترها پیدا نشد.</td></tr>';
+    }
+
+    const countBox = document.getElementById("logCount");
+    if (countBox) {
+        countBox.textContent = "نمایش " + filtered.length + " از " + stlpActivityLog.length + " رکورد";
+    }
+
+}
+
+
+function logRenderAll() {
+
+    logPopulateFilters();
+    logRenderStats();
+    logRenderTable();
+
+}
+
+
+function logExportExcel() {
+
+    if (typeof XLSX === "undefined") {
+        alert("❌ کتابخانه‌ی خروجی اکسل لود نشده — به اینترنت وصل باشید.");
+        return;
+    }
+
+    const filtered = logGetFiltered();
+
+    const data = filtered.map(function(e) {
+        return {
+            "تاریخ و ساعت": e.date || "",
+            "ماژول": e.module || "",
+            "کاربر": e.user || "",
+            "عملیات": e.action || "",
+            "جزئیات": e.details || ""
+        };
+    });
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "لاگ فعالیت");
+    XLSX.writeFile(wb, "activity-log.xlsx");
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    if (!stlpRequirePermission("admin-only")) {
+        return;
+    }
+
+    logRenderAll();
+
+    ["logSearch", "logModuleFilter", "logUserFilter", "logFromDate", "logToDate"].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("input", logRenderTable);
+        el.addEventListener("change", logRenderTable);
+    });
+
+    document.getElementById("btnClearLogFilters")?.addEventListener("click", function() {
+        ["logSearch", "logModuleFilter", "logUserFilter", "logFromDate", "logToDate"].forEach(function(id) {
+            const el = document.getElementById(id);
+            if (el) el.value = "";
+        });
+        logRenderTable();
+    });
+
+    document.getElementById("btnExportLog")?.addEventListener("click", logExportExcel);
+
+});
+
+</script>
+
+
+</body>
+
+</html>

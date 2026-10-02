@@ -1,0 +1,377 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+<script src="storage-sync.js"></script>
+  <title>فاکتور فروش - صبا تجهیز لاله پارسه</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+
+    #reportSearch, .invtabs-search {
+      padding: 10px;
+      width: 280px;
+      max-width: 100%;
+      margin-bottom: 15px;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+
+    .invtabs-table-container {
+      overflow-x: auto;
+    }
+
+    .invtabs-table-container table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #e9e3e3;
+      color: #000;
+      min-width: 700px;
+    }
+
+    .invtabs-table-container th,
+    .invtabs-table-container td {
+      padding: 8px;
+      border: 1px solid #999;
+      text-align: center;
+    }
+
+    .invtabs-table-container th {
+      background: #d3cccc;
+      font-weight: bold;
+    }
+
+    .view-btn {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .view-btn:hover {
+      background: #0b5ed7;
+    }
+
+    .report-card {
+      background: rgba(0, 0, 0, 0.45);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(6px);
+      border: 1px solid #0fa37f88;
+      box-shadow: 0 0 20px #00000080;
+    }
+
+    .invtabs-tabs {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0 16px;
+        flex-wrap: wrap;
+    }
+
+    .invtabs-tab-btn {
+        background: rgba(255,255,255,.08);
+        border: 1px solid #0fa37f66;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 14px;
+        transition: .2s;
+    }
+
+    .invtabs-tab-btn:hover { background: rgba(255,255,255,.15); }
+
+    .invtabs-tab-btn.active { background: #0fa37f; border-color: #0fa37f; }
+
+    .invtabs-tab-panel { display: none; }
+    .invtabs-tab-panel.active { display: block; }
+
+    @media (max-width: 600px) {
+      #reportSearch, .invtabs-search {
+        width: 100%;
+      }
+      .report-card {
+        padding: 12px;
+      }
+    }
+
+  </style>
+
+</head>
+<body>
+<div class="overlay">
+
+  <!-- =================== -->
+  <!--     هدر و منو       -->
+  <!-- =================== -->
+  <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html" class="active">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+  <h2>صدور فاکتور فروش</h2>
+
+  <h3>انتخاب مشتری</h3>
+
+  <input id="customerSearchInvoice" oninput="searchCustomerForInvoice()"
+         placeholder="جستجوی مشتری..."
+         style="padding:10px; width:250px;">
+
+  <select id="customerSelect" style="padding:10px; width:300px;">
+    <option value="">-- انتخاب مشتری --</option>
+  </select>
+
+  <br><br>
+
+  <!-- درصد مالیات -->
+  <div>
+    <label>درصد مالیات:</label>
+    <input type="number" id="taxRate" value="10" style="width:80px;">
+  </div>
+
+  <br>
+
+  <div>
+    <label>نوع فروش:</label>
+    <select id="purchaseType" style="padding:8px; border-radius:6px;">
+      <option value="cash">نقدی</option>
+      <option value="credit">غیر نقدی (نسیه)</option>
+    </select>
+  </div>
+
+  <br>
+
+  <table id="invoiceTable" border="1" style="width:100%; background:#fff; color:#000;">
+    <thead>
+      <tr style="background:#0fa37f; color:#fff;">
+        <th>ردیف</th>
+        <th>انتخاب کالا</th>
+        <th>کد کالا</th>
+        <th>شرح</th>
+        <th>واحد</th>
+        <th>تعداد</th>
+        <th>مبلغ واحد</th>
+        <th>مبلغ کل</th>
+        <th>% تخفیف</th>
+        <th>پس از تخفیف</th>
+        <th>مالیات</th>
+        <th>جمع کل</th>
+        <th>عملیات</th>
+      </tr>
+    </thead>
+    <tbody id="invoiceBody"></tbody>
+  </table>
+
+  <br>
+
+  <button onclick="addRow()">➕ افزودن ردیف</button>
+
+  <h3>جمع نهایی فاکتور:</h3>
+  <div id="finalTotal" style="font-size:20px; font-weight:bold;"></div>
+
+  <div class="btn-row" style="display:flex; gap:10px; flex-wrap:wrap;">
+
+    <button
+      onclick="stlpSaveInvoice()"
+      style="background:#0d6efd; color:#fff; border:none; padding:12px 22px; border-radius:8px; cursor:pointer; font-weight:bold;"
+    >
+      💾 ثبت فاکتور
+    </button>
+
+    <button
+      onclick="stlpSaveInvoice('excel')"
+      style="background:#0fa37f; color:#fff; border:none; padding:12px 22px; border-radius:8px; cursor:pointer; font-weight:bold;"
+    >
+      🟢 ثبت فاکتور و دانلود اکسل
+    </button>
+
+    <button
+      onclick="stlpSaveInvoice('pdf')"
+      style="background:#e24a38; color:#fff; border:none; padding:12px 22px; border-radius:8px; cursor:pointer; font-weight:bold;"
+    >
+      🔴 ثبت فاکتور و دانلود PDF
+    </button>
+
+  </div>
+
+
+  <!-- ===============================
+       لیست فاکتورهای فروش (سه تب)
+  ================================ -->
+
+  <div class="report-card" style="margin-top:30px;">
+
+    <h3>
+      لیست فاکتورهای فروش
+    </h3>
+
+    <div class="invtabs-tabs">
+      <button type="button" class="invtabs-tab-btn active" data-invtab="pending">📋 پیش‌فاکتورها</button>
+      <button type="button" class="invtabs-tab-btn" data-invtab="approved">✅ فاکتورهای تأییدشده</button>
+      <button type="button" class="invtabs-tab-btn" data-invtab="rejected">❌ فاکتورهای ردشده</button>
+    </div>
+
+    <div class="invtabs-tab-panel active" id="invtab-pending">
+
+      <input
+        class="invtabs-search"
+        id="reportSearchPending"
+        type="text"
+        oninput="stlpFilterInvoiceRows('invoiceTablePending', 'reportSearchPending')"
+        placeholder="جستجوی شماره فاکتور یا نام مشتری..."
+      >
+
+      <div class="invtabs-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" onchange="stlpToggleTableInvoiceChecks(this)" title="انتخاب همه"></th>
+              <th>شماره فاکتور</th>
+              <th>تاریخ</th>
+              <th>مشتری</th>
+              <th>نوع خرید</th>
+              <th>جمع کل</th>
+              <th>نمایش / چاپ</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceTablePending"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="invtabs-tab-panel" id="invtab-approved">
+
+      <input
+        class="invtabs-search"
+        id="reportSearchApproved"
+        type="text"
+        oninput="stlpFilterInvoiceRows('invoiceTableApproved', 'reportSearchApproved')"
+        placeholder="جستجوی شماره فاکتور یا نام مشتری..."
+      >
+
+      <div class="invtabs-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" onchange="stlpToggleTableInvoiceChecks(this)" title="انتخاب همه"></th>
+              <th>شماره فاکتور</th>
+              <th>تاریخ</th>
+              <th>مشتری</th>
+              <th>نوع خرید</th>
+              <th>جمع کل</th>
+              <th>نمایش / چاپ</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceTableApproved"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="invtabs-tab-panel" id="invtab-rejected">
+
+      <input
+        class="invtabs-search"
+        id="reportSearchRejected"
+        type="text"
+        oninput="stlpFilterInvoiceRows('invoiceTableRejected', 'reportSearchRejected')"
+        placeholder="جستجوی شماره فاکتور یا نام مشتری..."
+      >
+
+      <div class="invtabs-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" onchange="stlpToggleTableInvoiceChecks(this)" title="انتخاب همه"></th>
+              <th>شماره فاکتور</th>
+              <th>تاریخ</th>
+              <th>مشتری</th>
+              <th>نوع خرید</th>
+              <th>جمع کل</th>
+              <th>نمایش / چاپ</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceTableRejected"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+document.querySelectorAll('.invtabs-tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+        document.querySelectorAll('.invtabs-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+        document.querySelectorAll('.invtabs-tab-panel').forEach(function(p){ p.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById('invtab-' + btn.dataset.invtab).classList.add('active');
+    });
+});
+
+function stlpToggleTableInvoiceChecks(sourceCheckbox) {
+    const table = sourceCheckbox.closest('table');
+    if (!table) return;
+    table.querySelectorAll('.invoice-check').forEach(function(chk){ chk.checked = sourceCheckbox.checked; });
+}
+</script>
+
+<!-- کتابخانه‌های ساخت PDF (html2canvas + jsPDF) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- اسکریپت اصلی برنامه -->
+<script src="app.js"></script>
+
+<!-- چک لاگین و دسترسی -->
+<script>
+stlpRequirePermission("sales");
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (typeof loadInvoices === "function") {
+        loadInvoices();
+    }
+});
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,1315 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<script src="storage-sync.js"></script>
+<title>چارت سازمانی - STLP</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+
+.org-tree-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: auto;
+    padding: 20px 10px 40px 10px;
+}
+
+.org-vline {
+    width: 2px;
+    height: 22px;
+    background: #0fa37f99;
+}
+
+.org-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 26px;
+    flex-wrap: wrap;
+}
+
+.org-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.org-node {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid #0fa37f66;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.org-node.root {
+    background: #0fa37f;
+    border-color: #0fa37f;
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.org-node.dept {
+    background: rgba(13,110,253,.15);
+    border-color: #0d6efd88;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 8px 12px;
+}
+
+.org-node.dept .dept-title {
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.org-node.person {
+    background: rgba(255,255,255,.05);
+    border-color: #55555588;
+    font-size: 13px;
+    cursor: default;
+}
+
+.org-node.deputy {
+    background: rgba(15,163,127,.15);
+    border-color: #0fa37f88;
+    font-size: 13px;
+}
+
+.org-node.deputy.clickable {
+    cursor: pointer;
+}
+
+.org-node.deputy.clickable:hover {
+    background: rgba(15,163,127,.28);
+}
+
+.org-node.person.clickable {
+    cursor: pointer;
+    border-color: #f0ad4e88;
+}
+
+.org-node.person.clickable:hover {
+    background: rgba(240,173,78,.18);
+}
+
+.org-node.unassigned-title {
+    background: rgba(220,53,69,.12);
+    border-color: #dc354588;
+}
+
+.org-node.board-member {
+    background: rgba(240,173,78,.15);
+    border-color: #f0ad4e88;
+    cursor: pointer;
+}
+
+.org-node.board-member:hover {
+    background: rgba(240,173,78,.28);
+}
+
+.mini {
+    border: none;
+    border-radius: 6px;
+    padding: 0;
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    vertical-align: middle;
+}
+
+/* اندازه‌ی یکدست برای ایموجیِ کنار اسم‌ها تو نودهای چارت — بدون
+   این، بعضی ایموجی‌ها (مثل 🎖) به‌خاطر فونت پیش‌فرض ایموجیِ مرورگر
+   نسبت به بقیه‌ی متن بزرگ‌تر دیده می‌شن */
+.org-emoji {
+    font-size: .85em;
+    vertical-align: -1px;
+}
+
+.org-empty-hint {
+    color: #888;
+    font-size: 12px;
+    padding: 4px 0;
+}
+
+/* ---------- مودال دسترسی ---------- */
+
+.perm-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.6);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+}
+
+.perm-modal-box {
+    background: #1c1c1c;
+    border: 1px solid #0fa37f66;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 480px;
+    width: 92%;
+    max-height: 88vh;
+    overflow-y: auto;
+}
+
+.perm-check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 4px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    font-size: 14px;
+}
+
+.perm-check-row input {
+    width: 18px;
+    height: 18px;
+}
+
+.perm-section-title {
+    color: #0fa37f;
+    font-weight: 700;
+    margin: 14px 0 4px 0;
+    font-size: 13px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="overlay">
+
+    <button type="button" class="nav-toggle-btn" onclick="stlpToggleNavMenu()">
+        ☰
+    </button>
+
+    <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-drawer-header">
+            <img src="assets/logo.png" class="nav-drawer-logo">
+            <div class="nav-drawer-company">صبا تجهیز لاله پارسه</div>
+            <button type="button" class="nav-drawer-close" onclick="stlpCloseNavMenu()">✕</button>
+        </div>
+            <a href="home.html">🏠 خانه</a>
+            <a href="store-management.html">🛍️ فروشگاه و انبار آنلاین</a>
+            <a href="index.html">🧾 فاکتور فروش</a>
+            <a href="sales-delivery.html">📦 حواله‌ها</a>
+            <a href="inventory.html">🏬 انبار</a>
+            <a href="costumers.html">👥 مشتریان</a>
+            <a href="purchases.html">🚚 تأمین‌کنندگان و خرید</a>
+            <a href="treasury.html">🏦 خزانه</a>
+            <a href="payroll.html">💰 حقوق و دستمزد</a>
+            <a href="letters.html">✉️ نامه‌ها</a>
+            <a href="reports.html">📊 گزارش و داشبورد</a>
+            <a href="crm.html">🎯 CRM (پیگیری مشتریان بالقوه)</a>
+            <a href="backup.html">🗄️ پشتیبان‌گیری</a>
+            <a href="users.html">👤 کاربران</a>
+            <a href="org-chart.html" class="active">🌳 چارت سازمانی</a>
+            <a href="activity-log.html">🕒 لاگ فعالیت سیستم</a>
+    </div>
+
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="stlpCloseNavMenu()"></div>
+
+    <h2>🌳 چارت سازمانی</h2>
+
+    <p style="color:#aaa; font-size:13px; max-width:800px;">
+        همه‌ی ساختار سازمان و دسترسی‌ها از همین‌جا مدیریت می‌شود. تو «کاربران» فقط حساب (نام کاربری/رمز/اتصال به
+        کارمند) ساخته می‌شود؛ نقش‌ها، دسترسی‌ها و جایگاه هر نفر در سازمان همین‌جاست — روی هر اسمِ زردرنگ یا داخل هر
+        بخش کلیک کن تا دسترسی‌هایش را با چک‌باکس تنظیم کنی.
+    </p>
+
+    <div class="card">
+
+        <button type="button" onclick="stlpOrgAddDept()">➕ افزودن بخش جدید</button>
+
+        <div class="org-tree-container" id="orgChartWrap"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     مودال تنظیم دسترسی‌های یک کاربر
+===================================================== -->
+
+<div class="perm-modal-overlay" id="permModalOverlay">
+
+    <div class="perm-modal-box">
+
+        <h3 id="permModalTitle">دسترسی‌های کاربر</h3>
+
+        <input type="hidden" id="permModalUserId" value="">
+
+        <div class="perm-section-title">نقش‌های سازمانی</div>
+
+        <p id="permModalOrgHint" style="color:#aaa; font-size:12px; margin-top:0;"></p>
+
+        <label class="perm-check-row">
+            <input type="checkbox" id="permIsAdmin">
+            🛡️ مدیر سیستم (دسترسی کامل به همه‌جا)
+        </label>
+
+        <label class="perm-check-row">
+            <input type="checkbox" id="permCanSignLetters">
+            ✍️ امضای نامه‌های خارج‌سازمانی
+        </label>
+
+        <label class="perm-check-row">
+            <input type="checkbox" id="permCanApproveLeaveFinance">
+            🗂 تأیید نهایی درخواست مرخصی (کارگزینی) + ویرایش دستی مانده‌ی مرخصی
+        </label>
+
+        <label class="perm-check-row">
+            <input type="checkbox" id="permCanManageLetterTemplates">
+            🛠 مدیریت قالب‌های نامه‌ی رسمی/ضمانت + صدور نامه‌ی گروهی
+        </label>
+
+        <div class="perm-section-title">دسترسی به بخش‌های سیستم</div>
+
+        <div id="permModuleGrid"></div>
+
+        <br>
+        <button type="button" onclick="stlpSavePermModal()">💾 ذخیره دسترسی‌ها</button>
+        <button type="button" onclick="stlpClosePermModal()" style="background:#6c757d;">✖ بستن</button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     مودال «ویرایش جایگاه سازمانی» — بخش/نقش یا پستِ هیات‌مدیره‌ی
+     یک کارمند؛ نتیجه مستقیم روی رکورد کارمند (همون‌جایی که تو
+     حقوق‌ودستمزد هم دیده می‌شه) ذخیره می‌شه
+===================================================== -->
+
+<div class="perm-modal-overlay" id="positionModal">
+
+    <div class="perm-modal-box">
+
+        <h3 id="posModalTitle">جایگاه سازمانی</h3>
+
+        <div style="margin-bottom:10px;">
+            <label>نوع جایگاه</label><br>
+            <select id="posKind" onchange="stlpTogglePositionModalFields()" style="width:100%; padding:8px;">
+                <option value="dept">در یک بخش</option>
+                <option value="board">هیات مدیره</option>
+            </select>
+        </div>
+
+        <div id="posDeptFieldsWrap">
+
+            <div style="margin-bottom:10px;">
+                <label>بخش</label><br>
+                <select id="posDepartmentId" style="width:100%; padding:8px;">
+                    <option value="">— بدون بخش —</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:10px;">
+                <label>نقش در بخش</label><br>
+                <select id="posRole" style="width:100%; padding:8px;">
+                    <option value="employee">کارمند عادی</option>
+                    <option value="manager">مدیر بخش</option>
+                    <option value="deputy">معاون بخش</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div id="posBoardFieldsWrap" style="display:none;">
+
+            <div style="margin-bottom:10px;">
+                <label>پست در هیات مدیره</label><br>
+                <select id="posBoardPost" style="width:100%; padding:8px;">
+                    <option value="chairman">رئیس هیات مدیره</option>
+                    <option value="vice_chairman">نایب رئیس هیات مدیره</option>
+                    <option value="ceo">مدیرعامل</option>
+                    <option value="member">عضو هیات مدیره</option>
+                </select>
+            </div>
+
+        </div>
+
+        <br>
+        <button type="button" onclick="stlpSavePositionModal()">💾 ذخیره جایگاه</button>
+        <button type="button" onclick="stlpClosePositionModal()" style="background:#6c757d;">✖ بستن</button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     مودال «مدیریت اعضای بخش» — همون کاری که مودال «جایگاه» تک‌تک
+     برای هر شخص انجام می‌ده، اینجا یکجا با یه لیست از همه‌ی
+     کارمندها برای یک بخش انجام می‌شه (دو طرفه‌ی همون تغییر)
+===================================================== -->
+
+<div class="perm-modal-overlay" id="deptMembersModal">
+
+    <div class="perm-modal-box" style="max-width:560px;">
+
+        <h3 id="deptMembersModalTitle">اعضای بخش</h3>
+
+        <p style="color:#aaa; font-size:12px;">
+            برای هر کارمند مشخص کن نسبتش با این بخش چیه. هر بخش فقط یک «مدیر» می‌تونه داشته باشه.
+        </p>
+
+        <input
+            id="deptMembersSearch"
+            type="text"
+            oninput="stlpRenderDeptMembersList()"
+            placeholder="جستجوی نام کارمند..."
+            style="width:100%; padding:8px; margin-bottom:10px; box-sizing:border-box;"
+        >
+
+        <div id="deptMembersList" style="max-height:320px; overflow-y:auto; background:#00000022; padding:10px; border-radius:8px;"></div>
+
+        <br>
+        <button type="button" onclick="stlpSaveDeptMembersModal()">💾 ذخیره اعضا</button>
+        <button type="button" onclick="stlpCloseDeptMembersModal()" style="background:#6c757d;">✖ بستن</button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     مودال «مدیریت اعضای هیات مدیره» — دقیقاً هم‌شکل مودال اعضای
+     بخش؛ اینجا به‌جای نقش در بخش، پست در هیات مدیره انتخاب می‌شه
+     (دو طرفه‌ی همون دکمه‌ی ⚙️ تک‌نفره)
+===================================================== -->
+
+<div class="perm-modal-overlay" id="boardMembersModal">
+
+    <div class="perm-modal-box" style="max-width:560px;">
+
+        <h3>🏛 اعضای هیات مدیره</h3>
+
+        <p style="color:#aaa; font-size:12px;">
+            برای هر کارمند مشخص کن پستش تو هیات مدیره چیه. اگه کارمندی عضو هیات مدیره باشه، بخش نداره.
+        </p>
+
+        <input
+            id="boardMembersSearch"
+            type="text"
+            oninput="stlpRenderBoardMembersList()"
+            placeholder="جستجوی نام کارمند..."
+            style="width:100%; padding:8px; margin-bottom:10px; box-sizing:border-box;"
+        >
+
+        <div id="boardMembersList" style="max-height:320px; overflow-y:auto; background:#00000022; padding:10px; border-radius:8px;"></div>
+
+        <br>
+        <button type="button" onclick="stlpSaveBoardMembersModal()">💾 ذخیره اعضا</button>
+        <button type="button" onclick="stlpCloseBoardMembersModal()" style="background:#6c757d;">✖ بستن</button>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+
+<script>
+
+// stlpRequirePermission فقط location.href را صف می‌کند و false
+// برمی‌گرداند؛ خودش اجرای بقیه‌ی اسکریپت را متوقف نمی‌کند — برای
+// همین اگر false برگرداند، همین‌جا با throw از ادامه‌ی این تگِ
+// اسکریپت (renderOrgChart و بقیه، که پایین‌تر صدا زده می‌شوند)
+// جلوگیری می‌کنیم، وگرنه قبل از کامل‌شدنِ ریدایرکت، یک کاربرِ
+// غیرادمین برای یک لحظه ساختار دپارتمان‌ها را می‌دید.
+if (!stlpRequirePermission("admin-only")) {
+    throw new Error("STLP: access denied, redirecting");
+}
+
+
+// ایموجی هر ماژول برای نمایش در باکس دسترسی — هماهنگ با آیکون‌های همون ماژول در home.html
+const STLP_MODULE_EMOJIS = {
+    sales: "🧾",
+    delivery: "📦",
+    inventory: "🏬",
+    customers: "👥",
+    treasury: "🏦",
+    payroll: "💰",
+    purchases: "🚚",
+    letters: "✉️",
+    reports: "📊",
+    crm: "🎯"
+};
+
+
+function stlpOrgEscapeHtml(value) {
+    return typeof escapeHtml === "function" ? escapeHtml(value) : String(value == null ? "" : value);
+}
+
+
+// =====================================================
+// رندر درخت عمودی
+// =====================================================
+
+function renderOrgChart() {
+
+    const wrap = document.getElementById("orgChartWrap");
+    if (!wrap) return;
+
+    const users = stlpLoadUsers().filter(function(u) { return u.active !== false; });
+    const departments = stlpLoadDepartments();
+    const employees = loadEmployees().filter(function(e) { return e.active !== false; });
+
+    // منبع اصلی حقیقتِ جایگاه سازمانی، خودِ رکورد کارمنده
+    // (employee.orgRole / employee.boardPost) — نه فیلد جدا رو
+    // بخش یا کاربر
+    const boardEmployees =
+        employees
+            .filter(function(e) { return e.orgRole === "board"; })
+            .sort(function(a, b) {
+                return STLP_BOARD_POST_ORDER.indexOf(a.boardPost) - STLP_BOARD_POST_ORDER.indexOf(b.boardPost);
+            });
+
+    // کاربرانی که به هیچ کارمندی وصل نیستن (پس ذاتاً نمی‌تونن مدیر/
+    // معاون/هیات‌مدیره باشن — چون اون‌ها از روی رکورد کارمند تعیین می‌شن)
+    const otherUsers = users.filter(function(u) { return !u.employeeId; });
+
+    function linkedUserOf(employeeId) {
+        return users.find(function(u) { return u.employeeId === employeeId; }) || null;
+    }
+
+    // دکمه‌ی کوچیکِ «⚙️ جایگاه» — همیشه در دسترسه، چون تغییر بخش/نقش
+    // یا پستِ هیات‌مدیره وابسته به داشتنِ حساب کاربری نیست
+    function positionButton(employeeId) {
+        return '<button class="mini" style="background:#6c757d;" title="ویرایش جایگاه سازمانی" onclick="stlpOpenPositionModal(\'' + employeeId + '\')">⚙️</button>';
+    }
+
+    function personNode(user, label) {
+
+        if (!user) {
+            return '<div class="org-node person">' + stlpOrgEscapeHtml(label) + '</div>';
+        }
+
+        return (
+            '<div class="org-node person clickable" onclick="stlpOpenPermModal(\'' + user.id + '\')">' +
+                '<span class="org-emoji">👤</span> ' + stlpOrgEscapeHtml(label || user.fullName || user.username) +
+            '</div>'
+        );
+
+    }
+
+    let html = '';
+
+    // ---------- ریشه: هیات مدیره ----------
+    html += (
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<div class="org-node root"><span class="org-emoji">🏛</span> هیات مدیره</div>' +
+            '<button class="mini" style="background:#0fa37f;" title="مدیریت اعضای هیات مدیره (با لیست)" onclick="stlpOpenBoardMembersModal()">👥</button>' +
+        '</div>'
+    );
+    html += '<div class="org-vline"></div>';
+    html += '<div class="org-row">';
+
+    if (boardEmployees.length === 0) {
+        html += '<div class="org-empty-hint">عضوی برای هیات مدیره تعیین نشده — از قسمت «حقوق و دستمزد»، جایگاه یک کارمند رو «هیات مدیره» کن.</div>';
+    } else {
+        boardEmployees.forEach(function(emp) {
+
+            const linkedUser = linkedUserOf(emp.id);
+            const postLabel = STLP_BOARD_POST_LABELS[emp.boardPost] || STLP_BOARD_POST_LABELS.member;
+
+            html += (
+                '<div class="org-branch">' +
+                    '<div class="org-node board-member' + (linkedUser ? ' clickable' : '') + '"' +
+                        (linkedUser ? ' onclick="stlpOpenPermModal(\'' + linkedUser.id + '\')"' : '') +
+                    '>' + '<span class="org-emoji">👑</span> ' + postLabel + ': ' + stlpOrgEscapeHtml(emp.name) +
+                        (linkedUser ? '' : ' <span style="opacity:.5; font-size:11px;">(بدون حساب کاربری)</span>') +
+                    '</div>' +
+                    positionButton(emp.id) +
+                '</div>'
+            );
+        });
+    }
+
+    html += '</div>'; // پایان ردیف هیات مدیره
+
+    // ---------- ردیف بخش‌ها ----------
+    html += '<div class="org-vline"></div>';
+    html += '<div class="org-row">';
+
+    departments.forEach(function(dept) {
+
+        const manager =
+            employees.find(function(e) { return e.departmentId === dept.id && e.orgRole === "manager"; });
+
+        const deputies =
+            employees.filter(function(e) { return e.departmentId === dept.id && e.orgRole === "deputy"; });
+
+        // کارمندان عادیِ همین بخش — مدیر و معاونین که بالاتر با
+        // برچسب مخصوص خودشون نشان داده شدن، اینجا دوباره تکرار
+        // نمی‌شن
+        const deptEmployees =
+            employees.filter(function(e) {
+                return e.departmentId === dept.id &&
+                    e.orgRole !== "manager" &&
+                    e.orgRole !== "deputy";
+            });
+
+        html += '<div class="org-branch">';
+
+        html += (
+            '<div class="org-node dept">' +
+                '<div class="dept-title">' +
+                    '<span><span class="org-emoji">📁</span> ' + stlpOrgEscapeHtml(dept.name) + '</span>' +
+                    '<span>' +
+                        '<button class="mini" style="background:#0d6efd;" onclick="stlpOrgEditDept(\'' + dept.id + '\')">✏️</button>' +
+                        '<button class="mini" style="background:#0fa37f;" title="مدیریت اعضا (با لیست)" onclick="stlpOpenDeptMembersModal(\'' + dept.id + '\')">👥</button>' +
+                        '<button class="mini" style="background:#dc3545;" onclick="stlpOrgDeleteDept(\'' + dept.id + '\')">🗑</button>' +
+                    '</span>' +
+                '</div>' +
+                (manager
+                    ? (function() {
+                        const managerUser = linkedUserOf(manager.id);
+                        return (
+                            '<div style="display:flex; align-items:center; gap:6px;">' +
+                                '<div class="org-node person' + (managerUser ? ' clickable' : '') + '" style="margin:0;"' +
+                                    (managerUser ? ' onclick="stlpOpenPermModal(\'' + managerUser.id + '\')"' : '') +
+                                '>' + '<span class="org-emoji">👔</span> مدیر: ' + stlpOrgEscapeHtml(manager.name) +
+                                    (managerUser ? '' : ' <span style="opacity:.5; font-size:11px;">(بدون حساب کاربری)</span>') +
+                                '</div>' +
+                                positionButton(manager.id) +
+                            '</div>'
+                        );
+                    })()
+                    : '<div class="org-empty-hint">❓ مدیر تعیین‌نشده</div>'
+                ) +
+            '</div>'
+        );
+
+        // ---------- ردیف معاونین (هم‌سطح، همه توی یک خط) ----------
+        if (deputies.length > 0) {
+
+            html += '<div class="org-vline"></div>';
+            html += '<div class="org-row">';
+
+            deputies.forEach(function(dep) {
+
+                const linkedUser = linkedUserOf(dep.id);
+
+                html += '<div class="org-branch">';
+                html += (
+                    '<div class="org-node deputy' + (linkedUser ? ' clickable' : '') + '"' +
+                        (linkedUser ? ' onclick="stlpOpenPermModal(\'' + linkedUser.id + '\')"' : '') +
+                    '>' + '<span class="org-emoji">🎖</span> معاون: ' + stlpOrgEscapeHtml(dep.name) + '</div>'
+                );
+                html += positionButton(dep.id);
+                html += '</div>';
+
+            });
+
+            html += '</div>';
+
+        }
+
+        // ---------- ردیف کارمندان (هم‌سطح، همه توی یک خط، زیر معاونین) ----------
+        if (deptEmployees.length > 0) {
+
+            html += '<div class="org-vline"></div>';
+            html += '<div class="org-row">';
+
+            deptEmployees.forEach(function(emp) {
+
+                const linkedUser = linkedUserOf(emp.id);
+
+                html += '<div class="org-branch">';
+                html += (
+                    '<div class="org-node person' + (linkedUser ? ' clickable' : '') + '"' +
+                        (linkedUser ? ' onclick="stlpOpenPermModal(\'' + linkedUser.id + '\')"' : '') +
+                    '>' + '<span class="org-emoji">👤</span> ' + stlpOrgEscapeHtml(emp.name) +
+                        (linkedUser ? '' : ' <span style="opacity:.5; font-size:11px;">(بدون حساب کاربری)</span>') +
+                    '</div>'
+                );
+                html += positionButton(emp.id);
+                html += '</div>';
+
+            });
+
+            html += '</div>';
+
+        }
+
+        html += '</div>'; // پایان org-branch بخش
+
+    });
+
+    // ---------- بدون بخش ----------
+    // اعضای هیات مدیره بالای درخت نشان داده شدن، اینجا دوباره
+    // تکراری نشان داده نمی‌شوند
+    const unassigned = employees.filter(function(e) {
+
+        if (e.orgRole === "board") return false;
+
+        const isUnassignedDept =
+            !e.departmentId || !departments.some(function(d) { return d.id === e.departmentId; });
+
+        return isUnassignedDept;
+
+    });
+
+    if (unassigned.length > 0) {
+
+        html += '<div class="org-branch">';
+        html += '<div class="org-node unassigned-title">⚠️ بدون بخش</div>';
+        html += '<div class="org-vline"></div>';
+        html += '<div class="org-row">';
+
+        unassigned.forEach(function(emp) {
+
+            const linkedUser = linkedUserOf(emp.id);
+
+            html += '<div class="org-branch">';
+            html += (
+                '<div class="org-node person' + (linkedUser ? ' clickable' : '') + '"' +
+                    (linkedUser ? ' onclick="stlpOpenPermModal(\'' + linkedUser.id + '\')"' : '') +
+                '>' + '<span class="org-emoji">👤</span> ' + stlpOrgEscapeHtml(emp.name) +
+                    (linkedUser ? '' : ' <span style="opacity:.5; font-size:11px;">(بدون حساب کاربری)</span>') +
+                '</div>'
+            );
+            html += '<button class="mini" style="background:#6c757d; margin-top:4px;" onclick="stlpOpenPositionModal(\'' + emp.id + '\')">⚙️ ویرایش جایگاه</button>';
+            html += '</div>';
+
+        });
+
+        html += '</div></div>';
+
+    }
+
+    // ---------- سایر کاربران (بدون بخش/کارمند/هیات‌مدیره) ----------
+    if (otherUsers.length > 0) {
+
+        html += '<div class="org-branch">';
+        html += '<div class="org-node unassigned-title">🧑‍💻 سایر کاربران</div>';
+        html += '<div class="org-vline"></div>';
+        html += '<div class="org-row">';
+
+        otherUsers.forEach(function(u) {
+            html += personNode(u, u.fullName || u.username);
+        });
+
+        html += '</div></div>';
+
+    }
+
+    html += '</div>'; // پایان ردیف بخش‌ها
+
+    wrap.innerHTML = html;
+
+}
+
+
+// =====================================================
+// مودال دسترسی‌ها
+// =====================================================
+
+function stlpBuildPermModuleGrid() {
+
+    const grid = document.getElementById("permModuleGrid");
+
+    grid.innerHTML =
+        STLP_MODULES.map(function(m) {
+
+            const emoji = STLP_MODULE_EMOJIS[m.key] || "🔹";
+
+            return (
+                '<label class="perm-check-row">' +
+                    '<input type="checkbox" class="perm-check" data-key="' + m.key + '"> ' +
+                    emoji + ' ' + m.label +
+                '</label>'
+            );
+
+        }).join("");
+
+}
+
+
+function stlpOpenPermModal(userId) {
+
+    const users = stlpLoadUsers();
+    const user = users.find(function(u) { return u.id === userId; });
+    if (!user) return;
+
+    document.getElementById("permModalUserId").value = user.id;
+    document.getElementById("permModalTitle").textContent =
+        "دسترسی‌های " + (user.fullName || user.username);
+
+    document.getElementById("permIsAdmin").checked = !!user.isAdmin;
+    document.getElementById("permCanSignLetters").checked = !!user.canSignLetters;
+    document.getElementById("permCanApproveLeaveFinance").checked = !!user.canApproveLeaveFinance;
+    document.getElementById("permCanManageLetterTemplates").checked = !!user.canManageLetterTemplates;
+
+    // نقش سازمانی (بخش/مدیر/معاون/هیات‌مدیره) دیگه اینجا نیست — از
+    // روی رکورد کارمندِ همین کاربر (دکمه‌ی ⚙️ تو خودِ چارت) تعیین
+    // می‌شه؛ اینجا فقط یادآوری وضعیت فعلیشه
+    const linkedEmployee =
+        typeof stlpUserEmployee === "function" ? stlpUserEmployee(user) : null;
+
+    const orgHint = document.getElementById("permModalOrgHint");
+
+    if (!linkedEmployee) {
+        orgHint.textContent = "این کاربر به هیچ کارمندی وصل نیست — نقش سازمانی از قسمت «کاربران» تعیین می‌شه.";
+    } else if (linkedEmployee.orgRole === "board") {
+        orgHint.textContent = "نقش فعلی: عضو هیات مدیره (" + (STLP_BOARD_POST_LABELS[linkedEmployee.boardPost] || "عضو") + ") — برای تغییر، دکمه‌ی ⚙️ کنار اسمش تو چارت رو بزن.";
+    } else if (linkedEmployee.orgRole === "manager") {
+        orgHint.textContent = "نقش فعلی: مدیر بخش — برای تغییر، دکمه‌ی ⚙️ کنار اسمش تو چارت رو بزن.";
+    } else if (linkedEmployee.orgRole === "deputy") {
+        orgHint.textContent = "نقش فعلی: معاون بخش — برای تغییر، دکمه‌ی ⚙️ کنار اسمش تو چارت رو بزن.";
+    } else {
+        orgHint.textContent = "نقش فعلی: کارمند عادی — برای تغییر، دکمه‌ی ⚙️ کنار اسمش تو چارت رو بزن.";
+    }
+
+    stlpBuildPermModuleGrid();
+
+    document.querySelectorAll("#permModuleGrid .perm-check").forEach(function(chk) {
+        chk.checked = !!(user.permissions && user.permissions[chk.dataset.key]);
+    });
+
+    document.getElementById("permModalOverlay").style.display = "flex";
+
+}
+
+
+function stlpClosePermModal() {
+    document.getElementById("permModalOverlay").style.display = "none";
+}
+
+
+function stlpSavePermModal() {
+
+    const userId = document.getElementById("permModalUserId").value;
+    if (!userId) return;
+
+    const users = stlpLoadUsers();
+    const index = users.findIndex(function(u) { return u.id === userId; });
+    if (index < 0) return;
+
+    const newIsAdmin = document.getElementById("permIsAdmin").checked;
+
+    // جلوگیری از حذف آخرین مدیر سیستم فعال
+    if (users[index].isAdmin && !newIsAdmin) {
+
+        const remainingAdmins =
+            users.filter(function(u) { return u.isAdmin && u.id !== userId && u.active !== false; });
+
+        if (remainingAdmins.length === 0) {
+            alert("❌ حداقل باید یک مدیر سیستم فعال باقی بماند.");
+            return;
+        }
+
+    }
+
+    users[index].isAdmin = newIsAdmin;
+    users[index].canSignLetters = document.getElementById("permCanSignLetters").checked;
+    users[index].canApproveLeaveFinance = document.getElementById("permCanApproveLeaveFinance").checked;
+    users[index].canManageLetterTemplates = document.getElementById("permCanManageLetterTemplates").checked;
+
+    const permissions = {};
+    document.querySelectorAll("#permModuleGrid .perm-check").forEach(function(chk) {
+        permissions[chk.dataset.key] = chk.checked;
+    });
+    users[index].permissions = permissions;
+
+    stlpSaveUsers(users);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("چارت سازمانی", "تغییر دسترسی‌ها", users[index].fullName || users[index].username);
+    }
+
+    stlpClosePermModal();
+    renderOrgChart();
+
+}
+
+
+// =====================================================
+// مدیریت بخش‌ها (از همین چارت)
+// =====================================================
+
+function stlpOrgAddDept() {
+
+    const name = prompt("نام بخش جدید:", "");
+    if (!name) return;
+
+    const departments = stlpLoadDepartments();
+
+    departments.push({
+        id: "dept_" + Date.now().toString(36) + Math.random().toString(36).substring(2, 6),
+        name: name
+    });
+
+    stlpSaveDepartments(departments);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("چارت سازمانی", "افزودن بخش", name);
+    }
+
+    renderOrgChart();
+
+}
+
+
+function stlpOrgEditDept(deptId) {
+
+    const departments = stlpLoadDepartments();
+    const dept = departments.find(function(d) { return d.id === deptId; });
+    if (!dept) return;
+
+    const newName = prompt("نام بخش:", dept.name);
+    if (!newName) return;
+
+    dept.name = newName;
+
+    stlpSaveDepartments(departments);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("چارت سازمانی", "ویرایش بخش", newName);
+    }
+
+    renderOrgChart();
+
+}
+
+
+function stlpOrgDeleteDept(deptId) {
+
+    if (!confirm("این بخش حذف بشه؟ (کارمندانش بدون بخش می‌مونن، خودشون حذف نمی‌شن)")) return;
+
+    let departments = stlpLoadDepartments();
+    const dept = departments.find(function(d) { return d.id === deptId; });
+
+    departments = departments.filter(function(d) { return d.id !== deptId; });
+    stlpSaveDepartments(departments);
+
+    if (typeof stlpLogActivity === "function" && dept) {
+        stlpLogActivity("چارت سازمانی", "حذف بخش", dept.name);
+    }
+
+    renderOrgChart();
+
+}
+
+
+// =====================================================
+// مودال «ویرایش جایگاه سازمانی» — بخش/نقش یا پستِ هیات‌مدیره‌ی
+// یک کارمند از همینجا تعیین می‌شه؛ چون نتیجه مستقیم روی خودِ رکورد
+// کارمند ذخیره می‌شه (همون‌جایی که تو «حقوق و دستمزد» هم دیده
+// می‌شه)، هیچ سینک جداگانه‌ای لازم نیست
+// =====================================================
+
+let stlpPositionModalEmployeeId = null;
+
+function stlpOpenPositionModal(employeeId) {
+
+    const employees = loadEmployees();
+    const employee = employees.find(function(e) { return e.id === employeeId; });
+    if (!employee) return;
+
+    stlpPositionModalEmployeeId = employeeId;
+
+    document.getElementById("posModalTitle").textContent =
+        "جایگاه سازمانی: " + employee.name;
+
+    const departments = stlpLoadDepartments();
+    const sel = document.getElementById("posDepartmentId");
+
+    sel.innerHTML =
+        '<option value="">— بدون بخش —</option>' +
+        departments.map(function(d) {
+            return '<option value="' + d.id + '">' + stlpOrgEscapeHtml(d.name) + '</option>';
+        }).join("");
+
+    const isBoard = employee.orgRole === "board";
+
+    document.getElementById("posKind").value = isBoard ? "board" : "dept";
+    sel.value = employee.departmentId || "";
+    document.getElementById("posRole").value =
+        (employee.orgRole === "manager" || employee.orgRole === "deputy") ? employee.orgRole : "employee";
+    document.getElementById("posBoardPost").value = employee.boardPost || "member";
+
+    stlpTogglePositionModalFields();
+
+    document.getElementById("positionModal").style.display = "flex";
+
+}
+
+
+function stlpTogglePositionModalFields() {
+
+    const isBoard = document.getElementById("posKind").value === "board";
+
+    document.getElementById("posDeptFieldsWrap").style.display = isBoard ? "none" : "block";
+    document.getElementById("posBoardFieldsWrap").style.display = isBoard ? "block" : "none";
+
+}
+
+
+function stlpClosePositionModal() {
+
+    document.getElementById("positionModal").style.display = "none";
+    stlpPositionModalEmployeeId = null;
+
+}
+
+
+function stlpSavePositionModal() {
+
+    if (!stlpPositionModalEmployeeId) return;
+
+    const employees = loadEmployees();
+    const employee = employees.find(function(e) { return e.id === stlpPositionModalEmployeeId; });
+    if (!employee) return;
+
+    const isBoard = document.getElementById("posKind").value === "board";
+
+    if (isBoard) {
+
+        employee.orgRole = "board";
+        employee.boardPost = document.getElementById("posBoardPost").value;
+        employee.departmentId = "";
+
+    } else {
+
+        const departmentId = document.getElementById("posDepartmentId").value;
+        const role = document.getElementById("posRole").value;
+
+        // هر بخش فقط یک مدیر می‌تونه داشته باشه — اگه یکی دیگه از
+        // قبل مدیرِ همین بخشه، با تأیید کاربر به «کارمند عادی» تنزل
+        // می‌کنه
+        if (role === "manager" && departmentId) {
+
+            const previousManager =
+                employees.find(function(e) {
+                    return e.id !== employee.id &&
+                        e.departmentId === departmentId &&
+                        e.orgRole === "manager";
+                });
+
+            if (previousManager) {
+
+                if (!confirm(
+                    "کارمند «" + previousManager.name + "» از قبل مدیرِ همین بخشه.\n" +
+                    "اگه ادامه بدی، ایشون به «کارمند عادی» همین بخش تنزل پیدا می‌کنه. ادامه بدم؟"
+                )) {
+                    return;
+                }
+
+                previousManager.orgRole = "employee";
+
+            }
+
+        }
+
+        employee.departmentId = departmentId;
+        employee.orgRole = role;
+        employee.boardPost = "";
+
+    }
+
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("چارت سازمانی", "ویرایش جایگاه سازمانی", employee.name);
+    }
+
+    stlpClosePositionModal();
+    renderOrgChart();
+
+}
+
+
+// =====================================================
+// مودال «مدیریت اعضای بخش» — همون تنظیمِ جایگاه ولی از طرف بخش،
+// با یه لیست از همه‌ی کارمندها؛ نتیجه‌اش دقیقاً همون فیلدهاییه که
+// مودال «جایگاه» تک‌نفره می‌نویسه (دو طرفه‌ی همون کار)
+// =====================================================
+
+let stlpDeptMembersModalDeptId = null;
+let stlpDeptMembersPendingRoles = {}; // employeeId -> "" | "employee" | "manager" | "deputy"
+
+function stlpOpenDeptMembersModal(deptId) {
+
+    const departments = stlpLoadDepartments();
+    const dept = departments.find(function(d) { return d.id === deptId; });
+    if (!dept) return;
+
+    stlpDeptMembersModalDeptId = deptId;
+    stlpDeptMembersPendingRoles = {};
+
+    loadEmployees()
+        .filter(function(e) { return e.active !== false && e.orgRole !== "board"; })
+        .forEach(function(e) {
+            stlpDeptMembersPendingRoles[e.id] = e.departmentId === deptId ? (e.orgRole || "employee") : "";
+        });
+
+    document.getElementById("deptMembersModalTitle").textContent = "اعضای بخش: " + dept.name;
+    document.getElementById("deptMembersSearch").value = "";
+
+    stlpRenderDeptMembersList();
+
+    document.getElementById("deptMembersModal").style.display = "flex";
+
+}
+
+
+// انتخاب هر ردیف بلافاصله تو حافظه‌ی موقت ثبت می‌شه (نه مستقیم روی
+// کارمند) تا اگه بعدش سرچ کنی و لیست دوباره رندر بشه، انتخاب‌های
+// قبلی از دست نره
+function stlpDeptMemberRoleChanged(employeeId, value) {
+    stlpDeptMembersPendingRoles[employeeId] = value;
+}
+
+
+function stlpRenderDeptMembersList() {
+
+    const wrap = document.getElementById("deptMembersList");
+    if (!wrap || !stlpDeptMembersModalDeptId) return;
+
+    const searchText =
+        (document.getElementById("deptMembersSearch").value || "").trim().toLowerCase();
+
+    const employees =
+        loadEmployees()
+            .filter(function(e) { return e.active !== false && e.orgRole !== "board"; })
+            .filter(function(e) { return !searchText || (e.name || "").toLowerCase().indexOf(searchText) !== -1; })
+            .sort(function(a, b) { return (a.name || "").localeCompare(b.name || "", "fa"); });
+
+    wrap.innerHTML =
+        employees.map(function(e) {
+
+            const currentRole = stlpDeptMembersPendingRoles[e.id] || "";
+
+            return (
+                '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:4px 0; border-bottom:1px solid #ffffff11; font-size:13px;">' +
+                    '<span>' + stlpOrgEscapeHtml(e.name) + '</span>' +
+                    '<select onchange="stlpDeptMemberRoleChanged(\'' + e.id + '\', this.value)" style="padding:2px 4px; font-size:12px; width:150px; max-width:45%;">' +
+                        '<option value=""' + (currentRole === "" ? " selected" : "") + '>— بی‌ربط به این بخش —</option>' +
+                        '<option value="employee"' + (currentRole === "employee" ? " selected" : "") + '>کارمند این بخش</option>' +
+                        '<option value="manager"' + (currentRole === "manager" ? " selected" : "") + '>مدیر این بخش</option>' +
+                        '<option value="deputy"' + (currentRole === "deputy" ? " selected" : "") + '>معاون این بخش</option>' +
+                    '</select>' +
+                '</div>'
+            );
+
+        }).join("") || '<div class="org-empty-hint">کارمندی یافت نشد.</div>';
+
+}
+
+
+function stlpCloseDeptMembersModal() {
+    document.getElementById("deptMembersModal").style.display = "none";
+    stlpDeptMembersModalDeptId = null;
+    stlpDeptMembersPendingRoles = {};
+}
+
+
+function stlpSaveDeptMembersModal() {
+
+    if (!stlpDeptMembersModalDeptId) return;
+
+    const deptId = stlpDeptMembersModalDeptId;
+
+    // هر بخش فقط یک مدیر می‌تونه داشته باشه
+    const managerCount =
+        Object.keys(stlpDeptMembersPendingRoles)
+            .filter(function(empId) { return stlpDeptMembersPendingRoles[empId] === "manager"; })
+            .length;
+
+    if (managerCount > 1) {
+        alert("❌ فقط یک نفر می‌تونه مدیرِ این بخش باشه — بیشتر از یکی رو «مدیر این بخش» انتخاب کردی.");
+        return;
+    }
+
+    const employees = loadEmployees();
+
+    Object.keys(stlpDeptMembersPendingRoles).forEach(function(empId) {
+
+        const employee = employees.find(function(e) { return e.id === empId; });
+        if (!employee) return;
+
+        const role = stlpDeptMembersPendingRoles[empId];
+
+        if (role === "") {
+
+            // اگه قبلاً عضو همین بخش بوده و الان «بی‌ربط» انتخاب شده، از این بخش خارج می‌شه
+            if (employee.departmentId === deptId) {
+                employee.departmentId = "";
+                employee.orgRole = "employee";
+            }
+
+        } else {
+
+            employee.departmentId = deptId;
+            employee.orgRole = role;
+            employee.boardPost = "";
+
+        }
+
+    });
+
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        const dept = stlpLoadDepartments().find(function(d) { return d.id === deptId; });
+        stlpLogActivity("چارت سازمانی", "ویرایش اعضای بخش (لیستی)", dept ? dept.name : deptId);
+    }
+
+    stlpCloseDeptMembersModal();
+    renderOrgChart();
+
+}
+
+
+// =====================================================
+// مودال «مدیریت اعضای هیات مدیره» — دقیقاً هم‌شکل مودال اعضای
+// بخش (دو طرفه‌ی همون دکمه‌ی ⚙️ تک‌نفره)؛ اینجا به‌جای نقش در
+// بخش، پست در هیات مدیره انتخاب می‌شه
+// =====================================================
+
+let stlpBoardMembersPendingPosts = {}; // employeeId -> "" | "chairman" | "vice_chairman" | "ceo" | "member"
+
+function stlpOpenBoardMembersModal() {
+
+    stlpBoardMembersPendingPosts = {};
+
+    loadEmployees()
+        .filter(function(e) { return e.active !== false; })
+        .forEach(function(e) {
+            stlpBoardMembersPendingPosts[e.id] = e.orgRole === "board" ? (e.boardPost || "member") : "";
+        });
+
+    document.getElementById("boardMembersSearch").value = "";
+
+    stlpRenderBoardMembersList();
+
+    document.getElementById("boardMembersModal").style.display = "flex";
+
+}
+
+
+// انتخاب هر ردیف بلافاصله تو حافظه‌ی موقت ثبت می‌شه (نه مستقیم روی
+// کارمند) تا سرچ کردن باعث از دست رفتن انتخاب‌های قبلی نشه
+function stlpBoardMemberPostChanged(employeeId, value) {
+    stlpBoardMembersPendingPosts[employeeId] = value;
+}
+
+
+function stlpRenderBoardMembersList() {
+
+    const wrap = document.getElementById("boardMembersList");
+    if (!wrap) return;
+
+    const searchText =
+        (document.getElementById("boardMembersSearch").value || "").trim().toLowerCase();
+
+    const employees =
+        loadEmployees()
+            .filter(function(e) { return e.active !== false; })
+            .filter(function(e) { return !searchText || (e.name || "").toLowerCase().indexOf(searchText) !== -1; })
+            .sort(function(a, b) { return (a.name || "").localeCompare(b.name || "", "fa"); });
+
+    wrap.innerHTML =
+        employees.map(function(e) {
+
+            const currentPost = stlpBoardMembersPendingPosts[e.id] || "";
+
+            return (
+                '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:4px 0; border-bottom:1px solid #ffffff11; font-size:13px;">' +
+                    '<span>' + stlpOrgEscapeHtml(e.name) + '</span>' +
+                    '<select onchange="stlpBoardMemberPostChanged(\'' + e.id + '\', this.value)" style="padding:2px 4px; font-size:12px; width:170px; max-width:50%;">' +
+                        '<option value=""' + (currentPost === "" ? " selected" : "") + '>— بی‌ربط به هیات مدیره —</option>' +
+                        '<option value="chairman"' + (currentPost === "chairman" ? " selected" : "") + '>رئیس هیات مدیره</option>' +
+                        '<option value="vice_chairman"' + (currentPost === "vice_chairman" ? " selected" : "") + '>نایب رئیس هیات مدیره</option>' +
+                        '<option value="ceo"' + (currentPost === "ceo" ? " selected" : "") + '>مدیرعامل</option>' +
+                        '<option value="member"' + (currentPost === "member" ? " selected" : "") + '>عضو هیات مدیره</option>' +
+                    '</select>' +
+                '</div>'
+            );
+
+        }).join("") || '<div class="org-empty-hint">کارمندی یافت نشد.</div>';
+
+}
+
+
+function stlpCloseBoardMembersModal() {
+    document.getElementById("boardMembersModal").style.display = "none";
+}
+
+
+function stlpSaveBoardMembersModal() {
+
+    // برخلاف مدیرِ بخش، اینجا محدودیتِ «فقط یکی» اعمال نمی‌شه —
+    // چند نفر می‌تونن هم‌زمان هر پستی (حتی رئیس) داشته باشن، چون
+    // فقط برای مدیرِ بخش این قانون خواسته شده بود
+    const employees = loadEmployees();
+    let changedCount = 0;
+
+    Object.keys(stlpBoardMembersPendingPosts).forEach(function(empId) {
+
+        const employee = employees.find(function(e) { return e.id === empId; });
+        if (!employee) return;
+
+        const post = stlpBoardMembersPendingPosts[empId];
+
+        if (post === "") {
+
+            if (employee.orgRole === "board") {
+                employee.orgRole = "employee";
+                employee.boardPost = "";
+                changedCount++;
+            }
+
+        } else if (employee.orgRole !== "board" || employee.boardPost !== post) {
+
+            employee.orgRole = "board";
+            employee.boardPost = post;
+            employee.departmentId = "";
+            changedCount++;
+
+        }
+
+    });
+
+    saveEmployees(employees);
+
+    if (typeof stlpLogActivity === "function") {
+        stlpLogActivity("چارت سازمانی", "ویرایش اعضای هیات مدیره (لیستی)", changedCount + " مورد تغییر کرد");
+    }
+
+    stlpCloseBoardMembersModal();
+    renderOrgChart();
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    if (typeof stlpMigrateLegacyOrgRoles === "function") stlpMigrateLegacyOrgRoles();
+    renderOrgChart();
+});
+
+</script>
+
+</body>
+</html>

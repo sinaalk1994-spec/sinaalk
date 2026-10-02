@@ -1,0 +1,11 @@
+.home-page .hero{--slide-wash:#77431c38;background:radial-gradient(ellipse at 25% 65%,var(--slide-wash),transparent 60%),#19191b;transition:background .4s}
+.home-page .hero-inner{gap:40px}.home-page .hero-copy{flex:.85}.film-showcase{flex:1.3;min-width:0}
+.filmstrip{display:flex;gap:10px;align-items:flex-start;height:360px;direction:ltr}
+.film-card{position:relative;flex:1;min-width:0;height:245px;border:1px solid #ffffff10;border-radius:8px;background:linear-gradient(155deg,#ffffff0a,#ffffff02);color:#cec2b9;cursor:pointer;transition:flex .45s,height .45s,background .45s;overflow:hidden;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.film-card[aria-pressed=true]{flex:2.7;height:360px;background:linear-gradient(145deg,#eb975229,#34251e);border-color:#ffad7033}
+.film-card img{height:165px;width:90%;object-fit:contain;filter:drop-shadow(8px 14px 4px #0005);transition:height .45s,transform .45s;transform:rotate(-6deg)}
+.film-card[aria-pressed=true] img{height:255px;transform:rotate(0)}.film-card strong{font-size:11px;font-weight:600;margin-top:18px;letter-spacing:.5px}.film-card[aria-pressed=true] strong{font-size:15px;color:#f9dfcb}
+.film-caption{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:15px}.film-caption>div{display:flex;flex-direction:column;gap:7px}.film-caption strong{font-size:18px;color:#f4e3d4}.film-caption span{font-size:10px;color:#b8a89b}.film-controls{display:flex;gap:7px;direction:ltr}.film-controls button{width:37px;height:37px;background:#ffffff07;border:1px solid #ffffff20;color:#e8d4c3;border-radius:50%;cursor:pointer;font-size:18px}.film-controls button:hover{background:#f48b4120}
+@media(max-width:900px){.film-showcase{width:100%;max-width:680px}.home-page .hero-inner{gap:32px}}
+@media(max-width:600px){.filmstrip{gap:5px;height:285px}.film-card{height:180px;border-radius:5px}.film-card[aria-pressed=true]{height:285px;flex:3.5}.film-card img{height:110px}.film-card[aria-pressed=true] img{height:200px}.film-card strong{font-size:8px;letter-spacing:0}.film-card[aria-pressed=true] strong{font-size:12px}.film-caption strong{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.film-card,.film-card img{transition:none}}
